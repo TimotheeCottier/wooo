@@ -1,0 +1,569 @@
+/* =========================================================
+   WOOO MUSIQUE — Page classement
+   ========================================================= */
+
+
+.classement-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-navy);
+  margin-top: var(--space-2);
+}
+
+.classement-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+
+/* ---------- Bannière "en cours" si tout le monde n'a pas voté ---------- */
+.classement-banner {
+  background: rgba(244, 196, 48, 0.15);
+  border: 1.5px solid #F4C430;
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8A6D00;
+}
+
+.classement-banner__small {
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
+
+/* ---------- Liste du classement ---------- */
+.classement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.classement-loading {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-grey);
+  padding: var(--space-7) 0;
+}
+
+.classement-row {
+  display: grid;
+  /* rang | avatar | pseudo | score */
+  grid-template-columns: 56px 40px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-white);
+  border: 1.5px solid var(--color-grey-light);
+  border-radius: var(--radius-card);
+  animation: classRowIn 0.5s var(--ease-out) backwards;
+}
+
+.classement-row:nth-child(1) { animation-delay: 0.05s; }
+.classement-row:nth-child(2) { animation-delay: 0.15s; }
+.classement-row:nth-child(3) { animation-delay: 0.25s; }
+.classement-row:nth-child(4) { animation-delay: 0.35s; }
+.classement-row:nth-child(5) { animation-delay: 0.45s; }
+.classement-row:nth-child(6) { animation-delay: 0.55s; }
+
+/* Désactive l'animation sur les rendus silencieux (refresh polling) */
+.classement-list.no-anim .classement-row {
+  animation: none;
+}
+
+@keyframes classRowIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+
+/* Rangs 1, 2, 3 mis en avant */
+.classement-row__rank {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-navy);
+  text-align: center;
+  line-height: 1;
+}
+
+.classement-row__rank-suffix {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-grey);
+  margin-left: 1px;
+}
+
+/* Top 1 : fond + or */
+.classement-row--gold {
+  background: linear-gradient(135deg, #FFF5D6 0%, #FFE9A8 100%);
+  border-color: #E5B800;
+}
+.classement-row--gold .classement-row__rank,
+.classement-row--gold .classement-row__rank-suffix {
+  color: #B58900;
+}
+
+/* Top 2 : argent */
+.classement-row--silver {
+  background: linear-gradient(135deg, #F4F5F8 0%, #E2E4EA 100%);
+  border-color: #A0A8B8;
+}
+.classement-row--silver .classement-row__rank,
+.classement-row--silver .classement-row__rank-suffix {
+  color: #5C677D;
+}
+
+/* Top 3 : bronze */
+.classement-row--bronze {
+  background: linear-gradient(135deg, #F8E0CC 0%, #E5C29C 100%);
+  border-color: #B47A40;
+}
+.classement-row--bronze .classement-row__rank,
+.classement-row--bronze .classement-row__rank-suffix {
+  color: #884D1A;
+}
+
+
+/* Avatar */
+.classement-row__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-grey-light);
+}
+
+.classement-row__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* Joueur (pastille colorée + nom) */
+.classement-row__player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.classement-row__dot {
+  /* On retire la pastille de couleur — remplacée par l'avatar */
+  display: none;
+}
+
+.classement-row__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.classement-row__me {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-red);
+  background: rgba(230, 57, 70, 0.1);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  margin-left: var(--space-2);
+}
+
+
+/* Score à droite */
+.classement-row__score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.classement-row__points {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-red);
+  line-height: 1;
+}
+
+.classement-row__pts-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-grey);
+}
+
+/* Statut "en attente" si pas encore de votes */
+.classement-row__waiting {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-grey);
+  font-style: italic;
+}
+
+
+/* =========================================================
+   RÉCAP DES VOTES PAR THÈME
+   ========================================================= */
+
+.recap-themes {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-grey-light);
+}
+
+.recap-themes__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-red);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+
+/* ---------- Bloc d'un thème (titre + liste de chansons) ---------- */
+.theme-recap {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--color-white);
+  border: 1.5px solid var(--color-grey-light);
+  border-radius: var(--radius-card);
+}
+
+.theme-recap__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-grey-light);
+}
+
+.theme-recap__num {
+  display: inline-block;
+  background: var(--color-red);
+  color: var(--color-white);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+
+/* ---------- Une ligne = une chanson + qui a voté quoi ---------- */
+.song-recap {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px dashed var(--color-grey-light);
+}
+
+.song-recap:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.song-recap__head {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.song-recap__cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-grey-light);
+}
+
+.song-recap__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.song-recap__info {
+  min-width: 0;
+}
+
+.song-recap__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-recap__artist {
+  font-size: 11px;
+  color: var(--color-grey);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-recap__author {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-red);
+  background: rgba(230, 57, 70, 0.08);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+}
+
+
+/* ---------- Liste des votes pour cette chanson ---------- */
+.votes-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+}
+
+.vote-row {
+  display: grid;
+  /* avatar du votant | a voté pour : pseudo | verdict (✓/✗ ou en attente) */
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12px;
+}
+
+.vote-row__voter-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-grey-light);
+}
+
+.vote-row__voter-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vote-row__text {
+  font-size: 12px;
+  color: var(--color-navy);
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vote-row__voter {
+  font-weight: 700;
+}
+
+.vote-row__guessed {
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+/* Verdict : ✓ vert, ✗ rouge, "en attente" gris */
+.vote-row__verdict {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vote-row__verdict--correct {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2EA047;
+  color: var(--color-white);
+  font-size: 13px;
+}
+
+.vote-row__verdict--wrong {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-red);
+  color: var(--color-white);
+  font-size: 13px;
+}
+
+.vote-row__verdict--waiting {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-grey);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Cas spécial : c'est le morceau du joueur lui-même → on indique */
+.vote-row--self {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+
+/* =========================================================
+   RÉCAP PAR JOUEUR (nouveau format)
+   ========================================================= */
+
+.player-recap-title {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 14px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: var(--color-navy) !important;
+  text-align: left !important;
+}
+
+.player-recap-title strong {
+  color: var(--color-red);
+}
+
+.player-recap-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-grey-light);
+  flex-shrink: 0;
+}
+
+.player-recap-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.player-recap-theme-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-grey);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.player-recap-theme-label:first-of-type {
+  margin-top: 0;
+}
+
+
+/* Lignes de vote pour le récap par joueur */
+.vote-row--by-player {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+
+.vote-row__song-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-grey-light);
+}
+
+.vote-row__song-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vote-row__song-info {
+  min-width: 0;
+}
+
+.vote-row__song-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vote-row__song-artist {
+  font-size: 10px;
+  color: var(--color-grey);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vote-row__guess {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.vote-row__guessed-text {
+  font-size: 11px;
+  color: var(--color-navy);
+  font-weight: 500;
+}
+
+.vote-row__guessed-text strong {
+  color: var(--color-navy);
+  font-weight: 700;
+}
+
+
+/* ---------- Sous-titre de la page "trop tard" ---------- */
+.late-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-grey);
+  margin-top: var(--space-2);
+}

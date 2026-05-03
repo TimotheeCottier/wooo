@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Salle d'attente</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="invite.css" />
+  <link rel="stylesheet" href="lobby.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title">Réglages de ta partie</h1>
+    </div>
+
+    <!-- Contenu -->
+    <section class="lobby-content">
+
+      <!-- Bloc lien à partager (avec bouton Copier) -->
+      <div class="invite-share">
+        <p class="invite-share__label">Partage ce lien à tes amis</p>
+        <p class="invite-share__link" id="lobby-link">https://...</p>
+        <button type="button" class="btn btn--primary invite-share__btn" id="btn-copy">
+          Copier
+        </button>
+        <p class="invite-share__feedback" id="copy-feedback" hidden>Lien copié !</p>
+      </div>
+
+      <!-- Frise de statut -->
+      <div class="lobby-status">
+        <p class="lobby-status__title">Statut</p>
+        <ol class="lobby-status__steps" id="status-steps">
+          <li class="status-step status-step--active" data-step="created">Partie créée</li>
+          <li class="status-step" data-step="joined">Joueurs inscrits</li>
+          <li class="status-step" data-step="voting">Votes</li>
+          <li class="status-step" data-step="done">Résultats</li>
+        </ol>
+      </div>
+
+      <!-- Message d'état -->
+      <p class="lobby-message" id="lobby-message">Chargement…</p>
+
+      <!-- Liste des joueurs -->
+      <ul class="players-list" id="players-list" aria-live="polite"></ul>
+
+    </section>
+
+    <!-- Boutons en bas — différents selon créateur ou invité -->
+    <footer class="search-actions" id="lobby-footer">
+      <!-- Footer créateur : Retour + Lancer les votes -->
+      <div class="actions-row" id="footer-creator" hidden>
+        <button type="button" class="btn btn--secondary"
+                onclick="window.location.href='index.html'">Retour</button>
+        <button type="button" class="btn btn--primary" id="btn-launch" disabled>
+          Lancer les votes
+        </button>
+      </div>
+      <!-- Footer invité : juste un bouton "Voter !" (désactivé tant que la partie n'est pas lancée) -->
+      <div class="actions-row" id="footer-guest" hidden>
+        <button type="button" class="btn btn--primary" id="btn-voter" disabled>
+          Voter&nbsp;!
+        </button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="lobby.js"></script>
+</body>
+</html>

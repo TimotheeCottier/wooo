@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Classement</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="classement.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title" id="classement-title">Classement</h1>
+      <p class="classement-subtitle" id="classement-subtitle">Voici le résultat final !</p>
+    </div>
+
+    <!-- Contenu -->
+    <section class="classement-content">
+
+      <!-- Bandeau "en attente" si certains n'ont pas fini de voter -->
+      <div class="classement-banner" id="classement-banner" hidden>
+        <p>⏳ <strong>Classement en cours</strong></p>
+        <p class="classement-banner__small" id="classement-banner-small"></p>
+      </div>
+
+      <!-- Liste des joueurs avec leur score -->
+      <ul class="classement-list" id="classement-list" aria-live="polite"></ul>
+
+      <p class="classement-loading" id="classement-loading">Chargement…</p>
+
+      <!-- Récap des votes par thème (s'affiche quand j'ai fini mes votes) -->
+      <section class="recap-themes" id="recap-themes" hidden>
+        <h2 class="recap-themes__title">Récap des votes</h2>
+        <div id="recap-themes-list"></div>
+      </section>
+
+    </section>
+
+    <!-- Boutons -->
+    <footer class="search-actions">
+      <div class="actions-row">
+        <button type="button" class="btn btn--primary" id="btn-replay">Crée une autre partie</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="classement.js"></script>
+</body>
+</html>

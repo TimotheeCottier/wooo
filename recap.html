@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Récap</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="recap.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+      <span class="theme-badge">
+        <strong id="theme-num">Thème 1</strong>
+        <em id="theme-total">sur 3</em>
+      </span>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title" id="theme-title">Récap</h1>
+      <p class="recap-subtitle" id="recap-subtitle">Certain(e) de tes choix ?</p>
+      <p class="recap-hint" id="recap-hint">Clique sur deux joueurs pour les échanger</p>
+    </div>
+
+    <!-- Liste des chansons + leur attribution -->
+    <section class="recap-content">
+      <ul class="recap-list" id="recap-list" aria-live="polite"></ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="search-actions">
+      <div id="actions-confirm" class="actions-row">
+        <button type="button" class="btn btn--primary" id="btn-confirm">Je confirme ces choix</button>
+      </div>
+      <div id="actions-next" class="actions-row" hidden>
+        <button type="button" class="btn btn--primary" id="btn-next">Thème suivant</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <audio id="audio-player" preload="none"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="recap.js"></script>
+</body>
+</html>

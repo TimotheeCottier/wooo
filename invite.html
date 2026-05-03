@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Invite tes proches</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="create.css" />
+  <link rel="stylesheet" href="invite.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+      <span class="step-badge">
+        <strong>Création</strong>
+        <em>2/2</em>
+      </span>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title">Invite tes proches</h1>
+    </div>
+
+    <!-- Contenu -->
+    <section class="invite-content">
+
+      <!-- Bloc 1 : pseudo -->
+      <div class="invite-field">
+        <label class="invite-field__label" for="pseudo-input">Ton prénom</label>
+        <input type="text"
+               id="pseudo-input"
+               class="invite-field__input"
+               placeholder="Comment t'appelles-tu ?"
+               maxlength="20"
+               autocomplete="given-name" />
+      </div>
+
+      <!-- Bloc 2 : avatar -->
+      <div class="invite-field">
+        <label class="invite-field__label">Choisis ton avatar</label>
+        <ul class="avatar-picker" id="avatar-picker"></ul>
+      </div>
+
+      <!-- Bloc 3 : lien à partager -->
+      <div class="invite-share">
+        <p class="invite-share__label">Partage ce lien à tes amis</p>
+        <p class="invite-share__link" id="share-link">https://...</p>
+        <button type="button" class="btn btn--primary invite-share__btn" id="btn-copy">
+          Copier le lien
+        </button>
+        <p class="invite-share__feedback" id="copy-feedback" hidden>Lien copié !</p>
+      </div>
+
+      <!-- Récap des thèmes choisis -->
+      <div class="invite-recap" id="invite-recap">
+        <p class="invite-recap__title">Tes thèmes pour cette partie</p>
+        <ul class="invite-recap__list" id="recap-list"></ul>
+      </div>
+
+    </section>
+
+    <!-- Boutons -->
+    <footer class="search-actions">
+      <div class="actions-row">
+        <button type="button" class="btn btn--secondary"
+                onclick="window.location.href='create.html'">Retour</button>
+        <button type="button" class="btn btn--primary" id="btn-start" disabled>Commencer la partie</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="invite.js"></script>
+</body>
+</html>

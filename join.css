@@ -1,0 +1,54 @@
+/* =========================================================
+   WOOO MUSIQUE — Page "Rejoindre une partie"
+   ========================================================= */
+
+.join-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-5);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Champ "code PIN" : grand, espacé, façon pin code */
+.invite-field__input--pin {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  text-align: center;
+}
+
+/* Bloc récap des thèmes (visible uniquement si la partie est trouvée) */
+.join-recap {
+  text-align: center;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-grey-light);
+  /* Animation d'entrée quand on remplit le code */
+  animation: recapIn 0.4s var(--ease-out);
+}
+
+@keyframes recapIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.join-recap__intro {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-grey);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+}
+
+.join-error {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-red);
+  padding: var(--space-3);
+  background: rgba(230, 57, 70, 0.06);
+  border-radius: var(--radius-card);
+}

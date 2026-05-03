@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Rejoins une partie</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="create.css" />
+  <link rel="stylesheet" href="invite.css" />
+  <link rel="stylesheet" href="join.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title">Rejoins une partie</h1>
+    </div>
+
+    <!-- Contenu -->
+    <section class="join-content">
+
+      <!-- Champ : code PIN -->
+      <div class="invite-field">
+        <label class="invite-field__label" for="pin-input">Le code PIN de ta partie ?</label>
+        <input type="text"
+               inputmode="numeric"
+               id="pin-input"
+               class="invite-field__input invite-field__input--pin"
+               placeholder="000000"
+               maxlength="7"
+               autocomplete="off" />
+      </div>
+
+      <!-- Champ : pseudo -->
+      <div class="invite-field">
+        <label class="invite-field__label" for="pseudo-input">Quel est ton prénom ?</label>
+        <input type="text"
+               id="pseudo-input"
+               class="invite-field__input"
+               placeholder="Ton prénom"
+               maxlength="20"
+               autocomplete="given-name" />
+      </div>
+
+      <!-- Choix de l'avatar -->
+      <div class="invite-field">
+        <label class="invite-field__label">Choisis ton avatar</label>
+        <ul class="avatar-picker" id="avatar-picker"></ul>
+      </div>
+
+      <!-- Récap des thèmes (rempli si la partie est trouvée) -->
+      <div class="join-recap" id="join-recap" hidden>
+        <p class="join-recap__intro">Tu devras choisir une chanson pour chacun de ces thèmes.</p>
+        <ul class="invite-recap__list" id="join-recap-list"></ul>
+      </div>
+
+      <!-- Message d'erreur si code invalide -->
+      <p class="join-error" id="join-error" hidden></p>
+
+    </section>
+
+    <!-- Boutons -->
+    <footer class="search-actions">
+      <div class="actions-row">
+        <button type="button" class="btn btn--secondary"
+                onclick="window.location.href='index.html'">Retour</button>
+        <button type="button" class="btn btn--primary" id="btn-go" disabled>C'est parti !</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="join.js"></script>
+</body>
+</html>

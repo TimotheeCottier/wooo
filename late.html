@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Trop tard !</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+  <link rel="stylesheet" href="classement.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+    </header>
+
+    <!-- Titre -->
+    <div class="search-heading">
+      <h1 class="search-heading__title">Tu arrives trop tard !</h1>
+      <p class="late-subtitle">La partie est déjà lancée. Voici le classement en cours :</p>
+    </div>
+
+    <!-- Contenu : classement -->
+    <section class="classement-content">
+      <ul class="classement-list" id="classement-list"></ul>
+      <p class="classement-loading" id="classement-loading">Chargement…</p>
+    </section>
+
+    <!-- Footer : 2 boutons -->
+    <footer class="search-actions">
+      <div class="actions-row">
+        <button type="button" class="btn btn--secondary" id="btn-join-other">Rejoindre une autre partie</button>
+        <button type="button" class="btn btn--primary" id="btn-create">Créer une partie</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="late.js"></script>
+</body>
+</html>

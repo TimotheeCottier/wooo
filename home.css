@@ -1,0 +1,369 @@
+/* =========================================================
+   WOOO — Homepage
+   ========================================================= */
+
+
+/* ---------- Suffixe produit (caché pour l'instant) ---------- */
+.product-tag {
+  font-family: var(--font-base);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+
+/* ---------- Hero (colonne gauche) ---------- */
+.home-hero {
+  position: relative;
+  padding: var(--space-5) 0;
+}
+
+.home-hero__title {
+  color: var(--color-text);
+  margin-bottom: var(--space-5);
+}
+
+.home-hero__lead {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  max-width: 480px;
+  margin-bottom: var(--space-5);
+}
+
+.home-hero__how {
+  /* Tertiary mais avec underline pour signifier l'action */
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: var(--fw-semibold);
+  font-size: 16px;
+}
+
+
+/* ---------- Vinyles décoratifs ---------- */
+.home-vinyls {
+  position: relative;
+  margin-top: var(--space-7);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-4);
+  height: 160px;
+}
+
+.home-vinyl {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background:
+    /* sillons noirs */
+    repeating-radial-gradient(
+      circle,
+      #1A1A1A 0,
+      #1A1A1A 1px,
+      #0F0F0F 1px,
+      #0F0F0F 3px
+    ),
+    radial-gradient(circle, #2A2A2A 0%, #0A0A0A 100%);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+  position: relative;
+  /* Animation très lente */
+  animation: vinyl-spin 14s linear infinite;
+}
+
+.home-vinyl::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--gradient-orange);
+  transform: translate(-50%, -50%);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.home-vinyl::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  transform: translate(-50%, -50%);
+}
+
+.home-vinyl--1 { animation-duration: 14s; }
+.home-vinyl--2 { animation-duration: 18s; transform: translateY(-12px); }
+.home-vinyl--2::before { background: var(--gradient-blue); }
+.home-vinyl--3 { animation-duration: 22s; }
+.home-vinyl--3::before { background: var(--pastel-3); }
+
+
+/* ---------- Actions (colonne droite) ---------- */
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+
+/* ---------- Parties en cours ---------- */
+.active-games__title {
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.active-games__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.active-game {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: transform 0.1s var(--ease-out),
+              box-shadow 0.15s var(--ease-out),
+              border-color 0.15s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.active-game:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-blue-light);
+  box-shadow: var(--shadow-card);
+}
+
+.active-game__players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.active-game__cta {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 var(--space-4);
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-base);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  box-shadow: var(--shadow-button-blue);
+  transition: filter 0.15s var(--ease-out),
+              transform 0.1s var(--ease-out);
+}
+.active-game__cta:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.active-game__cta:active { transform: translateY(2px); }
+
+
+/* ---------- Bloc nouvelle partie ---------- */
+.new-game__title {
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.new-game__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+
+/* =========================================================
+   MODALE "Comment ça marche ?"
+   ========================================================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  animation: fade-in 0.2s var(--ease-out);
+}
+
+.modal[hidden] { display: none; }
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal__panel {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-7);
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-card-lg);
+  animation: pop-in 0.4s var(--ease-bounce) both;
+}
+
+.modal__close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 28px;
+  font-weight: var(--fw-regular);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out);
+}
+.modal__close:hover { background: var(--color-border); }
+
+.modal__title {
+  text-align: center;
+  margin-bottom: var(--space-7);
+  color: var(--color-text);
+}
+
+
+/* ---------- Cartes de règles ---------- */
+.rules-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.rules-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: center;
+  align-items: center;
+}
+
+.rules-card__emoji {
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.rules-card h3 {
+  color: var(--color-text);
+  font-size: 18px;
+}
+
+.rules-card p {
+  color: var(--color-text-soft);
+  font-size: 15px;
+  line-height: 1.4;
+  max-width: 280px;
+}
+
+
+/* =========================================================
+   DESKTOP (≥ 900px) — layout 2 colonnes
+   ========================================================= */
+@media (min-width: 900px) {
+  .home-hero__title {
+    font-size: 80px;
+    line-height: 0.95;
+  }
+
+  .home-vinyls {
+    margin-top: var(--space-9);
+  }
+
+  .home-vinyl {
+    width: 180px;
+    height: 180px;
+  }
+
+  .home-vinyl::before {
+    width: 64px;
+    height: 64px;
+  }
+
+  .rules-cards {
+    flex-direction: row;
+  }
+
+  .rules-card {
+    flex: 1;
+  }
+}
+
+
+/* =========================================================
+   MOBILE — empilage vertical
+   ========================================================= */
+@media (max-width: 899px) {
+  .home-hero {
+    text-align: center;
+    padding: var(--space-4) 0;
+  }
+
+  .home-hero__title {
+    font-size: clamp(40px, 12vw, 64px);
+  }
+
+  .home-hero__lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-vinyls {
+    justify-content: center;
+    margin-top: var(--space-6);
+    height: 120px;
+  }
+
+  .home-vinyl {
+    width: 100px;
+    height: 100px;
+  }
+
+  .home-vinyl::before {
+    width: 36px;
+    height: 36px;
+  }
+
+  .home-actions {
+    margin-top: var(--space-7);
+  }
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none">
+  <defs>
+    <linearGradient id="wooo-orange" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F75900"/>
+      <stop offset="100%" stop-color="#D83501"/>
+    </linearGradient>
+  </defs>
+  <text x="120" y="58"
+        font-family="'Clash Display', system-ui, sans-serif"
+        font-size="62" font-weight="700"
+        fill="url(#wooo-orange)"
+        text-anchor="middle"
+        letter-spacing="-2"
+        font-style="italic">wooo</text>
+</svg>

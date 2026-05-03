@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="musique">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Crée une partie</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="create.css" />
+</head>
+<body>
+
+  <main class="app">
+
+    <!-- Header -->
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
+    </header>
+
+
+    <!-- ============= ÉTAPE 1 : pseudo + avatar ============= -->
+    <section class="app-main step" id="step-1">
+      <div class="create-content">
+        <h1 class="title-h1 create-title">C'est quoi ton p'tit nom&nbsp;?</h1>
+
+        <input type="text"
+               id="pseudo-input"
+               class="input"
+               placeholder="Ton prénom"
+               maxlength="20"
+               autocomplete="given-name" />
+
+        <h2 class="title-h3 create-subtitle">Choisis un avatar</h2>
+        <ul class="avatar-grid" id="avatar-picker"></ul>
+      </div>
+    </section>
+
+
+    <!-- ============= ÉTAPE 2 : choix des thèmes ============= -->
+    <section class="app-main step" id="step-2" hidden>
+      <div class="create-content">
+        <h1 class="title-h1 create-title" id="themes-title">
+          OK <span id="themes-name">toi</span>, on a choisi quelques thèmes pour toi, change les si tu veux&nbsp;!
+        </h1>
+        <p class="create-lead">Tu devras choisir une chanson pour chacun de ces thèmes.</p>
+
+        <ul class="themes-list" id="themes-list"></ul>
+
+        <button type="button" class="btn btn--tertiary themes-add" id="btn-add-theme">
+          + Créer un thème personnalisé
+        </button>
+      </div>
+    </section>
+
+
+    <!-- Footer : boutons d'action -->
+    <footer class="app-footer">
+      <div class="app-footer__row">
+        <!-- Étape 1 → bouton Continuer -->
+        <button type="button" class="btn btn--primary" id="btn-step1-continue" disabled>
+          Je continue
+        </button>
+        <!-- Étape 2 → bouton Continuer avec X thèmes -->
+        <button type="button" class="btn btn--primary" id="btn-step2-continue" hidden disabled>
+          Je continue avec <span id="theme-count">0</span> thèmes
+        </button>
+      </div>
+    </footer>
+
+  </main>
+
+
+  <!-- Modale création thème custom -->
+  <div class="modal" id="custom-theme-modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Crée ton thème</h2>
+
+      <div class="custom-theme-field">
+        <label for="custom-theme-input" class="custom-theme-label">Musique…</label>
+        <input type="text"
+               id="custom-theme-input"
+               class="input"
+               placeholder="pour jouer à Wooo"
+               maxlength="40" />
+        <p class="custom-theme-hint" id="custom-theme-hint"></p>
+      </div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn--tertiary" data-close>Annuler</button>
+        <button type="button" class="btn btn--primary" id="btn-add-custom" disabled>Je l'ajoute</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="create.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="musique">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — À toi de jouer</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="guess.css" />
+</head>
+<body>
+
+  <!-- =========== ÉCRAN COUNTDOWN (overlay 3 sec) =========== -->
+  <div class="countdown" id="countdown">
+    <img src="assets/logo.svg" alt="Wooo" class="countdown__logo" />
+    <h1 class="title-h1 countdown__title">
+      Attention mesdames<br>et messieurs,<br>ça va commencer&nbsp;!
+    </h1>
+    <div class="countdown__rings" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="countdown__number" id="countdown-number">3</div>
+  </div>
+
+
+  <!-- =========== APP PRINCIPALE =========== -->
+  <main class="app guess-app" id="guess-app" aria-hidden="true">
+
+    <!-- Header : retour + progress dots + fermer -->
+    <header class="app-header guess-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+
+      <div class="progress-dots" id="progress-dots" aria-label="Progression"></div>
+
+      <button type="button" class="icon-btn" id="btn-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+
+
+    <!-- Contenu principal : centré -->
+    <section class="app-main guess-main">
+
+      <!-- Titre du thème -->
+      <h1 class="title-h1 guess-theme" id="guess-theme">CHARGEMENT…</h1>
+
+      <!-- Bloc info chanson + boutons play/pause -->
+      <div class="track-bar" id="track-bar">
+        <div class="track-bar__info">
+          <p class="track-bar__title" id="track-title">…</p>
+          <p class="track-bar__artist" id="track-artist">…</p>
+        </div>
+        <div class="track-bar__controls">
+          <button type="button" class="btn-play" id="btn-play" aria-label="Lire">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </button>
+          <button type="button" class="btn-play btn-play--secondary" id="btn-pause" aria-label="Pause">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Vinyle (cible du drop) -->
+      <div class="vinyl-stage">
+        <div class="vinyl" id="vinyl" data-drop="true">
+          <div class="vinyl__center">
+            <img id="cover-img" src="" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Hint + tags joueurs draggables -->
+      <div class="guess-bottom">
+        <p class="guess-hint">
+          <strong>Glisse le bon joueur sur le vinyle</strong><br>
+          <span class="guess-hint__sub">Tu pourras modifier plus tard !</span>
+        </p>
+        <ul class="players-tags" id="players-tags"></ul>
+      </div>
+
+    </section>
+
+    <!-- Audio (caché) -->
+    <audio id="audio-player" preload="auto"></audio>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="guess.js"></script>
+</body>
+</html>

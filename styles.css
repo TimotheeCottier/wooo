@@ -1,0 +1,655 @@
+/* =========================================================
+   WOOO — Design tokens + composants de base
+   ---------------------------------------------------------
+   Refonte UI complète à partir du Figma "Wooo New".
+   - Typos : Clash Display (titres) + Inter (texte courant)
+   - Couleurs : dégradés orange / bleu, fond beige, pastels joueurs
+   - Layout : desktop large (≥ 900px) + mobile responsive
+   ========================================================= */
+
+
+/* ---------- Imports fonts (Clash Display via Fontshare, Inter via Google) ---------- */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+
+:root {
+  /* ---------- Couleurs principales ---------- */
+  /* Orange : primaire, logo, CTA principaux */
+  --color-orange-light: #F75900;
+  --color-orange-dark:  #D83501;
+  --gradient-orange:    linear-gradient(180deg, #F75900 0%, #D83501 100%);
+
+  /* Bleu : secondaire, CTA alternatifs, accents */
+  --color-blue-light: #5D6DFC;
+  --color-blue-dark:  #3F53FE;
+  --gradient-blue:    linear-gradient(180deg, #5D6DFC 0%, #3F53FE 100%);
+
+  /* Surfaces */
+  --color-bg:          #F5F5F5;       /* fond global beige/crème */
+  --color-surface:     #FFFFFF;       /* cartes, inputs, modales */
+  --color-surface-alt: #FBFAF7;       /* léger contraste sur le fond */
+
+  /* Textes */
+  --color-text:        #000000;       /* noir profond pour les titres */
+  --color-text-soft:   #1A1918;       /* texte secondaire / corps */
+  --color-text-muted:  #6B6968;       /* texte aide / hint */
+  --color-text-light:  #FFFFFF;       /* texte sur fond coloré */
+
+  /* Bordures */
+  --color-border:       #E5E3DF;
+  --color-border-soft:  #EFEDE8;
+  --color-border-dark:  rgba(0, 0, 0, 0.10);
+
+  /* Couleurs pastel pour les avatars + tags joueurs (cycliques)
+     Ordre : 1=rose, 2=pêche, 3=jaune, 4=menthe, 5=bleu ciel,
+     6=cyan-pâle, 7=lavande, 8=mauve, 9=rose-mauve */
+  --pastel-1:  #FFCCCC;     /* rose */
+  --pastel-2:  #FFCF97;     /* pêche */
+  --pastel-3:  #FFE895;     /* jaune */
+  --pastel-4:  #AFEBBF;     /* menthe */
+  --pastel-5:  #AFDEFF;     /* bleu ciel */
+  --pastel-6:  #BEF9EB;     /* cyan pâle */
+  --pastel-7:  #C8CAFF;     /* lavande */
+  --pastel-8:  #EDCFFF;     /* mauve */
+  --pastel-9:  #FFCEFA;     /* rose-mauve */
+
+  /* Verdict */
+  --color-success: #2EA047;
+  --color-error:   #E63946;
+  --color-warning: #F4B400;
+
+  /* Typographies */
+  --font-title:   'Clash Display', 'Inter', system-ui, sans-serif;
+  --font-base:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', monospace;
+
+  /* Tailles & poids */
+  --fz-display:   72px;     /* gros titres home */
+  --fz-h1:        40px;
+  --fz-h2:        28px;
+  --fz-h3:        20px;
+  --fz-body:      16px;
+  --fz-small:     14px;
+  --fz-tiny:      12px;
+  --fw-regular:   400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+
+  /* Espacements (échelle de 4) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  32px;
+  --space-8:  48px;
+  --space-9:  64px;
+  --space-10: 96px;
+
+  /* Border radius */
+  --radius-xs:    6px;
+  --radius-sm:    10px;
+  --radius-md:    14px;
+  --radius-lg:    20px;
+  --radius-xl:    28px;
+  --radius-pill:  9999px;
+
+  /* Ombres (effet skeuomorphique léger sur les boutons) */
+  --shadow-button-orange:
+    0 4px 0 0 #B82B00,
+    0 6px 12px rgba(216, 53, 1, 0.30);
+  --shadow-button-blue:
+    0 4px 0 0 #2D3FCC,
+    0 6px 12px rgba(63, 83, 254, 0.30);
+  --shadow-button-tertiary:
+    0 4px 0 0 #D4D2CD,
+    0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-card:    0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-card-lg: 0 16px 40px rgba(0, 0, 0, 0.10);
+
+  /* Easing */
+  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
+/* =========================================================
+   RESET & BASE
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-base);
+  font-size: var(--fz-body);
+  font-weight: var(--fw-medium);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+button { font-family: inherit; border: none; background: none; cursor: pointer; padding: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+p { margin: 0; }
+
+
+/* =========================================================
+   TYPOS UTILITAIRES
+   ========================================================= */
+
+.title-display {
+  font-family: var(--font-title);
+  font-weight: var(--fw-bold);
+  font-size: clamp(40px, 5vw, var(--fz-display));
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.title-h1 {
+  font-family: var(--font-title);
+  font-weight: var(--fw-bold);
+  font-size: clamp(28px, 3.5vw, var(--fz-h1));
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.title-h2 {
+  font-family: var(--font-title);
+  font-weight: var(--fw-bold);
+  font-size: var(--fz-h2);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.title-h3 {
+  font-family: var(--font-title);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fz-h3);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.text-body { font-size: var(--fz-body); font-weight: var(--fw-regular); color: var(--color-text-soft); }
+.text-small { font-size: var(--fz-small); color: var(--color-text-muted); }
+.text-tiny  { font-size: var(--fz-tiny);  color: var(--color-text-muted); }
+
+
+/* =========================================================
+   BOUTONS (3 variantes : primary orange, secondary blue, tertiary)
+   ========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 56px;
+  padding: 0 var(--space-6);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-base);
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: transform 0.1s var(--ease-out),
+              box-shadow 0.15s var(--ease-out),
+              filter 0.15s var(--ease-out),
+              opacity 0.15s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary : dégradé orange + ombre relief */
+.btn--primary {
+  background: var(--gradient-orange);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-button-orange);
+}
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+.btn--primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #B82B00, 0 3px 6px rgba(216, 53, 1, 0.30);
+}
+
+/* Secondary : dégradé bleu + ombre relief */
+.btn--secondary {
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-button-blue);
+}
+.btn--secondary:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+.btn--secondary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 0 #2D3FCC, 0 3px 6px rgba(63, 83, 254, 0.30);
+}
+
+/* Tertiary : transparent / sobre, pour les liens d'action */
+.btn--tertiary {
+  background: transparent;
+  color: var(--color-text);
+  height: auto;
+  padding: var(--space-2) var(--space-3);
+  font-weight: var(--fw-medium);
+  box-shadow: none;
+}
+.btn--tertiary:hover:not(:disabled) {
+  color: var(--color-orange-light);
+}
+
+/* Désactivé */
+.btn:disabled,
+.btn[disabled] {
+  background: #D4D2CD !important;
+  color: #8B8985 !important;
+  cursor: not-allowed;
+  box-shadow: var(--shadow-button-tertiary) !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-blue-light);
+  outline-offset: 3px;
+}
+
+/* Tailles spéciales */
+.btn--full { width: 100%; }
+.btn--small { height: 40px; padding: 0 var(--space-4); font-size: 14px; }
+.btn--icon-only { width: 56px; padding: 0; }
+
+
+/* =========================================================
+   ICÔNES BOUTONS (en-tête : retour / fermer / home)
+   ========================================================= */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-blue-dark);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: transform 0.1s var(--ease-out),
+              background 0.15s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn:hover { background: var(--color-bg); transform: translateY(-1px); }
+.icon-btn:active { transform: translateY(1px); }
+.icon-btn svg { width: 20px; height: 20px; }
+
+
+/* =========================================================
+   INPUTS (texte)
+   ========================================================= */
+
+.input {
+  width: 100%;
+  height: 56px;
+  padding: 0 var(--space-5);
+  background: var(--color-surface);
+  border: 2px solid var(--color-orange-light);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-base);
+  font-size: 16px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.15s var(--ease-out),
+              box-shadow 0.15s var(--ease-out);
+  -webkit-appearance: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+  font-weight: var(--fw-regular);
+}
+
+.input:focus {
+  border-color: var(--color-orange-dark);
+  box-shadow: 0 0 0 4px rgba(247, 89, 0, 0.15);
+}
+
+.input--with-button {
+  /* Quand on a un bouton à droite (loupe etc.) */
+  padding-right: 64px;
+}
+
+
+/* =========================================================
+   TAGS JOUEURS (pastilles colorées avec avatar)
+   ========================================================= */
+
+.player-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-1);
+  background: var(--pastel-1);    /* surchargé via --tag-color en JS */
+  border-radius: var(--radius-pill);
+  font-family: var(--font-base);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.player-tag__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-surface);
+  flex-shrink: 0;
+}
+.player-tag__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-tag--no-avatar {
+  padding: var(--space-1) var(--space-4);
+}
+
+/* Tag pour le joueur courant */
+.player-tag--me::after {
+  content: 'TOI';
+  display: inline-block;
+  background: var(--color-text);
+  color: var(--color-text-light);
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.1em;
+  margin-left: var(--space-1);
+}
+
+
+/* =========================================================
+   CARTES (cartes blanches avec ombre)
+   ========================================================= */
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-soft);
+}
+
+.card--lg {
+  padding: var(--space-7);
+  border-radius: var(--radius-xl);
+}
+
+
+/* =========================================================
+   CHECKBOX / RADIO (style boîte avec coche bleue)
+   ========================================================= */
+
+.themed-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease-out),
+              background 0.15s var(--ease-out);
+  font-family: var(--font-base);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.themed-check:hover {
+  border-color: var(--color-blue-light);
+}
+
+.themed-check.is-checked {
+  border-color: var(--color-blue-dark);
+  background: rgba(93, 109, 252, 0.04);
+}
+
+.themed-check__box {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s var(--ease-out),
+              border-color 0.15s var(--ease-out);
+}
+
+.themed-check.is-checked .themed-check__box {
+  background: var(--gradient-blue);
+  border-color: var(--color-blue-dark);
+}
+
+.themed-check__box svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-light);
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+}
+
+.themed-check.is-checked .themed-check__box svg {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   LAYOUT — App container responsive
+   ========================================================= */
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+/* Header : logo + actions */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  flex-shrink: 0;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.app-header__logo {
+  height: 32px;
+  width: auto;
+}
+
+/* Conteneur central */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-6);
+  min-height: 0;
+}
+
+/* Footer sticky en bas (boutons d'action) */
+.app-footer {
+  flex-shrink: 0;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  background: var(--color-bg);
+  /* Sécurité iPhone notch */
+  padding-bottom: max(var(--space-5), env(safe-area-inset-bottom));
+}
+
+.app-footer__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   DESKTOP LARGE : ≥ 900px
+   Layout adapté plein-écran (option C demandée)
+   ========================================================= */
+
+@media (min-width: 900px) {
+  .app {
+    /* On garde un fond uniforme et on centre les écrans */
+    min-height: 100vh;
+  }
+
+  .app-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: var(--space-7) var(--space-8);
+  }
+
+  .app-header__logo {
+    height: 44px;
+  }
+
+  .app-main {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-8);
+  }
+
+  .app-footer {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-8);
+  }
+
+  /* Grille 2 colonnes (utilisée pour la home, lobby, etc.) */
+  .layout-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-9);
+    align-items: center;
+    width: 100%;
+  }
+
+  .layout-split--3-2 {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+
+/* =========================================================
+   ANIMATIONS RÉUTILISABLES
+   ========================================================= */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vinyl-spin {
+  to { transform: rotate(360deg); }
+}
+
+.anim-fade-in { animation: fade-in 0.3s var(--ease-out) both; }
+.anim-slide-up { animation: slide-up 0.4s var(--ease-out) both; }
+.anim-pop-in { animation: pop-in 0.4s var(--ease-bounce) both; }
+
+
+/* =========================================================
+   UTILITAIRES
+   ========================================================= */
+
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.text-center { text-align: center; }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-5 { gap: var(--space-5); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-5 { margin-top: var(--space-5); }
+.mt-6 { margin-top: var(--space-6); }
+.mt-7 { margin-top: var(--space-7); }
+.full-width { width: 100%; }
+.hidden { display: none !important; }

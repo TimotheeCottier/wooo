@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="musique">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Devine ce qu'écoutent tes potes</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+  <main class="app">
+
+    <!-- Header : logo seul -->
+    <header class="app-header">
+      <div class="app-header__brand">
+        <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      </div>
+      <!-- Suffixe produit (caché aujourd'hui, visible quand on aura plusieurs produits) -->
+      <span class="product-tag" id="product-tag" hidden>Musique</span>
+    </header>
+
+    <!-- Contenu : 2 colonnes en desktop, empilé en mobile -->
+    <section class="app-main">
+      <div class="layout-split">
+
+        <!-- Colonne gauche : titre + illustration -->
+        <div class="home-hero">
+          <h1 class="title-display home-hero__title">
+            Devine&nbsp;ce<br />qu'écoutent<br />tes&nbsp;potes&nbsp;!
+          </h1>
+          <p class="home-hero__lead">
+            Le jeu musical à jouer entre amis. Choisis tes chansons, devine celles des autres, marque des points.
+          </p>
+          <button type="button" class="btn btn--tertiary home-hero__how" id="btn-how">
+            Comment jouer ?
+          </button>
+
+          <!-- Illustration vinyles décoratifs -->
+          <div class="home-vinyls" aria-hidden="true">
+            <div class="home-vinyl home-vinyl--1"></div>
+            <div class="home-vinyl home-vinyl--2"></div>
+            <div class="home-vinyl home-vinyl--3"></div>
+          </div>
+        </div>
+
+        <!-- Colonne droite : parties en cours + actions -->
+        <div class="home-actions">
+
+          <!-- Parties en cours (visible uniquement s'il y en a) -->
+          <div class="active-games" id="active-games" hidden>
+            <h2 class="title-h3 active-games__title">Tes parties en cours</h2>
+            <ul class="active-games__list" id="active-games-list" aria-live="polite"></ul>
+          </div>
+
+          <!-- Bloc nouvelle partie -->
+          <div class="new-game">
+            <h2 class="title-h3 new-game__title" id="new-game-title">Nouvelle partie</h2>
+            <div class="new-game__buttons">
+              <button type="button" class="btn btn--primary btn--full" id="btn-create">
+                Je crée une partie
+              </button>
+              <button type="button" class="btn btn--secondary btn--full" id="btn-join">
+                Je rejoins une partie
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modale "Comment jouer ?" — option simple, 3 cartes -->
+  <div class="modal" id="how-modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Comment ça marche ?</h2>
+
+      <div class="rules-cards">
+        <div class="rules-card">
+          <div class="rules-card__emoji">🎯</div>
+          <h3 class="title-h3">+1 par bonne réponse</h3>
+          <p>Devine quel pote a choisi quelle musique pour gagner un point.</p>
+        </div>
+        <div class="rules-card">
+          <div class="rules-card__emoji">🔥</div>
+          <h3 class="title-h3">+2 si sans-faute</h3>
+          <p>Toutes les bonnes réponses sur un thème ? Tu décroches le bonus.</p>
+        </div>
+        <div class="rules-card">
+          <div class="rules-card__emoji">🤝</div>
+          <h3 class="title-h3">Doublons OK</h3>
+          <p>Si deux potes ont choisi la même chanson, voter l'un OU l'autre = bonne réponse.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

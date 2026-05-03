@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#E63946" />
+  <title>Wooo Musique — Choisis ta musique</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="search.css" />
+</head>
+<body>
+
+  <main class="search-app">
+
+    <!-- Header : logo + badge "Thème 1 sur 3" -->
+    <header class="search-topbar">
+      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
+        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
+      </a>
+      <span class="theme-badge">
+        <strong>Thème 1</strong>
+        <em>sur 3</em>
+      </span>
+    </header>
+
+    <!-- Bandeau "mode démo" si l'API n'est pas joignable -->
+    <div id="demo-banner" class="demo-banner" hidden>
+      <strong>Mode démo</strong>
+      <span>L'API de musique sera branchée à l'étape suivante (Supabase). Pour l'instant, voici un échantillon de morceaux.</span>
+    </div>
+
+    <!-- Titre du thème courant -->
+    <div class="search-heading">
+      <p class="search-heading__intro">Choisis ta</p>
+      <h1 class="search-heading__title" id="theme-title">Musique préférée</h1>
+    </div>
+
+    <!-- Contenu principal : étape A (recherche) ou B (confirmation) -->
+    <section class="search-content">
+
+      <!-- ÉTAPE A : recherche + résultats -->
+      <div id="step-search" class="step">
+        <div class="search-bar">
+          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/>
+            <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="search-input" class="search-bar__input"
+                 placeholder="Artistes ou titres" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div class="search-state">
+          <p id="state-idle" class="search-state__hint">Tes recherches s'afficheront ici</p>
+          <p id="state-empty" class="search-state__hint" hidden>Aucun résultat. Essaie un autre nom.</p>
+          <p id="state-error" class="search-state__error" hidden>Oups, la recherche n'a pas fonctionné.</p>
+        </div>
+
+        <ul id="results" class="results" aria-live="polite"></ul>
+
+        <!-- Lien "Charger plus" : visible uniquement quand on a des résultats à charger -->
+        <button type="button" id="load-more" class="load-more" hidden>
+          Charger plus
+        </button>
+      </div>
+
+      <!-- ÉTAPE B : confirmation -->
+      <div id="step-confirm" class="step" hidden>
+        <p class="confirm-question">Tu valides ton choix ?</p>
+        <div class="confirm-card">
+          <div class="confirm-card__cover">
+            <img id="confirm-cover" src="" alt="" />
+            <button type="button" id="confirm-play" class="play-btn play-btn--large" aria-label="Écouter">
+              <svg class="play-btn__icon play-btn__icon--play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+              <svg class="play-btn__icon play-btn__icon--pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+            </button>
+          </div>
+          <p class="confirm-card__title" id="confirm-title">—</p>
+          <p class="confirm-card__artist" id="confirm-artist">—</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Boutons d'action -->
+    <footer class="search-actions">
+      <div id="actions-search" class="actions-row">
+        <button type="button" class="btn btn--secondary"
+                onclick="window.location.href='create.html'">Retour</button>
+      </div>
+      <div id="actions-confirm" class="actions-row" hidden>
+        <button type="button" class="btn btn--secondary" id="btn-back-to-search">Retour</button>
+        <button type="button" class="btn btn--primary" id="btn-next-theme">Passer au tour suivant</button>
+      </div>
+    </footer>
+
+  </main>
+
+  <audio id="audio-player" preload="none"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="search.js"></script>
+</body>
+</html>
