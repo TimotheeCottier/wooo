@@ -1,88 +1,84 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-product="musique">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#E63946" />
-  <title>Wooo Musique — Invite tes proches</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Ta partie est créée</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="search.css" />
-  <link rel="stylesheet" href="create.css" />
   <link rel="stylesheet" href="invite.css" />
 </head>
 <body>
 
-  <main class="search-app">
+  <main class="app">
 
     <!-- Header -->
-    <header class="search-topbar">
-      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
-        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
-      </a>
-      <span class="step-badge">
-        <strong>Création</strong>
-        <em>2/2</em>
-      </span>
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
     </header>
 
-    <!-- Titre -->
-    <div class="search-heading">
-      <h1 class="search-heading__title">Invite tes proches</h1>
-    </div>
+    <!-- Contenu : avatar + nom + titre + PIN + boutons -->
+    <section class="app-main invite-main">
 
-    <!-- Contenu -->
-    <section class="invite-content">
-
-      <!-- Bloc 1 : pseudo -->
-      <div class="invite-field">
-        <label class="invite-field__label" for="pseudo-input">Ton prénom</label>
-        <input type="text"
-               id="pseudo-input"
-               class="invite-field__input"
-               placeholder="Comment t'appelles-tu ?"
-               maxlength="20"
-               autocomplete="given-name" />
+      <!-- Avatar du créateur en grand avec badge "couronne" -->
+      <div class="invite-avatar" id="invite-avatar">
+        <img id="avatar-img" src="" alt="" />
+        <span class="invite-avatar__badge">👑</span>
       </div>
 
-      <!-- Bloc 2 : avatar -->
-      <div class="invite-field">
-        <label class="invite-field__label">Choisis ton avatar</label>
-        <ul class="avatar-picker" id="avatar-picker"></ul>
-      </div>
+      <!-- Pseudo -->
+      <p class="invite-pseudo" id="invite-pseudo"></p>
 
-      <!-- Bloc 3 : lien à partager -->
-      <div class="invite-share">
-        <p class="invite-share__label">Partage ce lien à tes amis</p>
-        <p class="invite-share__link" id="share-link">https://...</p>
-        <button type="button" class="btn btn--primary invite-share__btn" id="btn-copy">
-          Copier le lien
+      <h1 class="title-display invite-title">
+        Ta partie<br>est créée&nbsp;!
+      </h1>
+      <p class="invite-lead">
+        Invite tes potes à jouer avec toi<br>et commence la partie&nbsp;!
+      </p>
+
+      <!-- PIN gros et bleu + bouton copier -->
+      <div class="pin-block">
+        <span class="pin-block__code" id="pin-code">000000</span>
+        <button type="button" class="pin-block__copy" id="btn-copy" aria-label="Copier le code PIN">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
         </button>
-        <p class="invite-share__feedback" id="copy-feedback" hidden>Lien copié !</p>
       </div>
 
-      <!-- Récap des thèmes choisis -->
-      <div class="invite-recap" id="invite-recap">
-        <p class="invite-recap__title">Tes thèmes pour cette partie</p>
-        <ul class="invite-recap__list" id="recap-list"></ul>
+      <!-- Boutons d'action -->
+      <div class="invite-buttons">
+        <button type="button" class="btn btn--secondary btn--full" id="btn-share">
+          Je partage le lien
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px;">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+        </button>
+        <button type="button" class="btn btn--primary btn--full" id="btn-go">
+          Je choisis mes chansons
+        </button>
       </div>
+
+      <p class="invite-hint">
+        Tu peux aussi commencer à jouer<br>tout de suite et les inviter plus tard.
+      </p>
 
     </section>
 
-    <!-- Boutons -->
-    <footer class="search-actions">
-      <div class="actions-row">
-        <button type="button" class="btn btn--secondary"
-                onclick="window.location.href='create.html'">Retour</button>
-        <button type="button" class="btn btn--primary" id="btn-start" disabled>Commencer la partie</button>
-      </div>
-    </footer>
-
   </main>
+
+  <!-- Toast de confirmation copie -->
+  <div class="toast" id="toast" hidden>
+    <span id="toast-text">Copié !</span>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>

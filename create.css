@@ -160,8 +160,12 @@
     gap: var(--space-7);
   }
 
+  /* Sur desktop, on garde 4 colonnes (donc 4×2) pour avoir des avatars plus gros */
   .avatar-grid {
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    max-width: 520px;
+    margin: 0 auto;
   }
 }
 

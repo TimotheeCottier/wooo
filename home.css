@@ -42,70 +42,30 @@
 }
 
 
-/* ---------- Vinyles décoratifs ---------- */
+/* ---------- Vinyles décoratifs (images PNG fournies) ---------- */
 .home-vinyls {
   position: relative;
   margin-top: var(--space-7);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
-  gap: var(--space-4);
-  height: 160px;
+  gap: var(--space-3);
+  height: 200px;
 }
 
 .home-vinyl {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background:
-    /* sillons noirs */
-    repeating-radial-gradient(
-      circle,
-      #1A1A1A 0,
-      #1A1A1A 1px,
-      #0F0F0F 1px,
-      #0F0F0F 3px
-    ),
-    radial-gradient(circle, #2A2A2A 0%, #0A0A0A 100%);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
   flex-shrink: 0;
-  position: relative;
-  /* Animation très lente */
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.20));
+  /* Animation rotation très lente */
   animation: vinyl-spin 14s linear infinite;
 }
 
-.home-vinyl::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--gradient-orange);
-  transform: translate(-50%, -50%);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
-}
-
-.home-vinyl::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-bg);
-  transform: translate(-50%, -50%);
-}
-
 .home-vinyl--1 { animation-duration: 14s; }
-.home-vinyl--2 { animation-duration: 18s; transform: translateY(-12px); }
-.home-vinyl--2::before { background: var(--gradient-blue); }
-.home-vinyl--3 { animation-duration: 22s; }
-.home-vinyl--3::before { background: var(--pastel-3); }
+.home-vinyl--2 { animation-duration: 18s; transform: translateY(-12px); margin-left: -32px; }
+.home-vinyl--3 { animation-duration: 22s; margin-left: -32px; }
 
 
 /* ---------- Actions (colonne droite) ---------- */
@@ -307,16 +267,12 @@
 
   .home-vinyls {
     margin-top: var(--space-9);
+    height: 240px;
   }
 
   .home-vinyl {
-    width: 180px;
-    height: 180px;
-  }
-
-  .home-vinyl::before {
-    width: 64px;
-    height: 64px;
+    width: 200px;
+    height: 200px;
   }
 
   .rules-cards {
@@ -350,17 +306,12 @@
   .home-vinyls {
     justify-content: center;
     margin-top: var(--space-6);
-    height: 120px;
+    height: 140px;
   }
 
   .home-vinyl {
-    width: 100px;
-    height: 100px;
-  }
-
-  .home-vinyl::before {
-    width: 36px;
-    height: 36px;
+    width: 120px;
+    height: 120px;
   }
 
   .home-actions {

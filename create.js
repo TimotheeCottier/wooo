@@ -29,16 +29,16 @@
 
   // ÉTAPE 2
   const themesTitle     = $('themes-title');
-  const themesName      = $('themes-name');
+  const themesNameWrap  = $('themes-name-wrap');
   const themesList      = $('themes-list');
   const btnAddTheme     = $('btn-add-theme');
   const themeCount      = $('theme-count');
 
-  // MODALE CUSTOM THEME
-  const customModal     = $('custom-theme-modal');
+  // ÉTAPE 3 (création thème custom pleine page)
+  const step3           = $('step-3');
+  const btnStep3Add     = $('btn-step3-add');
   const customInput     = $('custom-theme-input');
   const customHint      = $('custom-theme-hint');
-  const btnAddCustom    = $('btn-add-custom');
 
 
   // ======= CATALOGUE DE THÈMES (pré-cochés ou disponibles) =======
@@ -112,8 +112,14 @@
     const pseudo = pseudoInput.value.trim();
     if (pseudo.length < 2) return;
 
-    // Mise à jour du titre avec le prénom
-    themesName.textContent = pseudo;
+    // Mise à jour du titre :
+    // - Si pseudo : "OK [Tim], on a choisi..."
+    // - Sinon : "OK, on a choisi..."
+    if (pseudo) {
+      themesNameWrap.textContent = ' ' + pseudo;
+    } else {
+      themesNameWrap.textContent = '';
+    }
 
     // Initialise les thèmes cochés (6 premiers)
     themes = THEME_CATALOG.map((name, i) => ({
@@ -132,17 +138,23 @@
 
 
   // ======= RENDU DES THÈMES =======
+  // On n'affiche QUE les thèmes cochés. Décocher un thème le retire de la liste.
+  // Pour en ajouter d'autres, le joueur clique sur "Créer un thème personnalisé".
   function renderThemes() {
-    themesList.innerHTML = themes.map((t, i) => `
-      <li>
-        <button type="button" class="themed-check ${t.checked ? 'is-checked' : ''}" data-idx="${i}">
-          <span class="themed-check__label">${escapeHtml(t.name)}</span>
-          <span class="themed-check__box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
-          </span>
-        </button>
-      </li>
-    `).join('');
+    const visible = themes.filter(t => t.checked);
+    themesList.innerHTML = visible.map(t => {
+      const idx = themes.indexOf(t);
+      return `
+        <li>
+          <button type="button" class="themed-check is-checked" data-idx="${idx}">
+            <span class="themed-check__label">${escapeHtml(t.name)}</span>
+            <span class="themed-check__box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            </span>
+          </button>
+        </li>
+      `;
+    }).join('');
 
     updateThemeCount();
   }
@@ -151,9 +163,9 @@
     const btn = e.target.closest('.themed-check');
     if (!btn) return;
     const idx = parseInt(btn.dataset.idx, 10);
-    themes[idx].checked = !themes[idx].checked;
-    btn.classList.toggle('is-checked', themes[idx].checked);
-    updateThemeCount();
+    // Décocher = retirer de la liste
+    themes[idx].checked = false;
+    renderThemes();
   });
 
 
@@ -164,13 +176,17 @@
   }
 
 
-  // ======= MODALE CUSTOM THÈME =======
+  // ======= ÉTAPE 3 : création thème custom pleine page =======
   btnAddTheme.addEventListener('click', () => {
     customInput.value = '';
-    customHint.textContent = '';
-    btnAddCustom.disabled = true;
-    customModal.hidden = false;
-    document.body.style.overflow = 'hidden';
+    customHint.textContent = '0 / 40';
+    btnStep3Add.disabled = true;
+
+    step2.hidden = true;
+    step3.hidden = false;
+    btnStep2Next.hidden = true;
+    btnStep3Add.hidden = false;
+
     setTimeout(() => customInput.focus(), 100);
   });
 
@@ -178,41 +194,31 @@
     const val = customInput.value.trim();
     const len = val.length;
     customHint.textContent = `${len} / 40`;
-    btnAddCustom.disabled = (len < 2 || len > 40);
+    btnStep3Add.disabled = (len < 2 || len > 40);
   });
 
   customInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !btnAddCustom.disabled) {
+    if (e.key === 'Enter' && !btnStep3Add.disabled) {
       e.preventDefault();
       addCustomTheme();
     }
   });
 
-  btnAddCustom.addEventListener('click', addCustomTheme);
+  btnStep3Add.addEventListener('click', addCustomTheme);
 
   function addCustomTheme() {
     const val = customInput.value.trim();
     if (val.length < 2 || val.length > 40) return;
     // On ajoute en tête, coché
     themes.unshift({ name: val, custom: true, checked: true });
+
+    // Retour à l'étape 2 avec rendu mis à jour
     renderThemes();
-    closeCustomModal();
+    step3.hidden = true;
+    step2.hidden = false;
+    btnStep3Add.hidden = true;
+    btnStep2Next.hidden = false;
   }
-
-  function closeCustomModal() {
-    customModal.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  customModal.addEventListener('click', (e) => {
-    if (e.target.dataset.close !== undefined || e.target.closest('[data-close]')) {
-      closeCustomModal();
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !customModal.hidden) closeCustomModal();
-  });
 
 
   // ======= VALIDATION FINALE — création de la partie =======
@@ -256,7 +262,13 @@
 
   // ======= BOUTON RETOUR =======
   btnBack.addEventListener('click', () => {
-    if (!step2.hidden) {
+    if (!step3.hidden) {
+      // Étape 3 → retour étape 2 (sans ajouter le thème)
+      step3.hidden = true;
+      step2.hidden = false;
+      btnStep3Add.hidden = true;
+      btnStep2Next.hidden = false;
+    } else if (!step2.hidden) {
       // Retour étape 1
       step2.hidden = true;
       step1.hidden = false;

@@ -45,7 +45,7 @@
     <section class="app-main step" id="step-2" hidden>
       <div class="create-content">
         <h1 class="title-h1 create-title" id="themes-title">
-          OK <span id="themes-name">toi</span>, on a choisi quelques thèmes pour toi, change les si tu veux&nbsp;!
+          OK<span id="themes-name-wrap"></span>, on a choisi quelques thèmes pour toi, change les si tu veux&nbsp;!
         </h1>
         <p class="create-lead">Tu devras choisir une chanson pour chacun de ces thèmes.</p>
 
@@ -54,6 +54,25 @@
         <button type="button" class="btn btn--tertiary themes-add" id="btn-add-theme">
           + Créer un thème personnalisé
         </button>
+      </div>
+    </section>
+
+
+    <!-- ============= ÉTAPE 3 : création d'un thème custom (pleine page) ============= -->
+    <section class="app-main step" id="step-3" hidden>
+      <div class="create-content">
+        <h1 class="title-h1 create-title">Crée ton thème</h1>
+        <p class="create-lead">Imagine un thème original pour faire deviner tes potes !</p>
+
+        <div class="custom-theme-field">
+          <label for="custom-theme-input" class="custom-theme-label">Musique…</label>
+          <input type="text"
+                 id="custom-theme-input"
+                 class="input"
+                 placeholder="pour jouer à Wooo"
+                 maxlength="40" />
+          <p class="custom-theme-hint" id="custom-theme-hint">0 / 40</p>
+        </div>
       </div>
     </section>
 
@@ -69,35 +88,14 @@
         <button type="button" class="btn btn--primary" id="btn-step2-continue" hidden disabled>
           Je continue avec <span id="theme-count">0</span> thèmes
         </button>
+        <!-- Étape 3 → bouton Ajouter le thème -->
+        <button type="button" class="btn btn--primary" id="btn-step3-add" hidden disabled>
+          Je l'ajoute
+        </button>
       </div>
     </footer>
 
   </main>
-
-
-  <!-- Modale création thème custom -->
-  <div class="modal" id="custom-theme-modal" hidden>
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true">
-      <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
-      <h2 class="title-h2 modal__title">Crée ton thème</h2>
-
-      <div class="custom-theme-field">
-        <label for="custom-theme-input" class="custom-theme-label">Musique…</label>
-        <input type="text"
-               id="custom-theme-input"
-               class="input"
-               placeholder="pour jouer à Wooo"
-               maxlength="40" />
-        <p class="custom-theme-hint" id="custom-theme-hint"></p>
-      </div>
-
-      <div class="modal__actions">
-        <button type="button" class="btn btn--tertiary" data-close>Annuler</button>
-        <button type="button" class="btn btn--primary" id="btn-add-custom" disabled>Je l'ajoute</button>
-      </div>
-    </div>
-  </div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

@@ -1,212 +1,170 @@
 /* =========================================================
-   WOOO MUSIQUE — Page invitation
+   WOOO — Page "Ta partie est créée !"
    ========================================================= */
 
-
-/* ---------- Contenu principal scrollable ---------- */
-.invite-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-5);
-  min-height: 0;
-  overflow-y: auto;
-}
-
-
-/* ---------- Champs (pseudo, avatar) ---------- */
-.invite-field {
-  display: flex;
-  flex-direction: column;
+.invite-main {
   align-items: center;
   text-align: center;
-}
-
-.invite-field__label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-navy);
-  margin-bottom: var(--space-3);
-}
-
-.invite-field__input {
+  max-width: 520px;
+  margin: 0 auto;
   width: 100%;
-  max-width: 320px;
-  height: 56px;
-  background: var(--color-white);
-  border: 2px solid var(--color-grey-light);
-  border-radius: var(--radius-pill);
-  font-family: var(--font-base);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--color-red);
-  text-align: center;
-  padding: 0 var(--space-4);
-  outline: none;
-  -webkit-appearance: none;
-  transition: border-color 0.2s var(--ease-out),
-              box-shadow 0.2s var(--ease-out);
-}
-
-.invite-field__input::placeholder {
-  color: var(--color-grey);
-  font-weight: 400;
-}
-
-.invite-field__input:focus {
-  border-color: var(--color-red);
-  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.10);
+  padding-top: var(--space-3);
 }
 
 
-/* ---------- Sélecteur d'avatar : grille 4×2 (8 avatars) ---------- */
-.avatar-picker {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  max-width: 320px;
-  /* Centrage horizontal */
-  justify-self: center;
+/* ---------- Avatar du créateur ---------- */
+.invite-avatar {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  overflow: visible;
+  background: var(--color-surface);
+  margin-bottom: var(--space-4);
 }
 
-.avatar-option {
-  /* Carré responsive */
-  aspect-ratio: 1 / 1;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 3px solid transparent;
-  transition: transform 0.15s var(--ease-out),
-              border-color 0.15s var(--ease-out);
-  background: var(--color-grey-light);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.avatar-option img {
+.invite-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  pointer-events: none;
+  border-radius: 24px;
 }
 
-.avatar-option:hover {
-  transform: translateY(-2px);
+.invite-avatar__badge {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.avatar-option.is-selected {
-  border-color: var(--color-red);
-  transform: scale(1.05);
-  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.30);
+
+/* ---------- Pseudo ---------- */
+.invite-pseudo {
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
 }
 
 
-/* ---------- Bloc lien à partager ---------- */
-.invite-share {
-  text-align: center;
-  padding: var(--space-5) var(--space-4);
-  background: var(--color-white);
-  border: 1.5px solid var(--color-grey-light);
-  border-radius: var(--radius-card);
+/* ---------- Titre + lead ---------- */
+.invite-title {
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+  font-size: clamp(40px, 7vw, 56px);
+  line-height: 1;
+}
+
+.invite-lead {
+  font-size: 16px;
+  color: var(--color-text-soft);
+  margin-bottom: var(--space-7);
+  line-height: 1.4;
+}
+
+
+/* ---------- Bloc PIN (gros bleu + bouton copier) ---------- */
+.pin-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-7);
+  margin-bottom: var(--space-7);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border-soft);
+}
+
+.pin-block__code {
+  font-family: var(--font-title);
+  font-size: clamp(40px, 8vw, 64px);
+  font-weight: var(--fw-bold);
+  font-style: italic;
+  background: var(--gradient-blue);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.pin-block__copy {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s var(--ease-out);
+  flex-shrink: 0;
+}
+.pin-block__copy:hover { background: var(--color-border); }
+.pin-block__copy svg { width: 20px; height: 20px; }
+
+
+/* ---------- Boutons d'action ---------- */
+.invite-buttons {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-3);
-}
-
-/* Le label "Partage ce lien…" reprend le style des titres
-   (rouge, majuscules, comme "Invite tes proches" / "Choisis tes thèmes") */
-.invite-share__label {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--color-red);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  margin: 0;
-}
-
-.invite-share__link {
-  font-family: var(--font-base);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-red);
-  word-break: break-all;
-  margin: 0;
-  padding: var(--space-3) var(--space-4);
-  background: rgba(230, 57, 70, 0.06);
-  border-radius: 12px;
   width: 100%;
-  /* Animation discrète à l'apparition */
-  animation: linkIn 0.4s var(--ease-out);
-}
-
-@keyframes linkIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.invite-share__btn {
-  /* Bouton centré horizontalement */
-  flex: 0 0 auto;
-  min-width: 200px;
-  height: 48px;
-  font-size: 14px;
-  /* Le centrage vient déjà du align-items du parent */
-}
-
-.invite-share__feedback {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: #2EA047;
-  letter-spacing: 0.05em;
-  animation: feedbackIn 0.3s var(--ease-out);
-}
-
-@keyframes feedbackIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  margin-bottom: var(--space-5);
 }
 
 
-/* ---------- Récap des thèmes : gris (contour + texte) ---------- */
-.invite-recap {
-  text-align: center;
+/* ---------- Hint ---------- */
+.invite-hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
-.invite-recap__title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-grey);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-3);
-}
 
-.invite-recap__list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.invite-recap__item {
-  background: transparent;
-  color: var(--color-grey);
-  border: 1.5px solid var(--color-grey-light);
-  padding: var(--space-2) var(--space-3);
+/* ---------- Toast de copie ---------- */
+.toast {
+  position: fixed;
+  bottom: var(--space-7);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: var(--color-text-light);
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  cursor: default;
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+  z-index: 200;
+  animation: pop-in 0.3s var(--ease-bounce) both;
+}
+.toast[hidden] { display: none; }
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 900px) {
+  .invite-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .invite-title {
+    font-size: 64px;
+  }
 }
