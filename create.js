@@ -106,12 +106,13 @@
     if (pseudo.length < 2) return;
 
     // Mise à jour du titre :
-    // - Si pseudo : "OK [Tim], on a choisi..."
+    // - Si pseudo : "OK Tim, on a choisi..."
     // - Sinon : "OK, on a choisi..."
+    // On reconstruit tout le innerHTML pour éviter tout souci de span manquant
     if (pseudo) {
-      themesNameWrap.textContent = ' ' + pseudo;
+      themesTitle.textContent = `OK ${pseudo}, on a choisi quelques thèmes pour toi, change les si tu veux !`;
     } else {
-      themesNameWrap.textContent = '';
+      themesTitle.textContent = `OK, on a choisi quelques thèmes pour toi, change les si tu veux !`;
     }
 
     // Initialise les thèmes : tous présents, 3 cochés au hasard
@@ -144,15 +145,14 @@
 
 
   // ======= RENDU DES THÈMES =======
-  // On n'affiche QUE les thèmes cochés. Décocher un thème le retire de la liste.
-  // Pour en ajouter d'autres, le joueur clique sur "Créer un thème personnalisé".
+  // On affiche TOUS les thèmes (catalogue + customs ajoutés).
+  // L'utilisateur peut cocher/décocher librement. Min 3, max 6 cochés.
   function renderThemes() {
-    const visible = themes.filter(t => t.checked);
-    themesList.innerHTML = visible.map(t => {
-      const idx = themes.indexOf(t);
+    themesList.innerHTML = themes.map((t, idx) => {
+      const checkedClass = t.checked ? 'is-checked' : '';
       return `
         <li>
-          <button type="button" class="themed-check is-checked" data-idx="${idx}">
+          <button type="button" class="themed-check ${checkedClass}" data-idx="${idx}">
             <span class="themed-check__label">${escapeHtml(t.name)}</span>
             <span class="themed-check__box">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
@@ -169,9 +169,23 @@
     const btn = e.target.closest('.themed-check');
     if (!btn) return;
     const idx = parseInt(btn.dataset.idx, 10);
-    // Décocher = retirer de la liste
-    themes[idx].checked = false;
-    renderThemes();
+    // Toggle simple
+    const willCheck = !themes[idx].checked;
+    // Si on essaie de cocher mais qu'on a déjà 6 cochés → bloque
+    if (willCheck) {
+      const checkedCount = themes.filter(t => t.checked).length;
+      if (checkedCount >= 6) {
+        // Petite animation de refus
+        btn.animate(
+          [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }],
+          { duration: 200 }
+        );
+        return;
+      }
+    }
+    themes[idx].checked = willCheck;
+    btn.classList.toggle('is-checked', willCheck);
+    updateThemeCount();
   });
 
 
