@@ -28,7 +28,7 @@
   // ======= LECTURE SESSION =======
   const session = Wooo.session.get();
   if (!session || !session.partie_id) {
-    window.location.replace('index.html');
+    window.location.replace('index-musique.html');
     return;
   }
 
@@ -72,10 +72,10 @@
 
   // ======= NAVIGATION =======
   btnHome.addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = 'index-musique.html';
   });
   btnBackHome.addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = 'index-musique.html';
   });
 
 

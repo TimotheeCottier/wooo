@@ -20,7 +20,7 @@
   // Bouton retour vers le hub multi-produit
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => {
-      window.location.href = 'hub.html';
+      window.location.href = 'index.html';
     });
   }
   const howModal      = $('how-modal');

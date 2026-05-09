@@ -27,7 +27,7 @@
   // ======= BOUTON RETOUR HUB =======
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => {
-      window.location.href = 'hub.html';
+      window.location.href = 'index.html';
     });
   }
 

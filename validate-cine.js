@@ -23,7 +23,7 @@
 
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('hub.html');
+    window.location.replace('index.html');
     return;
   }
 

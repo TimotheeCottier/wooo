@@ -30,7 +30,7 @@
   // ======= LECTURE SESSION =======
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('hub.html');
+    window.location.replace('index.html');
     return;
   }
 
@@ -74,7 +74,7 @@
         Wooo.api.getPickCountsByJoueur(session.partie_id),
       ]);
       if (!partie) {
-        window.location.replace('hub.html');
+        window.location.replace('index.html');
         return;
       }
       // Si la partie est déjà lancée, on va voter directement
@@ -249,7 +249,7 @@
 
   // ======= NAVIGATION =======
   btnBack.addEventListener('click', () => {
-    window.location.href = isCine ? 'index-cine.html' : 'index.html';
+    window.location.href = isCine ? 'index-cine.html' : 'index-musique.html';
   });
 
 

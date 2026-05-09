@@ -54,28 +54,22 @@
 
   </main>
 
-  <!-- Modale info points -->
+  <!-- Modale règles -->
   <div class="modal" id="info-modal" hidden>
     <div class="modal__backdrop" data-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true">
+    <div class="modal__panel modal__panel--small" role="dialog" aria-modal="true">
       <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
-      <h2 class="title-h2 modal__title">Comment sont calculés les points ?</h2>
-      <div class="rules-cards">
-        <div class="rules-card">
-          <div class="rules-card__emoji">🎯</div>
-          <h3 class="title-h3">+1 par bonne réponse</h3>
-          <p>Chaque chanson correctement attribuée = 1 point.</p>
-        </div>
-        <div class="rules-card">
-          <div class="rules-card__emoji">🔥</div>
-          <h3 class="title-h3">+2 si sans-faute</h3>
-          <p>Toutes les bonnes réponses sur un thème ? Bonus de 2 points.</p>
-        </div>
-        <div class="rules-card">
-          <div class="rules-card__emoji">🤝</div>
-          <h3 class="title-h3">Doublons OK</h3>
-          <p>Même chanson choisie par 2 personnes ? Voter l'un OU l'autre compte.</p>
-        </div>
+      <h2 class="title-h2 modal__title">Règles</h2>
+      <div class="rules-text">
+        <p>
+          Tu marques <strong>1&nbsp;point</strong> à chaque fois que tu retrouves correctement la chanson choisie par un joueur.
+        </p>
+        <p>
+          Si tu fais un <strong>sans-faute</strong> sur un thème (toutes les bonnes réponses), tu remportes <strong>2&nbsp;points bonus</strong>&nbsp;!
+        </p>
+        <p>
+          Astuce&nbsp;: si plusieurs joueurs ont choisi la même chanson, voter pour l'un OU l'autre compte comme une bonne réponse.
+        </p>
       </div>
     </div>
   </div>

@@ -337,3 +337,30 @@
   .classement-row__tag { font-size: 14px; }
   .classement-row__score { font-size: 18px; }
 }
+
+
+/* Sécurité : le hidden HTML5 doit toujours masquer le bouton, même si .btn a un display custom */
+.btn[hidden],
+button[hidden] {
+  display: none !important;
+}
+
+
+/* ---------- Modale règles : texte simple ---------- */
+.rules-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.rules-text p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  margin: 0;
+}
+
+.rules-text strong {
+  color: var(--color-text);
+  font-weight: var(--fw-bold);
+}

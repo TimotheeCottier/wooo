@@ -24,7 +24,7 @@
   // ======= LECTURE SESSION =======
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('index.html');
+    window.location.replace('index-musique.html');
     return;
   }
 

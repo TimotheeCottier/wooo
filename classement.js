@@ -24,7 +24,7 @@
 
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('index.html');
+    window.location.replace('index-musique.html');
     return;
   }
 
@@ -39,11 +39,9 @@
   const isCine = session.produit === 'cine';
   document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
   if (isCine) {
-    // Adapter les textes de la modale "Comment sont calculés les points ?"
-    document.querySelectorAll('.rules-card p').forEach(p => {
-      p.textContent = p.textContent
-        .replace(/chanson/gi, 'film')
-        .replace(/musique/gi, 'film');
+    // Adapter les textes de la modale "Règles" : chanson → film
+    document.querySelectorAll('.rules-text p').forEach(p => {
+      p.innerHTML = p.innerHTML.replace(/chanson/gi, 'film');
     });
   }
 
@@ -61,7 +59,8 @@
   // ======= CHARGEMENT =======
   async function load() {
     try {
-      const [joueurs, scores, picks, votes] = await Promise.all([
+      const [partie, joueurs, scores, picks, votes] = await Promise.all([
+        Wooo.api.getPartieById(session.partie_id),
         Wooo.api.getJoueurs(session.partie_id),
         getScores(session.partie_id),
         Wooo.api.getPicksForPartie(session.partie_id),
@@ -72,6 +71,7 @@
         joueurs.map(j => j.id + ':' + j.pseudo),
         scores.map(s => s.joueur_id + ':' + s.points + ':' + s.bonus),
         votes.length,
+        partie ? partie.status : '',
       ]);
       if (sig === lastSig) return;
       lastSig = sig;
@@ -99,13 +99,21 @@
 
       // Tout le monde a fini ?
       const everyoneDone = ranked.every(p => p.finished);
-      if (everyoneDone) {
+      const isPartieTerminee = partie && partie.status === 'terminee';
+
+      if (everyoneDone || isPartieTerminee) {
         titleEl.textContent = 'C\'EST FINI !';
-        leadEl.textContent = `Bravo à ${ranked[0]?.pseudo || 'l\'équipe'} qui remporte la partie !`;
-        // Cache le bouton "Relancer tes potes" puisque tout le monde a voté
+        if (everyoneDone) {
+          leadEl.textContent = `Bravo à ${ranked[0]?.pseudo || 'l\'équipe'} qui remporte la partie !`;
+        } else {
+          leadEl.textContent = 'La partie est terminée.';
+        }
+        // Cache le bouton "Relancer tes potes" puisque c'est fini
         if (btnRelaunch) btnRelaunch.hidden = true;
         // Marquer la partie comme terminée
-        Wooo.api.setPartieStatus(session.partie_id, 'terminee').catch(() => {});
+        if (everyoneDone && !isPartieTerminee) {
+          Wooo.api.setPartieStatus(session.partie_id, 'terminee').catch(() => {});
+        }
       } else {
         const remaining = ranked.filter(p => !p.finished).length;
         leadEl.textContent = `Voici le classement intermédiaire, on attend encore ${remaining} retardataire${remaining > 1 ? 's' : ''} !`;
@@ -317,10 +325,10 @@
   });
 
   btnBack.addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = 'index-musique.html';
   });
   btnClose.addEventListener('click', () => {
-    window.location.href = 'index.html';
+    window.location.href = 'index-musique.html';
   });
 
 
