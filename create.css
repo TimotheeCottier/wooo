@@ -40,6 +40,11 @@
   margin-top: var(--space-2);
 }
 
+/* Sous-titre des thèmes : plus d'espace pour bien séparer du bloc avatar */
+.create-subtitle--themes {
+  margin-top: var(--space-6);
+}
+
 .create-lead {
   font-size: 16px;
   color: var(--color-text-soft);
