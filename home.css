@@ -404,6 +404,14 @@
 }
 
 @media (min-width: 900px) {
+  /* Sur desktop, on positionne les posters tout en bas et on les fait dépasser
+     vers le bas pour qu'ils ne remontent pas sur le texte du hero */
+  .home-vinyls.home-posters {
+    bottom: -120px;
+    left: 0;
+    right: 0;
+    justify-content: center;
+  }
   .home-poster {
     width: 160px;
     height: 240px;

@@ -212,7 +212,9 @@ window.Wooo = window.Wooo || {};
       partie_id:   partieId,
       joueur_id:   joueurId,
       theme_index: themeIndex,
-      deezer_id:   track.id,
+      // deezer_id est désormais une colonne TEXT côté Supabase,
+      // on accepte aussi bien un nombre (Deezer) qu'une chaîne préfixée (TMDB).
+      deezer_id:   String(track.id),
       title:       track.title,
       artist:      track.artist.name,
       cover:       track.album.cover_big || track.album.cover_medium || '',

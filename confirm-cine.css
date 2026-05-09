@@ -22,3 +22,34 @@
     width: 200px;
   }
 }
+
+
+/* ---------- Bloc info film/série : centré, sans fond blanc ---------- */
+[data-product="cine"] .confirm-song {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  text-align: center;
+  display: block;
+  border-radius: 0;
+}
+
+[data-product="cine"] .confirm-song__info {
+  text-align: center;
+  flex: none;
+  width: 100%;
+}
+
+[data-product="cine"] .confirm-song__title {
+  white-space: normal;
+  font-size: 18px;
+  margin-bottom: var(--space-1);
+}
+
+[data-product="cine"] .confirm-song__artist {
+  font-size: 14px;
+}
+
+[data-product="cine"] .confirm-song__controls {
+  display: none;
+}
