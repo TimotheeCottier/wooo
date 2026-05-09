@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="musique">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Tu confirmes ?</title>
+
+  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="confirm.css?v=4" />
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <div class="progress-dots" id="progress-dots"></div>
+      <button type="button" class="icon-btn" id="btn-close" aria-label="Quitter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+
+    <section class="app-main confirm-main">
+
+      <h1 class="title-h1 confirm-theme" id="confirm-theme">CHARGEMENT…</h1>
+
+      <!-- Vinyle qui tourne avec pochette au centre -->
+      <div class="confirm-vinyl">
+        <div class="confirm-vinyl__disc" id="vinyl-disc">
+          <div class="confirm-vinyl__cover">
+            <img id="cover-img" src="" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloc info chanson + play/pause -->
+      <div class="confirm-song">
+        <div class="confirm-song__info">
+          <p class="confirm-song__title" id="song-title"></p>
+          <p class="confirm-song__artist" id="song-artist"></p>
+        </div>
+        <div class="confirm-song__controls">
+          <button type="button" class="confirm-song__btn" id="btn-play" aria-label="Lire">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </button>
+          <button type="button" class="confirm-song__btn" id="btn-pause" aria-label="Pause" hidden>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="app-footer">
+      <div class="app-footer__row">
+        <button type="button" class="btn btn--primary" id="btn-confirm">Je confirme</button>
+      </div>
+    </footer>
+
+    <audio id="audio-player" preload="auto"></audio>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=4"></script>
+  <script src="confirm.js?v=4"></script>
+</body>
+</html>

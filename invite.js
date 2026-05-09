@@ -1,49 +1,42 @@
 /* =========================================================
-   WOOO — Page "Ta partie est créée !"
+   WOOO — Écran de partage final (Bravo [pseudo] !)
    ---------------------------------------------------------
-   - Affiche l'avatar + pseudo du créateur (déjà en session)
-   - Affiche le PIN à partager
-   - Bouton "Je partage le lien" → Web Share API ou copie
-   - Bouton "Je choisis mes chansons" → search.html
+   - Affiche avatar + pseudo + PIN du créateur
    - Bouton copier le PIN
+   - Bouton partager le lien
+   - Lien retour homepage (la session reste sauvegardée → retour facile)
    ========================================================= */
 
 (function () {
   'use strict';
 
+  console.log('[Wooo invite.js] version 4 chargée ✅');
+
   const $ = (id) => document.getElementById(id);
 
-  const btnBack       = $('btn-back');
-  const avatarImg     = $('avatar-img');
-  const pseudoEl      = $('invite-pseudo');
-  const pinCode       = $('pin-code');
-  const btnCopy       = $('btn-copy');
-  const btnShare      = $('btn-share');
-  const btnGo         = $('btn-go');
-  const toast         = $('toast');
-  const toastText     = $('toast-text');
+  const btnHome      = $('btn-home');
+  const myAvatar     = $('my-avatar');
+  const pseudoEl     = $('invite-pseudo');
+  const pinCodeEl    = $('pin-code');
+  const btnCopy      = $('btn-copy');
+  const btnShare     = $('btn-share');
+  const btnBackHome  = $('btn-back-home');
+  const toast        = $('toast');
+  const toastText    = $('toast-text');
 
 
   // ======= LECTURE SESSION =======
   const session = Wooo.session.get();
-  if (!session || !session.partie_id || !session.joueur_id) {
+  if (!session || !session.partie_id) {
     window.location.replace('index.html');
     return;
   }
 
-  // Affichage avatar + pseudo
-  const avatar = session.avatar || 1;
-  avatarImg.src = `assets/avatar${avatar}.png`;
-  avatarImg.alt = session.pseudo || '';
-  pseudoEl.textContent = session.pseudo || '';
-  pinCode.textContent = session.pin_code || '------';
-
-
-  // ======= LIEN À PARTAGER =======
-  function buildShareLink() {
-    return window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
-         + 'join.html?pin=' + encodeURIComponent(session.pin_code);
-  }
+  // Affichage
+  pseudoEl.textContent = (session.pseudo || '').toUpperCase();
+  pinCodeEl.textContent = session.pin_code || '------';
+  const av = session.avatar || 1;
+  myAvatar.innerHTML = `<img src="assets/avatar${av}.png" alt="" />`;
 
 
   // ======= COPIER LE PIN =======
@@ -51,8 +44,7 @@
     try {
       await navigator.clipboard.writeText(session.pin_code);
       showToast('Code copié !');
-    } catch (err) {
-      // Fallback
+    } catch (e) {
       const ta = document.createElement('textarea');
       ta.value = session.pin_code;
       document.body.appendChild(ta);
@@ -66,26 +58,20 @@
 
   // ======= PARTAGER LE LIEN =======
   btnShare.addEventListener('click', async () => {
-    const url = buildShareLink();
-    const title = 'Wooo — Devine ce qu\'écoutent tes potes';
+    const url = window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
+              + 'join.html?pin=' + encodeURIComponent(session.pin_code);
     const text = `Rejoins ma partie Wooo ! Code : ${session.pin_code}`;
 
-    // Web Share API (mobile)
     if (navigator.share) {
       try {
-        await navigator.share({ title, text, url });
+        await navigator.share({ text, url, title: 'Wooo' });
         return;
-      } catch (err) {
-        // Annulé par l'utilisateur, on ne fait rien
-        if (err.name === 'AbortError') return;
-      }
+      } catch (e) { /* annulé */ }
     }
-
-    // Fallback : copie du lien
     try {
       await navigator.clipboard.writeText(url);
       showToast('Lien copié !');
-    } catch (err) {
+    } catch (e) {
       const ta = document.createElement('textarea');
       ta.value = url;
       document.body.appendChild(ta);
@@ -97,14 +83,11 @@
   });
 
 
-  // ======= ALLER À LA RECHERCHE =======
-  btnGo.addEventListener('click', () => {
-    window.location.href = 'search.html?theme=0';
+  // ======= NAVIGATION =======
+  btnHome.addEventListener('click', () => {
+    window.location.href = 'index.html';
   });
-
-
-  // ======= RETOUR =======
-  btnBack.addEventListener('click', () => {
+  btnBackHome.addEventListener('click', () => {
     window.location.href = 'index.html';
   });
 

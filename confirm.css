@@ -1,0 +1,152 @@
+/* =========================================================
+   WOOO — Confirmation d'une chanson choisie
+   ========================================================= */
+
+.confirm-main {
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-6);
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-5);
+}
+
+.confirm-theme {
+  color: var(--color-text);
+  margin: 0;
+}
+
+
+/* ---------- Vinyle qui tourne ---------- */
+.confirm-vinyl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) 0;
+}
+
+.confirm-vinyl__disc {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08), rgba(255,255,255,0) 60%),
+    repeating-radial-gradient(circle at center,
+      #1A1A1A 0px,
+      #0A0A0A 1px,
+      #1A1A1A 2px,
+      #0A0A0A 4px),
+    radial-gradient(circle at center, #0A0A0A 0%, #050505 100%);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 2px #000;
+  animation: vinyl-spin 5s linear infinite;
+}
+
+/* Trou central + pochette posée par dessus */
+.confirm-vinyl__cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg);
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.6);
+}
+.confirm-vinyl__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Petit trou central par-dessus la pochette */
+.confirm-vinyl__cover::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #050505;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+}
+
+
+/* ---------- Bloc info chanson + contrôles ---------- */
+.confirm-song {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-pill);
+  width: 100%;
+  box-shadow: var(--shadow-card);
+}
+
+.confirm-song__info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+
+.confirm-song__title {
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.confirm-song__artist {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.confirm-song__controls {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.confirm-song__btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-button-blue);
+  transition: filter 0.15s var(--ease-out), transform 0.1s var(--ease-out);
+}
+.confirm-song__btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.confirm-song__btn:active { transform: translateY(2px); }
+.confirm-song__btn svg { width: 18px; height: 18px; }
+
+
+/* ---------- Mobile ---------- */
+@media (max-width: 599px) {
+  .confirm-theme { font-size: 28px; }
+  .confirm-vinyl__disc { width: 240px; height: 240px; }
+  .confirm-vinyl__cover { width: 110px; height: 110px; }
+}

@@ -1,14 +1,16 @@
 /* =========================================================
    WOOO — Recherche de chanson
    ---------------------------------------------------------
-   - Recherche Deezer via Edge Function
+   - Recherche LIVE (debounce 300ms après que l'utilisateur arrête de taper)
    - Pagination (charger plus, par 10)
    - Preview audio en cliquant sur la pochette
-   - "Choisir" enregistre le pick et passe au thème suivant
+   - "Choisir" REDIRIGE vers confirm.html (avec les données de la chanson)
    ========================================================= */
 
 (function () {
   'use strict';
+
+  console.log('[Wooo search.js] version 4 chargée ✅');
 
   const $ = (id) => document.getElementById(id);
 
@@ -25,6 +27,7 @@
   const audio            = $('audio-player');
 
   const PAGE_SIZE = 10;
+  const DEBOUNCE_MS = 300;
 
 
   // ======= LECTURE SESSION =======
@@ -49,6 +52,7 @@
   let allLoadedTracks = [];
   let abortController = null;
   let currentPlayingId = null;
+  let debounceTimer = null;
 
 
   // ======= PROGRESS DOTS =======
@@ -67,7 +71,41 @@
   }
 
 
-  // ======= RECHERCHE =======
+  // ======= RECHERCHE LIVE (debounce) =======
+  searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const query = searchInput.value.trim();
+    if (query.length < 2) {
+      // Trop court → reset
+      if (abortController) abortController.abort();
+      currentQuery = '';
+      allLoadedTracks = [];
+      resultsList.hidden = true;
+      btnLoadMore.hidden = true;
+      loadingEl.hidden = true;
+      emptyState.hidden = false;
+      emptyState.innerHTML = '<p class="search-empty__emoji">🥹</p><p class="search-empty__text">On sait, c\'est difficile<br>d\'en choisir une seule&nbsp;!</p>';
+      return;
+    }
+    debounceTimer = setTimeout(() => performNewSearch(), DEBOUNCE_MS);
+  });
+
+  // Le bouton loupe relance immédiatement (sans debounce)
+  btnSearch.addEventListener('click', () => {
+    clearTimeout(debounceTimer);
+    if (searchInput.value.trim().length >= 2) performNewSearch();
+  });
+
+  // Entrée déclenche immédiatement
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(debounceTimer);
+      if (searchInput.value.trim().length >= 2) performNewSearch();
+    }
+  });
+
+
   function performNewSearch() {
     const query = searchInput.value.trim();
     if (query.length < 2) return;
@@ -106,14 +144,6 @@
       });
   }
 
-  btnSearch.addEventListener('click', performNewSearch);
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performNewSearch();
-    }
-  });
-
 
   // ======= CHARGER PLUS =======
   btnLoadMore.addEventListener('click', () => {
@@ -145,7 +175,6 @@
 
   // ======= RENDU RÉSULTATS =======
   function renderResults(tracks) {
-    // Filtre les morceaux sans extrait audio
     const playable = tracks.filter(t => t.preview && t.preview.length > 0);
     if (playable.length === 0) {
       resultsList.hidden = true;
@@ -176,7 +205,7 @@
 
 
   // ======= CLIC SUR UN RÉSULTAT =======
-  resultsList.addEventListener('click', async (e) => {
+  resultsList.addEventListener('click', (e) => {
     const item = e.target.closest('.song-bloc');
     if (!item) return;
     const track = item._track;
@@ -187,7 +216,7 @@
     if (action === 'play') {
       togglePlay(track);
     } else if (action === 'choose') {
-      await choose(track);
+      goToConfirm(track);
     }
   });
 
@@ -219,22 +248,20 @@
   }
 
 
-  // ======= CHOISIR LA CHANSON =======
-  async function choose(track) {
+  // ======= REDIRECTION VERS CONFIRM =======
+  function goToConfirm(track) {
     audio.pause();
-    try {
-      await Wooo.api.savePick(session.partie_id, session.joueur_id, themeIndex, track);
-
-      // Aller au thème suivant ou au lobby
-      if (themeIndex + 1 < totalThemes) {
-        window.location.href = 'search.html?theme=' + (themeIndex + 1);
-      } else {
-        window.location.href = 'lobby.html';
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Oups : ' + err.message);
-    }
+    // On stocke le track sélectionné dans sessionStorage pour le passer à confirm.html
+    const payload = {
+      theme_index: themeIndex,
+      deezer_id:   String(track.id),
+      title:       track.title,
+      artist:      track.artist.name,
+      cover:       track.album.cover_big || track.album.cover_medium || '',
+      preview:     track.preview,
+    };
+    sessionStorage.setItem('wooo:pending-pick', JSON.stringify(payload));
+    window.location.href = 'confirm.html?theme=' + themeIndex;
   }
 
 
@@ -243,8 +270,7 @@
     if (themeIndex > 0) {
       window.location.href = 'search.html?theme=' + (themeIndex - 1);
     } else {
-      // Si créateur → invite, sinon → join
-      window.location.href = session.is_creator ? 'invite.html' : 'lobby.html';
+      window.location.href = session.is_creator ? 'index.html' : 'lobby.html';
     }
   });
 
@@ -255,7 +281,6 @@
   });
 
 
-  // ======= UTILITAIRE =======
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str || '';

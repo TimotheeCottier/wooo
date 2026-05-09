@@ -229,7 +229,7 @@
         pseudo:     pseudo,
         avatar:     selectedAvatar,
       });
-      window.location.href = 'invite.html';
+      window.location.href = 'search.html?theme=0';
     } catch (err) {
       console.error(err);
       btnLaunch.disabled = false;

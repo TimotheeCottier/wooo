@@ -1,0 +1,214 @@
+/* =========================================================
+   WOOO — Validation finale des choix
+   ========================================================= */
+
+.validate-main {
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+
+/* ---------- Avatar du joueur en haut ---------- */
+.validate-avatar {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  margin-bottom: var(--space-2);
+}
+.validate-avatar__main {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #AFEBBF;
+}
+.validate-avatar__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.validate-avatar__emoji {
+  position: absolute;
+  bottom: -4px;
+  right: -8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 3px solid var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+
+.validate-title {
+  color: var(--color-text);
+  margin: 0;
+}
+
+.validate-lead {
+  font-size: 14px;
+  color: var(--color-text-soft);
+  line-height: 1.4;
+  margin: 0 0 var(--space-5);
+}
+
+.validate-loading {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+
+/* ---------- Liste des thèmes ---------- */
+.validate-themes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+.validate-theme {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.validate-theme__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.validate-theme__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-orange);
+  color: var(--color-text-light);
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-button-orange);
+}
+
+.validate-theme__name {
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+
+/* Song-bloc avec bouton Modifier */
+.validate-song {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.validate-song__cover {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.validate-song__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.validate-song__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(63, 83, 254, 0.9);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+  cursor: pointer;
+}
+.validate-song__cover:hover .validate-song__play,
+.validate-song__cover .validate-song__play.is-active {
+  opacity: 1;
+}
+.validate-song__play svg { width: 16px; height: 16px; }
+
+.validate-song__info {
+  min-width: 0;
+}
+.validate-song__title {
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.validate-song__artist {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.validate-song__edit {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  border: none;
+  font-family: var(--font-base);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-button-blue);
+  transition: filter 0.15s var(--ease-out), transform 0.1s var(--ease-out);
+}
+.validate-song__edit:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.validate-song__edit:active { transform: translateY(2px); }
+
+
+@media (max-width: 599px) {
+  .validate-song { grid-template-columns: 48px 1fr auto; }
+  .validate-song__cover { width: 44px; height: 44px; }
+  .validate-song__edit {
+    padding: 0 var(--space-3);
+    font-size: 13px;
+  }
+}
