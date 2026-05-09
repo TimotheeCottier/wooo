@@ -1,670 +1,206 @@
 /* =========================================================
-   WOOO MUSIQUE — Page de recherche
-   On hérite des variables et styles de base de styles.css
-   et on ajoute ce qui est spécifique à cet écran.
+   WOOO — Recherche de chanson
    ========================================================= */
 
-
-/* ---------- Bandeau "mode démo" ---------- */
-.demo-banner {
-  flex-shrink: 0;
-  background: #FFF7E6;
-  border: 1px solid #FFD580;
-  border-radius: var(--radius-card);
-  margin: 0 var(--space-5) var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  font-size: 12px;
-  line-height: 1.4;
-  color: #8A5A00;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.demo-banner strong {
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.demo-banner[hidden] {
-  display: none;
-}
-
-
-/* ---------- Layout principal de la page recherche ---------- */
-.search-app {
-  width: 100%;
-  max-width: 760px;          /* Sur desktop, on garde un format lisible et concentré */
-  margin: 0 auto;
-  /* Hauteur 95dvh (un peu d'espace en bas) */
-  height: 95vh;
-  height: 95dvh;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg);
-  overflow: hidden;
-}
-
-
-/* ---------- Topbar avec logo + badge "Thème 1 sur 3" ---------- */
-.search-topbar {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--space-5) var(--space-5) var(--space-3);
-  position: relative;
-}
-
-.logo--small {
-  /* Le logo est un peu plus petit + atténué (gris) sur cet écran,
-     car ce n'est plus le héros mais un simple repère */
-  opacity: 0.4;
-  transition: opacity 0.2s var(--ease-out);
-}
-
-.logo--small:hover {
-  opacity: 0.7;
-}
-
-.logo--small .logo__img {
-  height: 44px;
-}
-
-/* Le badge "Thème 1 sur 3" en pastille rouge */
-.theme-badge {
-  display: flex;
-  flex-direction: column;
+.search-main {
   align-items: center;
-  justify-content: center;
-  background: var(--color-red);
-  color: var(--color-white);
-  border-radius: var(--radius-pill);
-  padding: var(--space-3) var(--space-4);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  /* Petite ombre pour donner un peu de relief */
-  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.25);
-  min-width: 80px;
-}
-
-.theme-badge strong {
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.theme-badge em {
-  font-size: 10px;
-  font-weight: 600;
-  font-style: normal;
-  opacity: 0.85;
-  margin-top: 2px;
-}
-
-
-/* ---------- Heading "Choisis ta MUSIQUE PRÉFÉRÉE" ---------- */
-.search-heading {
-  flex-shrink: 0;
   text-align: center;
-  padding: var(--space-3) var(--space-5) var(--space-5);
-  border-bottom: 1px solid var(--color-grey-light);
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: var(--space-8);
 }
 
-.search-heading__intro {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-red);
-  margin-bottom: var(--space-1);
+.search-theme {
+  color: var(--color-text);
+  margin-bottom: var(--space-5);
 }
-
-.search-heading__title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-red);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-}
-
-
-/* ---------- Contenu principal qui prend le reste ---------- */
-.search-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-5);
-  min-height: 0;
-  /* Empêche tout débordement horizontal sur mobile */
-  overflow-x: hidden;
-  min-width: 0;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  /* Le scroll interne de l'étape (pour la liste de résultats notamment).
-     Comme ça le bouton "Charger plus" suit naturellement la liste. */
-  overflow-y: auto;
-  overflow-x: hidden;
-  animation: stepIn 0.3s var(--ease-out) both;
-}
-
-.step[hidden] {
-  display: none;
-}
-
-@keyframes stepIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 
 /* ---------- Barre de recherche ---------- */
 .search-bar {
-  position: relative;
   display: flex;
   align-items: center;
-  background: var(--color-white);
-  border: 2px solid var(--color-grey-light);
-  border-radius: var(--radius-pill);
-  padding: 0 var(--space-4);
-  height: 52px;
-  transition: border-color 0.2s var(--ease-out),
-              box-shadow 0.2s var(--ease-out);
-}
-
-.search-bar:focus-within {
-  border-color: var(--color-red);
-  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.10);
-}
-
-.search-bar__icon {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  color: var(--color-red);
-  margin-right: var(--space-3);
+  gap: var(--space-3);
+  width: 100%;
+  margin-bottom: var(--space-7);
 }
 
 .search-bar__input {
   flex: 1;
-  height: 100%;
-  font-family: var(--font-base);
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--color-navy);
+}
+
+.search-bar__button {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   border: none;
-  outline: none;
-  background: transparent;
-  /* Important sur iOS : empêcher le zoom auto sur les inputs */
-  -webkit-appearance: none;
+  box-shadow: var(--shadow-button-blue);
+  transition: filter 0.15s var(--ease-out),
+              transform 0.1s var(--ease-out);
 }
-
-.search-bar__input::placeholder {
-  color: var(--color-grey);
-  font-weight: 400;
-}
-
-.search-bar__clear {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--color-grey-light);
-  color: var(--color-navy);
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: var(--space-2);
-  transition: background 0.15s var(--ease-out);
-}
-
-.search-bar__clear:hover {
-  background: var(--color-red);
-  color: var(--color-white);
-}
+.search-bar__button:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.search-bar__button:active { transform: translateY(2px); }
+.search-bar__button svg { width: 22px; height: 22px; }
 
 
-/* ---------- Zone d'état (idle, loading, etc.) ---------- */
-.search-state {
-  flex-shrink: 0;
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-5) 0;
-}
-
-.search-state__hint {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  color: var(--color-grey);
-  text-transform: uppercase;
+/* ---------- État vide (avant recherche) ---------- */
+.search-empty {
   text-align: center;
+  padding: var(--space-7) var(--space-5);
+  color: var(--color-text-soft);
+}
+.search-empty__emoji {
+  font-size: 32px;
+  margin-bottom: var(--space-3);
+}
+.search-empty__text {
+  font-size: 16px;
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
 }
 
-.search-state__error {
+
+/* ---------- Loading ---------- */
+.search-loading {
+  text-align: center;
+  padding: var(--space-7) 0;
+  color: var(--color-text-muted);
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-red);
-  text-align: center;
-  max-width: 320px;
-}
-
-.search-state__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Loader animé : un cercle rouge qui tourne */
-.loader {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--color-grey-light);
-  border-top-color: var(--color-red);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 
 /* ---------- Liste des résultats ---------- */
-.results {
+.search-results {
   list-style: none;
-  /* Plus de scroll interne : la liste prend la hauteur naturelle des items
-     et le scroll se fait au niveau du conteneur parent (.step / .search-content) */
-  padding: 0;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
 }
 
-.result {
-  display: flex;
+
+/* Une ligne de résultat = song-bloc du Figma */
+.song-bloc {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
   align-items: center;
   gap: var(--space-3);
-  background: var(--color-white);
-  border: 1.5px solid var(--color-grey-light);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-pill);
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
-  margin-bottom: var(--space-3);
-  cursor: pointer;
-  /* Sécurité contre le débordement horizontal sur mobile */
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  transition: border-color 0.15s var(--ease-out),
-              transform 0.15s var(--ease-out),
+  transition: transform 0.15s var(--ease-out),
               box-shadow 0.15s var(--ease-out);
 }
 
-.result:hover {
-  border-color: var(--color-red);
+.song-bloc:hover {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-card);
 }
 
-.result__cover {
+/* Pochette + bouton play en surimpression */
+.song-bloc__cover {
   position: relative;
-  flex-shrink: 0;
   width: 52px;
   height: 52px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--color-grey-light);
+  background: var(--color-bg);
+  flex-shrink: 0;
 }
-
-.result__cover img {
+.song-bloc__cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Fallback si l'image ne charge pas */
-  display: block;
 }
-
-/* Petit bouton play en surimpression sur la pochette */
-.result__cover .play-btn {
+.song-bloc__play {
   position: absolute;
   inset: 0;
-  /* Voile sombre léger pour faire ressortir l'icône, sans masquer la pochette */
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(63, 83, 254, 0.9);
+  color: var(--color-text-light);
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
   opacity: 0;
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity 0.15s var(--ease-out);
 }
-
-.result:hover .play-btn,
-.result.is-playing .play-btn {
+.song-bloc__cover:hover .song-bloc__play,
+.song-bloc__cover .song-bloc__play.is-active {
   opacity: 1;
 }
+.song-bloc__play svg { width: 18px; height: 18px; }
 
-.result__info {
-  flex: 1;
-  min-width: 0;          /* permet au texte de tronquer correctement */
+
+/* Infos titre + artiste */
+.song-bloc__info {
+  min-width: 0;
+  text-align: left;
 }
-
-.result__title {
+.song-bloc__title {
   font-size: 15px;
-  font-weight: 600;
-  color: var(--color-navy);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
-
-.result__artist {
+.song-bloc__artist {
   font-size: 13px;
-  font-weight: 500;
-  color: var(--color-grey);
+  color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* La grosse flèche rouge à droite (= "choisir cette musique") */
-.result__pick {
+
+/* Bouton "Choisir" orange */
+.song-bloc__choose {
   flex-shrink: 0;
-  /* Pilule rouge avec texte "Choisir" */
-  height: 36px;
-  /* Padding réduit sur mobile pour éviter les débordements */
-  padding: 0 var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-4);
   border-radius: var(--radius-pill);
-  background: var(--color-red);
-  color: var(--color-white);
-  font-family: var(--font-base);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  border: none;
-  transition: background 0.15s var(--ease-out),
-              transform 0.15s var(--ease-out);
-}
-
-.result:hover .result__pick {
-  background: var(--color-red-dark);
-}
-
-.result__pick:hover {
-  transform: translateY(-1px);
-}
-
-.result__pick:active {
-  transform: scale(0.97);
-}
-
-
-/* ---------- Bouton "Charger plus" sous la liste ---------- */
-.load-more {
-  display: block;
-  margin: var(--space-4) auto var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  background: transparent;
-  color: var(--color-red);
+  background: var(--gradient-orange);
+  color: var(--color-text-light);
   border: none;
   font-family: var(--font-base);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
   cursor: pointer;
+  box-shadow: var(--shadow-button-orange);
+  transition: filter 0.15s var(--ease-out),
+              transform 0.1s var(--ease-out);
+}
+.song-bloc__choose:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.song-bloc__choose:active { transform: translateY(2px); }
+
+
+/* ---------- Charger plus ---------- */
+.search-more {
+  margin: var(--space-5) auto 0;
   text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: color 0.2s var(--ease-out);
-}
-
-.load-more:hover {
-  color: var(--color-red-dark);
-}
-
-.load-more[hidden] {
-  display: none;
 }
 
 
-/* ---------- Bouton play générique ---------- */
-.play-btn {
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.play-btn__icon {
-  width: 18px;
-  height: 18px;
-}
-
-/* Sur l'état "is-playing", on inverse les icônes (play vs pause) */
-.play-btn .play-btn__icon--pause {
-  display: none;
-}
-
-.is-playing .play-btn .play-btn__icon--play,
-.play-btn.is-playing .play-btn__icon--play {
-  display: none;
-}
-
-.is-playing .play-btn .play-btn__icon--pause,
-.play-btn.is-playing .play-btn__icon--pause {
-  display: block;
-}
-
-
-/* ---------- Étape B : confirmation ---------- */
-.confirm-question {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--color-navy);
-  text-align: center;
-  margin-bottom: var(--space-5);
-}
-
-.confirm-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-5) 0;
-}
-
-.confirm-card__cover {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  /* Plus d'overflow:hidden — sinon le bouton play rond dépasse */
-  background: var(--color-grey-light);
-  /* Bordure ciselée façon vinyle */
-  box-shadow:
-    0 0 0 4px var(--color-bg),
-    0 0 0 6px rgba(230, 57, 70, 0.25),
-    0 12px 32px rgba(15, 27, 61, 0.2);
-  animation: confirmIn 0.5s var(--ease-out) both;
-}
-
-/* Petit trou central façon disque vinyle */
-.confirm-card__cover::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-bg);
-  transform: translate(-50%, -50%);
-  z-index: 4;
-  box-shadow: 0 0 0 2px rgba(15, 27, 61, 0.15);
-}
-
-@keyframes confirmIn {
-  from { opacity: 0; transform: scale(0.92); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.confirm-card__cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  /* Rotation lente type vinyle quand l'audio joue */
-  animation: vinylSpin 12s linear infinite;
-  animation-play-state: paused;
-}
-
-/* L'image tourne SEULEMENT quand le bouton est en mode "playing" */
-.confirm-card__cover.is-playing img {
-  animation-play-state: running;
-}
-
-@keyframes vinylSpin {
-  to { transform: rotate(360deg); }
-}
-
-/* Bouton play/pause : rond rouge, centré, fixe */
-.confirm-card__cover .play-btn--large {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--color-red);
-  color: var(--color-white);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  box-shadow: 0 4px 16px rgba(230, 57, 70, 0.45);
-  transition: opacity 0.2s var(--ease-out),
-              transform 0.15s var(--ease-out);
-  /* Visible par défaut (l'utilisateur n'a pas encore lancé la lecture) */
-  opacity: 1;
-}
-
-/* Quand ça joue, l'icône passe en pause et reste visible quand même */
-.confirm-card__cover .play-btn--large:hover {
-  transform: translate(-50%, -50%) scale(1.06);
-}
-
-.confirm-card__cover .play-btn__icon {
-  width: 28px;
-  height: 28px;
-}
-
-/* Affichage play vs pause selon l'état */
-.confirm-card__cover .play-btn--large .play-btn__icon--play  { display: block; }
-.confirm-card__cover .play-btn--large .play-btn__icon--pause { display: none; }
-.confirm-card__cover .play-btn--large.is-playing .play-btn__icon--play  { display: none; }
-.confirm-card__cover .play-btn--large.is-playing .play-btn__icon--pause { display: block; }
-
-.confirm-card__title {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--color-navy);
-  margin-top: var(--space-3);
-  text-align: center;
-}
-
-.confirm-card__artist {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--color-grey);
-  text-align: center;
-}
-
-
-/* ---------- Boutons d'action en bas ---------- */
-.search-actions {
-  flex-shrink: 0;
-  /* Padding réduit (avant : space-4 = 16px, maintenant : space-3 = 12px) */
-  padding: var(--space-3) var(--space-5);
-  border-top: 1px solid var(--color-grey-light);
-  background: var(--color-bg);
-  /* Sur iPhone, on respecte la safe-area mais sans padding excédentaire */
-  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
-}
-
-.actions-row {
-  display: flex;
-  gap: var(--space-3);
-  /* Sur mobile : les boutons s'étalent sur toute la largeur (les .btn ont flex: 1) */
-}
-
-/* Si la rangée n'a qu'un seul bouton → centrage automatique */
-.actions-row > .btn:only-child {
-  flex: 0 0 auto;
-  margin: 0 auto;
-  min-width: 240px;
-}
-
-.actions-row[hidden] {
-  display: none;
-}
-
-
-/* =========================================================
-   DESKTOP : ≥ 900px
-   On centre l'écran et on agrandit un peu
-   ========================================================= */
-@media (min-width: 900px) {
-
-  body {
-    background: var(--color-bg);
-  }
-
-  .search-app {
-    max-width: 600px;
-    /* Hauteur fixée mais limitée pour que le footer ne soit pas tout en bas */
-    height: 95vh;
-    height: 95dvh;
-    max-height: 760px;
-    min-height: 560px;
-    margin: var(--space-5) auto;
-    border-radius: var(--radius-card);
-    box-shadow: 0 12px 40px rgba(15, 27, 61, 0.08);
-    padding-bottom: 0;
-    overflow: hidden;
-  }
-
-  /* Footer encore plus compact en desktop */
-  .search-actions {
-    padding: var(--space-2) var(--space-5);
-    padding-bottom: var(--space-2);
-  }
-
-  /* Sur desktop, on centre les rangées de boutons */
-  .actions-row {
-    justify-content: center;
-  }
-
-  .actions-row > .btn {
-    flex: 0 0 auto;
-    min-width: 200px;
-  }
-
-  .search-heading__title {
-    font-size: 26px;
+/* ---------- Mobile : empêcher le scroll horizontal ---------- */
+@media (max-width: 599px) {
+  .search-theme { font-size: 28px; }
+  .song-bloc { grid-template-columns: 48px 1fr auto; }
+  .song-bloc__cover { width: 44px; height: 44px; }
+  .song-bloc__choose {
+    padding: 0 var(--space-3);
+    font-size: 13px;
   }
 }

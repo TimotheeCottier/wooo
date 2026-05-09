@@ -41,8 +41,8 @@
   const customHint      = $('custom-theme-hint');
 
 
-  // ======= CATALOGUE DE THÈMES (pré-cochés ou disponibles) =======
-  // Les 6 premiers seront pré-cochés au démarrage de l'étape 2.
+  // ======= CATALOGUE DE THÈMES =======
+  // Liste fixe fournie par le client. 3 sont pré-cochés au hasard à l'arrivée.
   const THEME_CATALOG = [
     'Ta préférée all-time',
     'De l\'adolescence',
@@ -51,13 +51,6 @@
     'Que tu n\'assumes pas',
     'Qui te fait pleurer',
     'Pour partir en vacances',
-    'D\'un dimanche pluvieux',
-    'D\'un mariage parfait',
-    'Pour danser sur la table',
-    'D\'un ex',
-    'Pour pleurer en cuisinant',
-    'Du voyage de tes rêves',
-    'Que ton père écoute en boucle',
   ];
 
 
@@ -121,11 +114,12 @@
       themesNameWrap.textContent = '';
     }
 
-    // Initialise les thèmes cochés (6 premiers)
+    // Initialise les thèmes : tous présents, 3 cochés au hasard
+    const indicesAleatoires = pickRandomIndices(THEME_CATALOG.length, 3);
     themes = THEME_CATALOG.map((name, i) => ({
       name,
       custom: false,
-      checked: i < 6,
+      checked: indicesAleatoires.includes(i),
     }));
 
     renderThemes();
@@ -134,6 +128,18 @@
     step2.hidden = false;
     btnStep1Next.hidden = true;
     btnStep2Next.hidden = false;
+  }
+
+
+  /** Tire `n` indices distincts au hasard parmi [0, max[ */
+  function pickRandomIndices(max, n) {
+    const all = Array.from({ length: max }, (_, i) => i);
+    // Mélange Fisher-Yates
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
+    }
+    return all.slice(0, n);
   }
 
 
@@ -176,16 +182,13 @@
   }
 
 
-  // ======= ÉTAPE 3 : création thème custom pleine page =======
+  // ======= ÉTAPE 3 : création thème custom (overlay fullscreen) =======
   btnAddTheme.addEventListener('click', () => {
     customInput.value = '';
     customHint.textContent = '0 / 40';
     btnStep3Add.disabled = true;
 
-    step2.hidden = true;
     step3.hidden = false;
-    btnStep2Next.hidden = true;
-    btnStep3Add.hidden = false;
 
     setTimeout(() => customInput.focus(), 100);
   });
@@ -212,13 +215,25 @@
     // On ajoute en tête, coché
     themes.unshift({ name: val, custom: true, checked: true });
 
-    // Retour à l'étape 2 avec rendu mis à jour
+    // Ferme l'overlay et rafraîchit la liste
     renderThemes();
-    step3.hidden = true;
-    step2.hidden = false;
-    btnStep3Add.hidden = true;
-    btnStep2Next.hidden = false;
+    closeCustomOverlay();
   }
+
+  function closeCustomOverlay() {
+    step3.hidden = true;
+  }
+
+  // Bouton retour de l'overlay
+  const btnBackStep3 = $('btn-back-step3');
+  if (btnBackStep3) {
+    btnBackStep3.addEventListener('click', closeCustomOverlay);
+  }
+
+  // ESC pour fermer l'overlay
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !step3.hidden) closeCustomOverlay();
+  });
 
 
   // ======= VALIDATION FINALE — création de la partie =======
@@ -262,13 +277,7 @@
 
   // ======= BOUTON RETOUR =======
   btnBack.addEventListener('click', () => {
-    if (!step3.hidden) {
-      // Étape 3 → retour étape 2 (sans ajouter le thème)
-      step3.hidden = true;
-      step2.hidden = false;
-      btnStep3Add.hidden = true;
-      btnStep2Next.hidden = false;
-    } else if (!step2.hidden) {
+    if (!step2.hidden) {
       // Retour étape 1
       step2.hidden = true;
       step1.hidden = false;

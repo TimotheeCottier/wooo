@@ -1,86 +1,69 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-product="musique">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#E63946" />
-  <title>Wooo Musique — Rejoins une partie</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Rejoins une partie</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="search.css" />
-  <link rel="stylesheet" href="create.css" />
-  <link rel="stylesheet" href="invite.css" />
   <link rel="stylesheet" href="join.css" />
 </head>
 <body>
 
-  <main class="search-app">
+  <main class="app">
 
-    <!-- Header -->
-    <header class="search-topbar">
-      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
-        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
-      </a>
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
     </header>
 
-    <!-- Titre -->
-    <div class="search-heading">
-      <h1 class="search-heading__title">Rejoins une partie</h1>
-    </div>
+    <section class="app-main join-main">
 
-    <!-- Contenu -->
-    <section class="join-content">
+      <h1 class="title-h1 join-title">Rejoins une partie</h1>
+      <p class="join-lead">Entre le code que ton pote t'a partagé.</p>
 
-      <!-- Champ : code PIN -->
-      <div class="invite-field">
-        <label class="invite-field__label" for="pin-input">Le code PIN de ta partie ?</label>
+      <!-- Étape 1 : code PIN -->
+      <div class="join-step" id="step-pin">
         <input type="text"
-               inputmode="numeric"
                id="pin-input"
-               class="invite-field__input invite-field__input--pin"
+               class="input join-pin-input"
                placeholder="000000"
-               maxlength="7"
+               maxlength="6"
+               inputmode="numeric"
                autocomplete="off" />
+        <p class="join-error" id="pin-error" hidden></p>
+
+        <!-- Aperçu de la partie une fois le PIN trouvé -->
+        <div class="join-preview" id="join-preview" hidden>
+          <p class="join-preview__label">Cette partie contient :</p>
+          <ul class="join-preview__themes" id="join-preview-themes"></ul>
+        </div>
       </div>
 
-      <!-- Champ : pseudo -->
-      <div class="invite-field">
-        <label class="invite-field__label" for="pseudo-input">Quel est ton prénom ?</label>
+      <!-- Étape 2 : pseudo + avatar -->
+      <div class="join-step" id="step-identity" hidden>
+        <h2 class="title-h2 join-subtitle">C'est quoi ton p'tit nom ?</h2>
         <input type="text"
                id="pseudo-input"
-               class="invite-field__input"
+               class="input"
                placeholder="Ton prénom"
-               maxlength="20"
-               autocomplete="given-name" />
-      </div>
+               maxlength="20" />
+        <p class="join-error" id="pseudo-error" hidden></p>
 
-      <!-- Choix de l'avatar -->
-      <div class="invite-field">
-        <label class="invite-field__label">Choisis ton avatar</label>
-        <ul class="avatar-picker" id="avatar-picker"></ul>
+        <h2 class="title-h3 join-subtitle">Choisis un avatar</h2>
+        <ul class="avatar-grid" id="avatar-picker"></ul>
       </div>
-
-      <!-- Récap des thèmes (rempli si la partie est trouvée) -->
-      <div class="join-recap" id="join-recap" hidden>
-        <p class="join-recap__intro">Tu devras choisir une chanson pour chacun de ces thèmes.</p>
-        <ul class="invite-recap__list" id="join-recap-list"></ul>
-      </div>
-
-      <!-- Message d'erreur si code invalide -->
-      <p class="join-error" id="join-error" hidden></p>
 
     </section>
 
-    <!-- Boutons -->
-    <footer class="search-actions">
-      <div class="actions-row">
-        <button type="button" class="btn btn--secondary"
-                onclick="window.location.href='index.html'">Retour</button>
-        <button type="button" class="btn btn--primary" id="btn-go" disabled>C'est parti !</button>
+    <footer class="app-footer">
+      <div class="app-footer__row">
+        <button type="button" class="btn btn--primary" id="btn-validate-pin" disabled>Valider</button>
+        <button type="button" class="btn btn--primary" id="btn-go" hidden disabled>C'est parti&nbsp;!</button>
       </div>
     </footer>
 

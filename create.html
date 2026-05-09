@@ -58,26 +58,44 @@
     </section>
 
 
-    <!-- ============= ÉTAPE 3 : création d'un thème custom (pleine page) ============= -->
-    <section class="app-main step" id="step-3" hidden>
-      <div class="create-content">
-        <h1 class="title-h1 create-title">Crée ton thème</h1>
-        <p class="create-lead">Imagine un thème original pour faire deviner tes potes !</p>
+    <!-- ============= ÉTAPE 3 : création d'un thème custom (OVERLAY pleine page) ============= -->
+    <div class="custom-overlay" id="step-3" hidden>
+      <header class="app-header custom-overlay__header">
+        <button type="button" class="icon-btn" id="btn-back-step3" aria-label="Retour">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+        </button>
+        <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+        <span class="icon-btn-spacer"></span>
+      </header>
 
-        <div class="custom-theme-field">
-          <label for="custom-theme-input" class="custom-theme-label">Musique…</label>
-          <input type="text"
-                 id="custom-theme-input"
-                 class="input"
-                 placeholder="pour jouer à Wooo"
-                 maxlength="40" />
-          <p class="custom-theme-hint" id="custom-theme-hint">0 / 40</p>
+      <section class="app-main">
+        <div class="create-content">
+          <h1 class="title-h1 create-title">Crée ton thème</h1>
+          <p class="create-lead">Imagine un thème original pour faire deviner tes potes !</p>
+
+          <div class="custom-theme-field">
+            <label for="custom-theme-input" class="custom-theme-label">Musique…</label>
+            <input type="text"
+                   id="custom-theme-input"
+                   class="input"
+                   placeholder="pour jouer à Wooo"
+                   maxlength="40" />
+            <p class="custom-theme-hint" id="custom-theme-hint">0 / 40</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <footer class="app-footer">
+        <div class="app-footer__row">
+          <button type="button" class="btn btn--primary" id="btn-step3-add" disabled>
+            Je l'ajoute
+          </button>
+        </div>
+      </footer>
+    </div>
 
 
-    <!-- Footer : boutons d'action -->
+    <!-- Footer global : boutons d'action des étapes 1 et 2 -->
     <footer class="app-footer">
       <div class="app-footer__row">
         <!-- Étape 1 → bouton Continuer -->
@@ -87,10 +105,6 @@
         <!-- Étape 2 → bouton Continuer avec X thèmes -->
         <button type="button" class="btn btn--primary" id="btn-step2-continue" hidden disabled>
           Je continue avec <span id="theme-count">0</span> thèmes
-        </button>
-        <!-- Étape 3 → bouton Ajouter le thème -->
-        <button type="button" class="btn btn--primary" id="btn-step3-add" hidden disabled>
-          Je l'ajoute
         </button>
       </div>
     </footer>

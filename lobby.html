@@ -1,87 +1,78 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-product="musique">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#E63946" />
-  <title>Wooo Musique — Salle d'attente</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Salle d'attente</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="search.css" />
-  <link rel="stylesheet" href="invite.css" />
   <link rel="stylesheet" href="lobby.css" />
 </head>
 <body>
 
-  <main class="search-app">
+  <main class="app">
 
     <!-- Header -->
-    <header class="search-topbar">
-      <a href="index.html" class="logo logo--small" aria-label="Retour à l'accueil">
-        <img src="assets/logo.svg" alt="Wooo Musique" class="logo__img" />
-      </a>
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
     </header>
 
-    <!-- Titre -->
-    <div class="search-heading">
-      <h1 class="search-heading__title">Réglages de ta partie</h1>
-    </div>
+    <section class="app-main lobby-main">
 
-    <!-- Contenu -->
-    <section class="lobby-content">
+      <!-- Tes potes -->
+      <div class="lobby-section">
+        <h2 class="title-h2 lobby-section__title">Tes potes</h2>
+        <p class="lobby-section__lead">Tu les connais toutes et tous j'espère&nbsp;!</p>
+        <ul class="lobby-players" id="lobby-players" aria-live="polite"></ul>
 
-      <!-- Bloc lien à partager (avec bouton Copier) -->
-      <div class="invite-share">
-        <p class="invite-share__label">Partage ce lien à tes amis</p>
-        <p class="invite-share__link" id="lobby-link">https://...</p>
-        <button type="button" class="btn btn--primary invite-share__btn" id="btn-copy">
-          Copier
+        <!-- Bouton inviter (créateur seulement) -->
+        <button type="button" class="btn btn--secondary btn--full lobby-share" id="btn-share" hidden>
+          Inviter d'autres potes
         </button>
-        <p class="invite-share__feedback" id="copy-feedback" hidden>Lien copié !</p>
       </div>
 
-      <!-- Frise de statut -->
-      <div class="lobby-status">
-        <p class="lobby-status__title">Statut</p>
-        <ol class="lobby-status__steps" id="status-steps">
-          <li class="status-step status-step--active" data-step="created">Partie créée</li>
-          <li class="status-step" data-step="joined">Joueurs inscrits</li>
-          <li class="status-step" data-step="voting">Votes</li>
-          <li class="status-step" data-step="done">Résultats</li>
-        </ol>
+      <!-- Les thèmes -->
+      <div class="lobby-section">
+        <h2 class="title-h2 lobby-section__title">Les thèmes</h2>
+        <p class="lobby-section__lead">
+          Pour chaque thème, tu vas entendre les chansons choisies par tes potes et tu devras retrouver qui a choisi quoi&nbsp;!
+        </p>
+        <ul class="lobby-themes" id="lobby-themes"></ul>
       </div>
 
       <!-- Message d'état -->
-      <p class="lobby-message" id="lobby-message">Chargement…</p>
-
-      <!-- Liste des joueurs -->
-      <ul class="players-list" id="players-list" aria-live="polite"></ul>
+      <p class="lobby-message" id="lobby-message"></p>
 
     </section>
 
-    <!-- Boutons en bas — différents selon créateur ou invité -->
-    <footer class="search-actions" id="lobby-footer">
-      <!-- Footer créateur : Retour + Lancer les votes -->
-      <div class="actions-row" id="footer-creator" hidden>
-        <button type="button" class="btn btn--secondary"
-                onclick="window.location.href='index.html'">Retour</button>
-        <button type="button" class="btn btn--primary" id="btn-launch" disabled>
-          Lancer les votes
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="app-footer__row" id="lobby-footer">
+
+        <!-- Cas créateur -->
+        <button type="button" class="btn btn--primary" id="btn-launch" hidden disabled>
+          C'est parti&nbsp;!
         </button>
-      </div>
-      <!-- Footer invité : juste un bouton "Voter !" (désactivé tant que la partie n'est pas lancée) -->
-      <div class="actions-row" id="footer-guest" hidden>
-        <button type="button" class="btn btn--primary" id="btn-voter" disabled>
+
+        <!-- Cas invité : bouton "Voter !" toujours présent, désactivé tant que créateur n'a pas lancé -->
+        <button type="button" class="btn btn--primary" id="btn-voter" hidden disabled>
           Voter&nbsp;!
         </button>
+
       </div>
     </footer>
 
   </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" hidden>
+    <span id="toast-text">Lien copié !</span>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>

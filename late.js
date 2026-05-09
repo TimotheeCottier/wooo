@@ -94,10 +94,12 @@
       p._rank = displayedRank;
     });
 
-    list.innerHTML = ranked.map(p => {
+    const colors = (Wooo.config && Wooo.config.PLAYER_COLORS) || [];
+
+    list.innerHTML = ranked.map((p, idx) => {
       const rank = p._rank;
-      const suffix = (rank === 1) ? 'er' : 'e';
       const avatar = p.avatar || 1;
+      const color = colors[idx % colors.length];
 
       let medalClass = '';
       if (rank === 1) medalClass = 'classement-row--gold';
@@ -106,17 +108,14 @@
 
       return `
         <li class="classement-row ${medalClass}">
-          <span class="classement-row__rank">${rank}<span class="classement-row__rank-suffix">${suffix}</span></span>
-          <div class="classement-row__avatar">
-            <img src="assets/avatar${avatar}.png" alt="" />
-          </div>
-          <div class="classement-row__player">
-            <span class="classement-row__name">${escapeHtml(p.pseudo)}</span>
-          </div>
-          <div class="classement-row__score">
-            <span class="classement-row__points">${p.points}</span>
-            <span class="classement-row__pts-label">pts</span>
-          </div>
+          <span class="classement-row__rank">${rank}</span>
+          <span class="classement-row__tag" style="background: ${color}">
+            <span class="classement-row__tag-avatar"><img src="assets/avatar${avatar}.png" alt="" /></span>
+            ${escapeHtml(p.pseudo)}
+          </span>
+          <span class="classement-row__score">
+            ${p.points}<span class="classement-row__score-pts">pts</span>
+          </span>
         </li>
       `;
     }).join('');
@@ -133,6 +132,13 @@
     Wooo.session.clear();
     window.location.href = 'join.html';
   });
+
+  const btnBack = $('btn-back');
+  if (btnBack) {
+    btnBack.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  }
 
 
   function escapeHtml(str) {

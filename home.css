@@ -42,30 +42,30 @@
 }
 
 
-/* ---------- Vinyles décoratifs (images PNG fournies) ---------- */
+/* ---------- Vinyles décoratifs (SVG transparents) ---------- */
+/* Sur DESKTOP : positionnés en absolu dans le hero (en bas à gauche) */
+/* Sur MOBILE : sous le contenu, dépassent les bords */
 .home-vinyls {
-  position: relative;
-  margin-top: var(--space-7);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-start;
-  gap: var(--space-3);
-  height: 200px;
+  gap: 0;
+  pointer-events: none;
 }
 
 .home-vinyl {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
   flex-shrink: 0;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.20));
-  /* Animation rotation très lente */
-  animation: vinyl-spin 14s linear infinite;
+  /* TOUS les vinyles tournent (vitesses différentes) */
+  animation: vinyl-spin 20s linear infinite;
 }
 
-.home-vinyl--1 { animation-duration: 14s; }
-.home-vinyl--2 { animation-duration: 18s; transform: translateY(-12px); margin-left: -32px; }
-.home-vinyl--3 { animation-duration: 22s; margin-left: -32px; }
+.home-vinyl--1 { animation-duration: 18s; z-index: 3; }
+.home-vinyl--2 { animation-duration: 24s; margin-left: -50px; z-index: 2; }
+.home-vinyl--3 { animation-duration: 28s; margin-left: -50px; z-index: 1; }
 
 
 /* ---------- Actions (colonne droite) ---------- */
@@ -265,9 +265,16 @@
     line-height: 0.95;
   }
 
+  /* Sur desktop, les vinyles flottent en bas à gauche du hero */
+  .app-main {
+    position: relative;
+  }
+
   .home-vinyls {
-    margin-top: var(--space-9);
-    height: 240px;
+    position: absolute;
+    bottom: 0;
+    left: var(--space-8);
+    margin: 0;
   }
 
   .home-vinyl {
@@ -295,7 +302,7 @@
   }
 
   .home-hero__title {
-    font-size: clamp(40px, 12vw, 64px);
+    font-size: clamp(40px, 12vw, 56px);
   }
 
   .home-hero__lead {
@@ -303,18 +310,36 @@
     margin-right: auto;
   }
 
+  .home-actions {
+    margin-top: var(--space-7);
+  }
+
+  /* Vinyles : tout en bas, dépassent à gauche/droite et en bas */
   .home-vinyls {
+    margin-top: var(--space-7);
+    margin-left: -10vw;
+    margin-right: -10vw;
+    margin-bottom: -60px;
     justify-content: center;
-    margin-top: var(--space-6);
+    overflow: visible;
+  }
+
+  .home-vinyl {
+    width: 140px;
     height: 140px;
   }
 
+  /* Cache l'overflow du body pour pas créer de scroll horizontal */
+  body { overflow-x: hidden; }
+  .app-main { overflow: hidden; }
+}
+
+@media (max-width: 480px) {
   .home-vinyl {
     width: 120px;
     height: 120px;
   }
-
-  .home-actions {
-    margin-top: var(--space-7);
+  .home-vinyls {
+    margin-bottom: -50px;
   }
 }

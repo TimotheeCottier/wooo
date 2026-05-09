@@ -1,336 +1,190 @@
 /* =========================================================
-   WOOO MUSIQUE — Page récap (ajustement + résultats)
+   WOOO — Récap des votes
    ========================================================= */
 
+.recap-main {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
 
-/* ---------- Sous-titres ---------- */
-.recap-subtitle {
+.recap-title {
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+}
+
+.recap-lead {
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-navy);
-  margin-top: var(--space-2);
-}
-
-.recap-hint {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-grey);
-  margin-top: var(--space-2);
+  color: var(--color-text-soft);
+  margin-bottom: var(--space-6);
+  line-height: 1.4;
 }
 
 
-/* ---------- Contenu scrollable ---------- */
-.recap-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-4) var(--space-5);
-  min-height: 0;
-  overflow-y: auto;
-}
-
-
-/* ---------- Liste des chansons ---------- */
+/* ---------- Liste de chansons à deviner ---------- */
 .recap-list {
   list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: 0;
-  margin: 0;
 }
 
 .recap-row {
   display: grid;
-  grid-template-columns: 24px 56px 1fr auto;
+  grid-template-columns: 56px 1fr auto;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2);
-  background: var(--color-white);
-  border: 1.5px solid var(--color-grey-light);
-  border-radius: var(--radius-card);
-  animation: rowIn 0.4s var(--ease-out) backwards;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
+  transition: border-color 0.15s var(--ease-out);
+  cursor: pointer;
 }
 
-.recap-row:nth-child(1)  { animation-delay: 0.05s; }
-.recap-row:nth-child(2)  { animation-delay: 0.10s; }
-.recap-row:nth-child(3)  { animation-delay: 0.15s; }
-.recap-row:nth-child(4)  { animation-delay: 0.20s; }
-.recap-row:nth-child(5)  { animation-delay: 0.25s; }
-.recap-row:nth-child(6)  { animation-delay: 0.30s; }
-.recap-row:nth-child(7)  { animation-delay: 0.35s; }
-
-@keyframes rowIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+.recap-row:hover {
+  border-color: var(--color-blue-light);
 }
 
-/* Numéro à gauche */
-.recap-row__num {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-navy);
-  text-align: center;
-}
-
-/* Pochette */
 .recap-row__cover {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--color-grey-light);
-  cursor: pointer;
-  /* Petite animation au survol pour suggérer qu'on peut cliquer pour écouter */
-  transition: transform 0.15s var(--ease-out);
+  background: var(--color-bg);
+  position: relative;
+  flex-shrink: 0;
 }
-
-.recap-row__cover:hover {
-  transform: scale(1.05);
-}
-
 .recap-row__cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
-
-/* Infos morceau */
-.recap-row__info {
-  min-width: 0;
-}
-
-.recap-row__title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--color-navy);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.recap-row__artist {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-grey);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Pastille du joueur attribué (cliquable pour la mécanique d'échange) */
-.recap-row__player {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  background: var(--color-bg);
-  /* Border : couleur du joueur (héritée via currentColor) */
-  border: 2px solid currentColor;
-  border-radius: var(--radius-pill);
-  padding: var(--space-2) var(--space-3);
-  cursor: pointer;
-  transition: transform 0.15s var(--ease-out),
-              background 0.2s var(--ease-out);
-  font-family: var(--font-base);
-  /* Empêche la sélection de texte au tap */
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
-.recap-row__player:hover {
-  transform: translateY(-1px);
-}
-
-.recap-row__player .player-row__dot {
-  width: 12px;
-  height: 12px;
-  background: currentColor;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.recap-row__player-name {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--color-navy);
-  white-space: nowrap;
-}
-
-/* État sélectionné : fond rempli avec la couleur du joueur, texte blanc */
-.recap-row__player.is-selected {
-  background: currentColor;
-  /* Petite anim de pulse pour signifier l'attente du 2e clic */
-  animation: playerPulse 1s ease-in-out infinite;
-}
-
-.recap-row__player.is-selected .recap-row__player-name {
-  color: var(--color-white);
-}
-
-.recap-row__player.is-selected .player-row__dot {
-  background: var(--color-white);
-  border: 2px solid var(--color-white);
-}
-
-@keyframes playerPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-  50%      { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.08); }
-}
-
-/* État "lecture en cours" sur la pochette */
-.recap-row.is-playing .recap-row__cover {
-  box-shadow: 0 0 0 2px var(--color-red);
-}
-
-
-/* ---------- Ligne "rappel de mon propre choix" (non modifiable) ---------- */
-/* Style un peu différent : un fond légèrement teinté et pas de pastille
-   cliquable, mais une étiquette "TON CHOIX" */
-.recap-row--mine {
-  background: rgba(15, 27, 61, 0.04);
-  border-color: rgba(15, 27, 61, 0.10);
-  /* Petit effet pour montrer que ce n'est pas modifiable */
-  cursor: default;
-}
-
-.recap-row--mine .recap-row__title,
-.recap-row--mine .recap-row__artist {
-  opacity: 0.85;
-}
-
-.recap-row__mine-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-navy);
-  color: var(--color-white);
-  border-radius: var(--radius-pill);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.recap-row__mine-tag .player-row__dot {
-  width: 10px;
-  height: 10px;
-  background: var(--color-white);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   PHASE RÉSULTATS (après confirmation des choix)
-   ========================================================= */
-
-.recap-row.recap-row--correct {
-  border-color: #2EA047;
-  background: rgba(46, 160, 71, 0.05);
-}
-
-.recap-row.recap-row--wrong {
-  border-color: var(--color-red);
-  background: rgba(230, 57, 70, 0.05);
-}
-
-/* En mode résultats, la grille change : pas de pastille joueur, mais un verdict */
-.recap-list.is-results .recap-row {
-  grid-template-columns: 24px 56px 1fr 36px;
-}
-
-/* Badge ✓ ou ✗ qui apparaît à droite */
-.recap-row__verdict {
+.recap-row__play {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  background: rgba(63, 83, 254, 0.9);
+  color: var(--color-text-light);
+  border: none;
+  cursor: pointer;
   border-radius: 50%;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--color-white);
-  flex-shrink: 0;
-  animation: verdictPop 0.4s var(--ease-out) backwards;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
 }
-
-.recap-row__verdict--correct {
-  background: #2EA047;
+.recap-row__cover:hover .recap-row__play,
+.recap-row__cover .recap-row__play.is-active {
+  opacity: 1;
 }
+.recap-row__play svg { width: 18px; height: 18px; }
 
-.recap-row__verdict--wrong {
-  background: var(--color-red);
+.recap-row__info {
+  text-align: left;
+  min-width: 0;
 }
-
-@keyframes verdictPop {
-  0%   { opacity: 0; transform: scale(0); }
-  60%  { transform: scale(1.2); }
-  100% { opacity: 1; transform: scale(1); }
+.recap-row__title {
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
-
-/* En cas d'erreur : on affiche aussi le bon joueur */
-.recap-row__correct-answer {
-  grid-column: 3 / 5;
-  font-size: 11px;
-  color: var(--color-red);
-  margin-top: var(--space-1);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.recap-row__correct-answer strong {
-  color: var(--color-navy);
-}
-
-
-/* ---------- Score affiché en bas ---------- */
-.recap-score {
-  text-align: center;
-  margin: var(--space-5) 0 var(--space-3);
-  animation: scoreIn 0.5s var(--ease-out) backwards;
-  animation-delay: 1s;
-}
-
-@keyframes scoreIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.recap-score__value {
-  font-size: 48px;
-  font-weight: 800;
-  color: var(--color-red);
-  line-height: 1;
-}
-
-.recap-score__label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-navy);
-  margin-top: var(--space-2);
-}
-
-.recap-score__bonus {
-  display: inline-block;
-  margin-top: var(--space-3);
-  background: var(--color-red);
-  color: var(--color-white);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-pill);
+.recap-row__artist {
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  animation: bonusBounce 0.6s var(--ease-out) 1.4s backwards;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-@keyframes bonusBounce {
-  0%   { opacity: 0; transform: scale(0.5); }
-  60%  { transform: scale(1.15); }
-  100% { opacity: 1; transform: scale(1); }
+/* Tag du joueur attribué */
+.recap-row__tag {
+  flex-shrink: 0;
+}
+
+/* États de phase results */
+.recap-row--correct {
+  border-color: var(--color-success) !important;
+}
+.recap-row--wrong {
+  border-color: var(--color-error) !important;
+}
+.recap-row--correct .recap-row__cover::after,
+.recap-row--wrong .recap-row__cover::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  z-index: 2;
+}
+.recap-row--correct::before,
+.recap-row--wrong::before {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-light);
+}
+
+
+/* Bouton "modifier" (en phase adjust uniquement) */
+.recap-row__edit {
+  height: 36px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--gradient-blue);
+  color: var(--color-text-light);
+  border: none;
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-button-blue);
+  transition: filter 0.15s var(--ease-out);
+}
+.recap-row__edit:hover { filter: brightness(1.05); }
+
+
+/* ---------- État "swap mode" : on a sélectionné une chanson, on attend la 2e ---------- */
+.recap-row.is-swap-source {
+  border-color: var(--color-orange-light);
+  background: rgba(247, 89, 0, 0.05);
+}
+
+
+/* ---------- Numéro de thème en pilule orange ---------- */
+.recap-theme-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-orange);
+  color: var(--color-text-light);
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  margin-right: var(--space-2);
+  box-shadow: var(--shadow-button-orange);
 }

@@ -1,175 +1,122 @@
 /* =========================================================
-   WOOO MUSIQUE — Page lobby (salle d'attente)
+   WOOO — Lobby (salle d'attente)
    ========================================================= */
 
-
-/* ---------- Contenu principal ---------- */
-.lobby-content {
-  flex: 1;
+.lobby-main {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  padding: var(--space-5);
-  min-height: 0;
-  overflow-y: auto;
+  gap: var(--space-7);
 }
 
-
-/* ---------- Frise de statut horizontale ---------- */
-.lobby-status {
-  text-align: center;
+.lobby-section__title {
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
 }
 
-.lobby-status__title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-navy);
-  margin-bottom: var(--space-3);
-}
-
-.lobby-status__steps {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0;
-  margin: 0;
-  flex-wrap: wrap;
-}
-
-.status-step {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-grey);
-  padding: var(--space-2) var(--space-3);
-  border: 1.5px solid var(--color-grey-light);
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.02em;
-  background: var(--color-bg);
-  white-space: nowrap;
-  transition: all 0.3s var(--ease-out);
-}
-
-.status-step--active {
-  background: rgba(230, 57, 70, 0.08);
-  color: var(--color-red);
-  border-color: rgba(230, 57, 70, 0.4);
-  font-weight: 700;
-}
-
-.status-step--done {
-  background: var(--color-grey-light);
-  color: var(--color-navy);
-  border-color: var(--color-grey-light);
-}
-
-
-/* ---------- Message d'état ---------- */
-.lobby-message {
+.lobby-section__lead {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--color-red);
-  text-align: center;
+  color: var(--color-text-soft);
+  margin-bottom: var(--space-4);
   line-height: 1.4;
-  padding: 0 var(--space-3);
 }
 
 
-/* ---------- Liste des joueurs ---------- */
-.players-list {
+/* ---------- Liste des joueurs (tags pastel) ---------- */
+.lobby-players {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: 0;
   margin: 0;
-}
-
-.player-row {
-  display: grid;
-  /* avatar (40px) + nom + statut */
-  grid-template-columns: 40px 1fr auto;
-  align-items: center;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
-  padding: var(--space-2) 0;
-  animation: playerIn 0.3s var(--ease-out);
 }
 
-/* Désactive l'animation sur les rendus silencieux (refresh polling) */
-.players-list.no-anim .player-row {
+/* On utilise les .player-tag de styles.css, juste avec marge + animation */
+.lobby-players .player-tag {
+  animation: pop-in 0.4s var(--ease-bounce) both;
+  cursor: default;
+}
+.lobby-players.no-anim .player-tag {
   animation: none;
 }
 
-@keyframes playerIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
+
+/* ---------- Liste des thèmes ---------- */
+.lobby-themes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-
-/* Avatar à gauche */
-.player-row__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--color-grey-light);
-}
-
-.player-row__avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-
-/* Pseudo */
-.player-row__name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-navy);
+.lobby-theme {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-}
-
-.player-row__me {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-red);
-  background: rgba(230, 57, 70, 0.10);
-  padding: 2px 6px;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+}
+
+/* Thème pour lequel TOUS les joueurs ont choisi */
+.lobby-theme--ready {
+  border-color: var(--color-success);
+}
+.lobby-theme--ready::after {
+  content: '✓';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-success);
+  color: var(--color-text-light);
+  font-weight: var(--fw-bold);
+  font-size: 14px;
 }
 
 
-/* Statut "prêt" / "en attente" à droite */
-.player-row__status {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* Bouton inviter (créateur) */
+.lobby-share {
+  margin-top: var(--space-4);
+}
+
+
+/* Message d'état */
+.lobby-message {
   text-align: center;
-  padding: var(--space-1) var(--space-3);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  margin: 0;
+}
+
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: var(--space-7);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: var(--color-text-light);
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
-  background: var(--color-grey-light);
-  color: var(--color-grey);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+  z-index: 200;
+  animation: pop-in 0.3s var(--ease-bounce) both;
 }
-
-.player-row__status--ready {
-  background: rgba(46, 160, 67, 0.12);
-  color: #2EA047;
-}
-
-
-/* ---------- État "vide" ---------- */
-.players-empty {
-  text-align: center;
-  font-size: 13px;
-  color: var(--color-grey);
-  padding: var(--space-5) 0;
-  font-style: italic;
-}
+.toast[hidden] { display: none; }
