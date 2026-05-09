@@ -481,6 +481,49 @@ window.Wooo = window.Wooo || {};
     activeGames: getActiveGames,
   };
 
+  // ========================================================================
+  // PARTAGE — utilitaire centralisé
+  // - Sur mobile (avec navigator.share) → ouvre le partage natif
+  // - Sur desktop → copie simplement le lien dans le presse-papier
+  // ========================================================================
+  function isMobileLike() {
+    // Détection : Web Share API + UA mobile-like (évite Safari desktop qui a aussi share)
+    if (!navigator.share) return false;
+    const ua = (navigator.userAgent || '').toLowerCase();
+    return /android|iphone|ipad|mobile/.test(ua);
+  }
+
+  async function shareOrCopyLink({ url, text, title, onCopied }) {
+    // Mobile : partage natif
+    if (isMobileLike()) {
+      try {
+        await navigator.share({ url, text, title });
+        return 'shared';
+      } catch (e) {
+        if (e && e.name === 'AbortError') return 'cancelled';
+        // sinon on retombe sur la copie
+      }
+    }
+    // Desktop ou échec partage : copie
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      ta.remove();
+    }
+    if (typeof onCopied === 'function') onCopied();
+    return 'copied';
+  }
+
+  Wooo.share = {
+    isMobileLike,
+    shareOrCopyLink,
+  };
+
   Wooo.config = {
     SUPABASE_URL,
     SUPABASE_ANON,

@@ -61,25 +61,12 @@
     const url = window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
               + 'join.html?pin=' + encodeURIComponent(session.pin_code);
     const text = `Rejoins ma partie Wooo ! Code : ${session.pin_code}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ text, url, title: 'Wooo' });
-        return;
-      } catch (e) { /* annulé */ }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast('Lien copié !');
-    } catch (e) {
-      const ta = document.createElement('textarea');
-      ta.value = url;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-      showToast('Lien copié !');
-    }
+    const result = await Wooo.share.shareOrCopyLink({
+      url, text, title: 'Wooo',
+      onCopied: () => showToast('Lien copié !'),
+    });
+    // Sur mobile partagé : on ne montre rien (l'OS gère)
+    // Sur desktop ou fallback copie : showToast déjà appelé
   });
 
 

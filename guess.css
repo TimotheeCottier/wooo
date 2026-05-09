@@ -96,9 +96,39 @@
 
 .guess-app {
   background: var(--color-bg);
-  /* Background décoratif léger : grandes cercles concentriques */
-  background-image:
-    radial-gradient(circle at center 60%, rgba(247, 89, 0, 0.04) 0%, transparent 60%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Motif décoratif : cercles concentriques centrés derrière le contenu.
+   Passe par-dessus la typo (z-index lower than 1 mais visible). */
+.guess-app::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(140vmin, 1200px);
+  height: min(140vmin, 1200px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0,
+      transparent 38px,
+      rgba(247, 89, 0, 0.10) 38px,
+      rgba(247, 89, 0, 0.10) 40px
+    );
+  mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+}
+
+/* Le contenu doit rester au dessus du motif */
+.guess-app > * {
+  position: relative;
+  z-index: 1;
 }
 
 .guess-header {

@@ -143,11 +143,8 @@
   // ======= VALIDATION =======
   btnValidate.addEventListener('click', () => {
     audio.pause();
-    if (session.is_creator) {
-      window.location.href = 'invite.html';
-    } else {
-      window.location.href = 'lobby.html';
-    }
+    // Créateur ET invité vont au lobby (pas d'écran intermédiaire pour le créateur)
+    window.location.href = 'lobby.html';
   });
 
 

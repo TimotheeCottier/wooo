@@ -56,6 +56,7 @@
   let allPlayers = [];      // tous les joueurs de la partie
   let currentTrackIdx = 0;  // index de la chanson en cours dans allPicks
   let votes = {};           // { pick.id: joueur_id_voté }
+  let isLocked = false;     // verrou drag&drop pendant la transition entre tracks
 
 
   // ======= COUNTDOWN 3-2-1-GO (3 sec) =======
@@ -165,6 +166,7 @@
       return;
     }
     currentTrackIdx = idx;
+    isLocked = false;          // déverrouille le drag&drop
     const pick = allPicks[idx];
 
     trackTitle.textContent = pick.title || '';
@@ -230,6 +232,8 @@
   function onDragStart(e) {
     const tag = e.currentTarget;
     if (tag.classList.contains('is-placed')) return;
+    // Verrouillage : on bloque tout nouveau drag pendant la transition
+    if (isLocked) return;
 
     e.preventDefault();
 
@@ -330,8 +334,11 @@
 
   // ======= ATTRIBUTION D'UN JOUEUR À LA CHANSON COURANTE =======
   function attributePlayer(playerId) {
+    if (isLocked) return;       // déjà attribué, en attente du prochain track
     const pick = allPicks[currentTrackIdx];
     if (!pick) return;
+
+    isLocked = true;            // verrouille jusqu'au showTrack suivant
 
     votes[pick.id] = playerId;
     placeAvatarOnVinyl(playerId);
@@ -339,7 +346,7 @@
     // On grise le tag (utilisé)
     refreshTagsState();
 
-    // Petit délai puis on passe à la suivante
+    // Petit délai puis on passe à la suivante (qui réinitialise isLocked)
     setTimeout(() => {
       showTrack(currentTrackIdx + 1);
     }, 800);

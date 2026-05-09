@@ -134,22 +134,15 @@
   }
 
   function renderMessage() {
-    const nbReady = players.filter(p => (pickCounts[p.id] || 0) === totalThemes).length;
-    const everyoneReady = (nbReady === players.length) && (players.length > 0);
     const enoughPlayers = players.length >= MIN_PLAYERS;
-    const allReady = enoughPlayers && everyoneReady;
-
+    const nbReady = players.filter(p => (pickCounts[p.id] || 0) === totalThemes).length;
     const myCount = pickCounts[session.joueur_id] || 0;
     const myReady = myCount === totalThemes;
 
-    if (btnLaunch) btnLaunch.disabled = !allReady;
+    // Activation du bouton "C'est parti" : créateur + au moins 3 joueurs
+    if (btnLaunch) btnLaunch.disabled = !enoughPlayers;
 
-    if (!myReady) {
-      messageEl.textContent = `Tu n'as pas encore terminé tes choix (${myCount}/${totalThemes}). Reprends-les pour passer à la suite.`;
-      messageEl.style.color = 'var(--color-error)';
-      return;
-    }
-
+    // Construction du message d'état
     if (!enoughPlayers) {
       const needed = MIN_PLAYERS - players.length;
       messageEl.textContent = `Il faut au moins ${MIN_PLAYERS} joueurs pour lancer. Encore ${needed} à inviter !`;
@@ -157,14 +150,20 @@
       return;
     }
 
+    if (!myReady) {
+      messageEl.textContent = `Tu n'as pas encore terminé tes choix (${myCount}/${totalThemes}). Reprends-les pour participer.`;
+      messageEl.style.color = 'var(--color-error)';
+      return;
+    }
+
     if (session.is_creator) {
-      if (allReady) {
-        messageEl.textContent = "Tout le monde est prêt ! C'est à toi de lancer la partie.";
+      if (nbReady === players.length) {
+        messageEl.textContent = "Tout le monde est prêt ! Tu peux lancer la partie.";
         messageEl.style.color = 'var(--color-success)';
       } else {
         const nbWaiting = players.length - nbReady;
-        messageEl.textContent = `En attente de ${nbWaiting} joueur${nbWaiting > 1 ? 's' : ''} (${nbReady}/${players.length} prêts).`;
-        messageEl.style.color = 'var(--color-error)';
+        messageEl.textContent = `${nbReady}/${players.length} joueurs prêts. Tu peux attendre les ${nbWaiting} retardataire${nbWaiting > 1 ? 's' : ''} ou lancer dès maintenant.`;
+        messageEl.style.color = 'var(--color-text-soft)';
       }
       return;
     }
@@ -172,13 +171,13 @@
     // Invité
     const creator = players.find(p => p.is_creator);
     const creatorName = creator ? creator.pseudo : 'le créateur';
-    if (allReady) {
+    if (nbReady === players.length) {
       messageEl.textContent = `Tout le monde est prêt ! Attends que ${creatorName} lance la partie.`;
       messageEl.style.color = 'var(--color-success)';
     } else {
       const nbWaiting = players.length - nbReady;
       messageEl.textContent = `En attente de ${nbWaiting} joueur${nbWaiting > 1 ? 's' : ''} (${nbReady}/${players.length} prêts).`;
-      messageEl.style.color = 'var(--color-error)';
+      messageEl.style.color = 'var(--color-text-soft)';
     }
   }
 
@@ -195,9 +194,8 @@
   // ======= BOUTON LANCER (créateur) =======
   if (btnLaunch) {
     btnLaunch.addEventListener('click', async () => {
-      const nbReady = players.filter(p => (pickCounts[p.id] || 0) === totalThemes).length;
-      if (players.length < MIN_PLAYERS || nbReady !== players.length) {
-        alert(`Impossible de lancer : ${nbReady}/${players.length} joueurs prêts.`);
+      if (players.length < MIN_PLAYERS) {
+        alert(`Il faut au moins ${MIN_PLAYERS} joueurs pour lancer.`);
         return;
       }
       btnLaunch.disabled = true;
@@ -232,21 +230,10 @@
       const url = window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
                 + 'join.html?pin=' + encodeURIComponent(session.pin_code);
       const text = `Rejoins ma partie Wooo ! Code : ${session.pin_code}`;
-      if (navigator.share) {
-        try { await navigator.share({ text, url, title: 'Wooo' }); return; } catch (e) {}
-      }
-      try {
-        await navigator.clipboard.writeText(url);
-        showToast('Lien copié !');
-      } catch (e) {
-        const ta = document.createElement('textarea');
-        ta.value = url;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        showToast('Lien copié !');
-      }
+      await Wooo.share.shareOrCopyLink({
+        url, text, title: 'Wooo',
+        onCopied: () => showToast('Lien copié !'),
+      });
     });
   }
 

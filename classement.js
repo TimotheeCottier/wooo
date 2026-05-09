@@ -37,9 +37,10 @@
 
 
   function renderProgressDots() {
+    // Partie terminée → toutes les pastilles en orange foncé sans numéro
     let html = '';
     for (let i = 0; i < totalThemes; i++) {
-      html += `<span class="progress-dot ${i === totalThemes - 1 ? 'is-current' : 'is-done'}">${i === totalThemes - 1 ? (i + 1) : ''}</span>`;
+      html += `<span class="progress-dot is-done"></span>`;
     }
     progressDots.innerHTML = html;
   }
@@ -89,11 +90,14 @@
       if (everyoneDone) {
         titleEl.textContent = 'C\'EST FINI !';
         leadEl.textContent = `Bravo à ${ranked[0]?.pseudo || 'l\'équipe'} qui remporte la partie !`;
+        // Cache le bouton "Relancer tes potes" puisque tout le monde a voté
+        if (btnRelaunch) btnRelaunch.hidden = true;
         // Marquer la partie comme terminée
         Wooo.api.setPartieStatus(session.partie_id, 'terminee').catch(() => {});
       } else {
         const remaining = ranked.filter(p => !p.finished).length;
         leadEl.textContent = `Voici le classement intermédiaire, on attend encore ${remaining} retardataire${remaining > 1 ? 's' : ''} !`;
+        if (btnRelaunch) btnRelaunch.hidden = false;
       }
 
       renderList(ranked);
@@ -182,16 +186,22 @@
   function renderRecap(joueurs, picks, votes) {
     const playerById = {};
     joueurs.forEach(p => { playerById[p.id] = p; });
-    const otherPlayers = joueurs.filter(p => p.id !== session.joueur_id);
+
+    // Mes votes en premier, puis ceux des autres
+    const me = joueurs.find(p => p.id === session.joueur_id);
+    const others = joueurs.filter(p => p.id !== session.joueur_id);
+    const orderedPlayers = me ? [me, ...others] : others;
 
     let html = '';
-    otherPlayers.forEach(player => {
+    orderedPlayers.forEach(player => {
       const av = player.avatar || 1;
+      const isMe = player.id === session.joueur_id;
+      const blockTitle = isMe ? 'Tes votes' : `Les votes de ${escapeHtml(player.pseudo)}`;
       html += `
         <div class="player-recap-block">
           <div class="player-recap-block__head">
             <div class="player-recap-block__avatar"><img src="assets/avatar${av}.png" alt="" /></div>
-            <span class="player-recap-block__name">Les votes de ${escapeHtml(player.pseudo)}</span>
+            <span class="player-recap-block__name">${blockTitle}</span>
           </div>
       `;
 
@@ -283,13 +293,10 @@
     const url = window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
               + 'join.html?pin=' + encodeURIComponent(session.pin_code);
     const text = `Relance ! Code Wooo : ${session.pin_code}`;
-    if (navigator.share) {
-      try { await navigator.share({ text, url, title: 'Wooo' }); return; } catch (e) {}
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      alert('Lien copié !');
-    } catch (e) {}
+    await Wooo.share.shareOrCopyLink({
+      url, text, title: 'Wooo',
+      onCopied: () => alert('Lien copié !'),
+    });
   });
 
   btnNew.addEventListener('click', () => {
