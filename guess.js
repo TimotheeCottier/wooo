@@ -391,7 +391,7 @@
     } else if (themeIndex > 0) {
       window.location.href = 'guess.html?theme=' + (themeIndex - 1);
     } else {
-      window.location.href = 'lobby.html';
+      window.location.href = session.is_creator ? 'lobby.html' : 'lobby-invite.html';
     }
   });
 

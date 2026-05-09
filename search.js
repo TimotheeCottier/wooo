@@ -278,7 +278,7 @@
     if (themeIndex > 0) {
       window.location.href = 'search.html?theme=' + (themeIndex - 1);
     } else {
-      window.location.href = session.is_creator ? 'index.html' : 'lobby.html';
+      window.location.href = session.is_creator ? 'lobby.html' : 'lobby-invite.html';
     }
   });
 

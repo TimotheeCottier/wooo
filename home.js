@@ -15,6 +15,14 @@
   const btnCreate     = $('btn-create');
   const btnJoin       = $('btn-join');
   const btnHow        = $('btn-how');
+  const btnBackHub    = $('btn-back-hub');
+
+  // Bouton retour vers le hub multi-produit
+  if (btnBackHub) {
+    btnBackHub.addEventListener('click', () => {
+      window.location.href = 'hub.html';
+    });
+  }
   const howModal      = $('how-modal');
   const activeBlock   = $('active-games');
   const activeList    = $('active-games-list');
@@ -129,7 +137,7 @@
     if (game.status === 'votes') {
       window.location.href = 'guess.html?theme=0';
     } else {
-      window.location.href = 'lobby.html';
+      window.location.href = game.is_creator ? 'lobby.html' : 'lobby-invite.html';
     }
   });
 

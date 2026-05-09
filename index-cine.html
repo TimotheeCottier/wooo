@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="cine">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo Ciné &amp; Séries — Bientôt disponible</title>
+
+  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="home.css?v=6" />
+  <style>
+    .coming-soon {
+      max-width: 540px;
+      margin: 0 auto;
+      text-align: center;
+      padding: var(--space-7) var(--space-5);
+    }
+    .coming-soon__emoji {
+      font-size: 80px;
+      margin-bottom: var(--space-5);
+    }
+    .coming-soon__title {
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+    }
+    .coming-soon__lead {
+      font-size: 18px;
+      color: var(--color-text-soft);
+      line-height: 1.5;
+      margin-bottom: var(--space-7);
+    }
+  </style>
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
+    </header>
+
+    <section class="app-main">
+      <div class="coming-soon">
+        <div class="coming-soon__emoji">🎬</div>
+        <h1 class="title-h1 coming-soon__title">Wooo Ciné &amp; Séries</h1>
+        <p class="coming-soon__lead">
+          C'est en cours de préparation&nbsp;!<br>
+          Bientôt, tu pourras jouer avec tes potes pour deviner leurs films et séries préférés.
+        </p>
+        <button type="button" class="btn btn--primary" id="btn-back-hub">
+          Retour
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    document.getElementById('btn-back').addEventListener('click', () => {
+      window.location.href = 'hub.html';
+    });
+    document.getElementById('btn-back-hub').addEventListener('click', () => {
+      window.location.href = 'hub.html';
+    });
+  </script>
+
+</body>
+</html>

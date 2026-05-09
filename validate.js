@@ -143,8 +143,8 @@
   // ======= VALIDATION =======
   btnValidate.addEventListener('click', () => {
     audio.pause();
-    // Créateur ET invité vont au lobby (pas d'écran intermédiaire pour le créateur)
-    window.location.href = 'lobby.html';
+    // Créateur → lobby.html, invité → lobby-invite.html
+    window.location.href = session.is_creator ? 'lobby.html' : 'lobby-invite.html';
   });
 
 

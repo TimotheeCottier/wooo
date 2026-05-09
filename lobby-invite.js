@@ -1,17 +1,15 @@
 /* =========================================================
-   WOOO — Lobby CRÉATEUR
+   WOOO — Lobby INVITÉ
    ---------------------------------------------------------
    - Liste joueurs + thèmes
-   - Bouton "C'est parti !" actif dès 3 joueurs
-   - Au clic : passe la partie en status='votes' puis va à guess.html
-   - Bouton "Je partage le lien" pour inviter
-   - Polling lent (30s) car le créateur n'attend rien d'asynchrone
+   - Bouton "Voter !" désactivé tant que partie pas lancée
+   - Polling actif (1.5s) pour détecter que le créateur a lancé
    ========================================================= */
 
 (function () {
   'use strict';
 
-  console.log('[Wooo lobby.js] version 6 chargée ✅');
+  console.log('[Wooo lobby-invite.js] version 6 chargée ✅');
 
   const $ = (id) => document.getElementById(id);
 
@@ -19,12 +17,7 @@
   const playersList     = $('lobby-players');
   const themesList      = $('lobby-themes');
   const messageEl       = $('lobby-message');
-  const btnShare        = $('btn-share');
-  const btnLaunch       = $('btn-launch');
-  const toast           = $('toast');
-  const toastText       = $('toast-text');
-
-  const MIN_PLAYERS = 3;
+  const btnVoter        = $('btn-voter');
 
 
   // ======= LECTURE SESSION =======
@@ -34,9 +27,9 @@
     return;
   }
 
-  // Si un invité arrive ici par erreur, on le redirige vers son lobby
-  if (!session.is_creator) {
-    window.location.replace('lobby-invite.html');
+  // Si le créateur arrive ici par erreur, on le redirige vers son lobby à lui
+  if (session.is_creator) {
+    window.location.replace('lobby.html');
     return;
   }
 
@@ -65,10 +58,9 @@
         window.location.replace('hub.html');
         return;
       }
-      // Si la partie est déjà lancée, on va voter directement
+      // Si la partie est déjà lancée
       if (partie.status === 'votes') {
-        window.location.href = 'guess.html?theme=0';
-        return;
+        activateVoterButton();
       }
       if (partie.status === 'terminee') {
         window.location.href = 'classement.html';
@@ -125,20 +117,8 @@
   }
 
   function renderMessage() {
-    const enoughPlayers = players.length >= MIN_PLAYERS;
-    const nbReady = players.filter(p => (pickCounts[p.id] || 0) === totalThemes).length;
     const myCount = pickCounts[session.joueur_id] || 0;
     const myReady = myCount === totalThemes;
-
-    // Activation du bouton "C'est parti" : au moins 3 joueurs
-    btnLaunch.disabled = !enoughPlayers;
-
-    if (!enoughPlayers) {
-      const needed = MIN_PLAYERS - players.length;
-      messageEl.textContent = `Il faut au moins ${MIN_PLAYERS} joueurs pour lancer. Encore ${needed} à inviter !`;
-      messageEl.style.color = 'var(--color-error)';
-      return;
-    }
 
     if (!myReady) {
       messageEl.textContent = `Tu n'as pas encore terminé tes choix (${myCount}/${totalThemes}). Reprends-les pour participer.`;
@@ -146,53 +126,28 @@
       return;
     }
 
-    if (nbReady === players.length) {
-      messageEl.textContent = "Tout le monde est prêt ! Tu peux lancer la partie.";
-      messageEl.style.color = 'var(--color-success)';
-    } else {
-      const nbWaiting = players.length - nbReady;
-      messageEl.textContent = `${nbReady}/${players.length} joueurs prêts. Tu peux attendre les ${nbWaiting} retardataire${nbWaiting > 1 ? 's' : ''} ou lancer dès maintenant.`;
-      messageEl.style.color = 'var(--color-text-soft)';
-    }
+    const creator = players.find(p => p.is_creator);
+    const creatorName = creator ? creator.pseudo : 'le créateur';
+    messageEl.textContent = `Attends que ${creatorName} lance la partie.`;
+    messageEl.style.color = 'var(--color-text-soft)';
   }
 
 
-  // ======= BOUTON LANCER =======
-  btnLaunch.addEventListener('click', async () => {
-    if (players.length < MIN_PLAYERS) {
-      alert(`Il faut au moins ${MIN_PLAYERS} joueurs pour lancer.`);
-      return;
-    }
-    btnLaunch.disabled = true;
-    btnLaunch.textContent = 'Démarrage…';
-    try {
-      const updated = await Wooo.api.setPartieStatus(session.partie_id, 'votes');
-      if (!updated || updated.status !== 'votes') {
-        throw new Error('Mise à jour silencieusement bloquée. Vérifie la policy UPDATE sur Supabase.');
-      }
-      window.location.href = 'guess.html?theme=0';
-    } catch (err) {
-      console.error(err);
-      btnLaunch.disabled = false;
-      btnLaunch.textContent = "C'est parti !";
-      alert('Oups : ' + err.message);
-    }
+  function activateVoterButton() {
+    if (!btnVoter || !btnVoter.disabled) return;
+    btnVoter.disabled = false;
+    messageEl.textContent = 'La partie est lancée ! Clique sur "Voter !" pour commencer.';
+    messageEl.style.color = 'var(--color-success)';
+  }
+
+
+  // ======= BOUTON VOTER =======
+  btnVoter.addEventListener('click', () => {
+    window.location.href = 'guess.html?theme=0';
   });
 
 
-  // ======= BOUTON PARTAGE =======
-  btnShare.addEventListener('click', async () => {
-    const url = window.location.origin + window.location.pathname.replace(/[^/]+$/, '')
-              + 'join.html?pin=' + encodeURIComponent(session.pin_code);
-    const text = `Rejoins ma partie Wooo ! Code : ${session.pin_code}`;
-    await Wooo.share.shareOrCopyLink({
-      url, text, title: 'Wooo',
-      onCopied: () => showToast('Lien copié !'),
-    });
-  });
-
-
-  // ======= POLLING (lent : 15s) =======
+  // ======= POLLING =======
   let pollTimer = null;
   async function checkStatus() {
     try {
@@ -203,6 +158,10 @@
       ]);
       if (!partie) return;
 
+      if (partie.status === 'votes') {
+        activateVoterButton();
+        return;
+      }
       if (partie.status === 'terminee') {
         if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
         window.location.href = 'classement.html';
@@ -220,11 +179,12 @@
         renderSilent();
       }
     } catch (e) {
-      console.warn('[Wooo] Polling lobby error:', e);
+      console.warn('[Wooo] Polling lobby-invite error:', e);
     }
   }
 
-  pollTimer = setInterval(checkStatus, 15000);
+  // Polling rapide (1.5s) pour détecter que le créateur a lancé
+  pollTimer = setInterval(checkStatus, 1500);
 
   window.addEventListener('beforeunload', () => {
     if (pollTimer) clearInterval(pollTimer);
@@ -240,15 +200,6 @@
     window.location.href = 'hub.html';
   });
 
-
-  // ======= TOAST =======
-  let toastTimer;
-  function showToast(msg) {
-    clearTimeout(toastTimer);
-    toastText.textContent = msg;
-    toast.hidden = false;
-    toastTimer = setTimeout(() => { toast.hidden = true; }, 2000);
-  }
 
   function escapeHtml(str) {
     const div = document.createElement('div');
