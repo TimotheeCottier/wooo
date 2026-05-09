@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="cine">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo Ciné — Récap</title>
+
+  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="recap.css?v=6" />
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <div class="progress-dots" id="progress-dots"></div>
+      <button type="button" class="icon-btn" id="btn-close" aria-label="Quitter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+
+    <section class="app-main recap-main">
+
+      <h1 class="title-h1 recap-title" id="recap-title">CHARGEMENT…</h1>
+      <p class="recap-lead" id="recap-lead">C'est l'heure du récap' ! Tu peux modifier tes choix en glissant les joueurs vers les chansons.</p>
+
+      <ul class="recap-list" id="recap-list"></ul>
+
+    </section>
+
+    <footer class="app-footer">
+      <div class="app-footer__row">
+        <button type="button" class="btn btn--primary" id="btn-next">
+          Je passe au thème suivant
+        </button>
+      </div>
+    </footer>
+
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=6"></script>
+  <script src="recap-cine.js?v=6"></script>
+</body>
+</html>

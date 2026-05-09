@@ -350,6 +350,54 @@ window.Wooo = window.Wooo || {};
   }
 
 
+  /**
+   * Lance une recherche TMDB (films + séries mélangés) via notre Edge Function.
+   * @param query  texte de recherche
+   * @param signal AbortSignal optionnel
+   * @param opts   { page } (TMDB pagine par 20)
+   * Retourne un tableau de résultats au format :
+   *   { id, title, year, director, poster, type ('movie'|'tv') }
+   */
+  async function searchTmdb(query, signal, opts) {
+    const page = (opts && opts.page) || 1;
+    const url = FUNCTIONS_BASE + '/tmdb-search' +
+                '?q=' + encodeURIComponent(query) +
+                '&page=' + page;
+    const resp = await fetch(url, {
+      headers: {
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'apikey': SUPABASE_ANON,
+      },
+      signal: signal,
+    });
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error('Erreur TMDB : ' + err);
+    }
+    const data = await resp.json();
+    return data.results || [];
+  }
+
+
+  /**
+   * Liste les top movies/séries de TMDB pour la mosaïque du hub.
+   * Utilise l'edge function tmdb-search avec un mot vide → top trending.
+   */
+  async function topTmdb(signal) {
+    const url = FUNCTIONS_BASE + '/tmdb-search?trending=1';
+    const resp = await fetch(url, {
+      headers: {
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'apikey': SUPABASE_ANON,
+      },
+      signal: signal,
+    });
+    if (!resp.ok) throw new Error('Erreur TMDB trending');
+    const data = await resp.json();
+    return data.results || [];
+  }
+
+
   // ======= UTILITAIRES =======
 
   function generatePinCode() {
@@ -407,6 +455,7 @@ window.Wooo = window.Wooo || {};
       pseudo:     session.pseudo,
       avatar:     session.avatar,
       is_creator: session.is_creator,
+      produit:    session.produit || 'musique',
       last_seen:  Date.now(),
     });
     // Limite la taille
@@ -465,6 +514,8 @@ window.Wooo = window.Wooo || {};
     getPickCountsByJoueur,
     getVotesForPartie,
     searchDeezer,
+    searchTmdb,
+    topTmdb,
     getClient,
   };
 

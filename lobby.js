@@ -46,6 +46,18 @@
   const pinCodeEl = $('lobby-pin-code');
   if (pinCodeEl) pinCodeEl.textContent = session.pin_code || '------';
 
+  // Adaptation produit (musique vs ciné)
+  const isCine = session.produit === 'cine';
+  document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
+  const themesIntro = $('themes-intro');
+  if (themesIntro) {
+    themesIntro.textContent = isCine
+      ? `Pour chaque thème, tu vas voir les films/séries choisis par tes potes et tu devras retrouver qui a choisi quoi !`
+      : `Pour chaque thème, tu vas entendre les chansons choisies par tes potes et tu devras retrouver qui a choisi quoi !`;
+  }
+  // URL de la page de jeu selon produit
+  const guessUrl = isCine ? 'guess-cine.html' : 'guess.html';
+
 
   // ======= ÉTAT =======
   let players = [];
@@ -67,7 +79,7 @@
       }
       // Si la partie est déjà lancée, on va voter directement
       if (partie.status === 'votes') {
-        window.location.href = 'guess.html?theme=0';
+        window.location.href = guessUrl + '?theme=0';
         return;
       }
       if (partie.status === 'terminee') {
@@ -170,7 +182,7 @@
       if (!updated || updated.status !== 'votes') {
         throw new Error('Mise à jour silencieusement bloquée. Vérifie la policy UPDATE sur Supabase.');
       }
-      window.location.href = 'guess.html?theme=0';
+      window.location.href = guessUrl + '?theme=0';
     } catch (err) {
       console.error(err);
       btnLaunch.disabled = false;
@@ -237,7 +249,7 @@
 
   // ======= NAVIGATION =======
   btnBack.addEventListener('click', () => {
-    window.location.href = 'hub.html';
+    window.location.href = isCine ? 'index-cine.html' : 'index.html';
   });
 
 

@@ -54,6 +54,16 @@
 
       foundPartie = partie;
 
+      // Adapter le wording selon produit de la partie
+      const isCine = (partie.produit === 'cine');
+      document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
+      const themesIntro = document.getElementById('themes-intro');
+      if (themesIntro) {
+        themesIntro.textContent = isCine
+          ? 'Tu devras choisir un film ou une série pour chacun de ces thèmes.'
+          : 'Tu devras choisir une chanson pour chacun de ces thèmes.';
+      }
+
       // Récupère le créateur
       const joueurs = await Wooo.api.getJoueurs(partie.id);
       const creator = joueurs.find(j => j.is_creator);
@@ -152,6 +162,9 @@
 
       const joueur = await Wooo.api.addJoueur(foundPartie.id, pseudo, false, selectedAvatar);
 
+      // Récupère le produit de la partie (par défaut musique pour rétrocompat)
+      const produit = foundPartie.produit || 'musique';
+
       Wooo.session.save({
         partie_id:  foundPartie.id,
         pin_code:   foundPartie.pin_code,
@@ -160,9 +173,12 @@
         joueur_id:  joueur.id,
         pseudo:     pseudo,
         avatar:     selectedAvatar,
+        produit:    produit,
       });
 
-      window.location.href = 'search.html?theme=0';
+      // Redirige vers le bon parcours selon produit
+      const searchUrl = produit === 'cine' ? 'search-cine.html' : 'search.html';
+      window.location.href = searchUrl + '?theme=0';
     } catch (err) {
       console.error(err);
       btnGo.disabled = false;

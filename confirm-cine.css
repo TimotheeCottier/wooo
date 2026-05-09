@@ -1,0 +1,24 @@
+/* =========================================================
+   WOOO Ciné — Confirmation : poster fixe
+   ========================================================= */
+
+.confirm-poster {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) 0;
+}
+
+.confirm-poster img {
+  width: 240px;
+  max-width: 70vw;
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.30);
+  background: var(--color-text);
+}
+
+@media (max-width: 599px) {
+  .confirm-poster img {
+    width: 200px;
+  }
+}

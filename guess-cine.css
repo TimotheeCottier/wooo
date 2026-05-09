@@ -1,0 +1,81 @@
+/* =========================================================
+   WOOO Ciné — Adaptations guess pour le ciné
+   ========================================================= */
+
+/* Track-bar simplifiée : pas de boutons play/pause */
+.track-bar--cine .track-bar__controls {
+  display: none;
+}
+
+/* Poster (remplace le vinyle) */
+.poster-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-3) 0;
+}
+
+.poster-target {
+  position: relative;
+  width: 220px;
+  height: 330px;
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--color-text);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.30),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.poster-target img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* État drag-over */
+.poster-target.is-drop-target {
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.40),
+    0 0 0 6px var(--color-blue-light),
+    0 0 40px rgba(63, 83, 254, 0.6);
+  transition: box-shadow 0.15s var(--ease-out);
+}
+
+/* Avatar du joueur attribué : recouvre le poster, ne tourne pas (statique) */
+.poster-stage .assigned-avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+  border: 4px solid var(--color-bg);
+  z-index: 10;
+  pointer-events: none;
+  animation: pop-in 0.4s var(--ease-bounce) both;
+}
+
+.poster-stage .assigned-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 599px) {
+  .poster-target {
+    width: 180px;
+    height: 270px;
+  }
+  .poster-stage .assigned-avatar {
+    width: 90px;
+    height: 90px;
+  }
+}

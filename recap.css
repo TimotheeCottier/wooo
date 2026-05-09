@@ -208,3 +208,19 @@
   transform: scale(1.01);
   transition: transform 0.1s var(--ease-out);
 }
+
+
+/* ---------- Adaptations ciné : poster rectangulaire ---------- */
+[data-product="cine"] .recap-row {
+  grid-template-columns: 48px 1fr auto;
+}
+
+[data-product="cine"] .recap-row__cover {
+  width: 48px;
+  height: 72px;
+  border-radius: 6px;
+}
+
+[data-product="cine"] .recap-row__cover img {
+  border-radius: 6px;
+}

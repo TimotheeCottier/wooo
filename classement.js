@@ -35,6 +35,18 @@
 
   renderProgressDots();
 
+  // Adaptation produit (musique vs ciné)
+  const isCine = session.produit === 'cine';
+  document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
+  if (isCine) {
+    // Adapter les textes de la modale "Comment sont calculés les points ?"
+    document.querySelectorAll('.rules-card p').forEach(p => {
+      p.textContent = p.textContent
+        .replace(/chanson/gi, 'film')
+        .replace(/musique/gi, 'film');
+    });
+  }
+
 
   function renderProgressDots() {
     // Partie terminée → toutes les pastilles en orange foncé sans numéro

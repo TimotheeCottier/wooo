@@ -28,7 +28,7 @@
     try {
       // On utilise notre edge function existante avec des recherches "tendance"
       // Plusieurs requêtes pour avoir un mix varié
-      const queries = ['top hits', 'pop 2024', 'rap fr', 'rock classics', 'electro'];
+      const queries = ['pop 2024', 'rap fr', 'rock classics', 'electro', 'r&b', 'indie'];
       const allCovers = new Set();
 
       for (const q of queries) {
@@ -51,40 +51,41 @@
   }
 
 
-  // ======= CINÉ : on utilise une liste hardcodée de top films/séries =======
-  // (TMDB sans clé n'est pas dispo, OMDb demande aussi une clé.
-  //  On utilise une liste statique d'URLs d'affiches publiques.)
+  // ======= CINÉ : top trending TMDB =======
   async function loadCineMosaic() {
-    // Liste curatée d'affiches de films cultes (URLs CDN publiques de TMDB).
-    // Si une URL casse, on n'affiche juste pas la cellule (pas de souci visuel).
-    const covers = [
-      'https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg', // The Godfather
-      'https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg', // Pulp Fiction
-      'https://image.tmdb.org/t/p/w500/aiy35Evcofzl7hASZZvsfQrbXIC.jpg', // The Shawshank Redemption
-      'https://image.tmdb.org/t/p/w500/fjS3DmlGXTKw9QqAUluzLNMfvk7.jpg', // Schindler's List
-      'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg', // The Godfather Part II
-      'https://image.tmdb.org/t/p/w500/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg', // The Dark Knight
-      'https://image.tmdb.org/t/p/w500/eBP6mTXhDr9C8kRxxZX1tQR5xKJ.jpg', // Inception
-      'https://image.tmdb.org/t/p/w500/jeAQdDX9nguP6YOX6QSWKDPkbBw.jpg', // Forrest Gump
-      'https://image.tmdb.org/t/p/w500/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg', // The Matrix
-      'https://image.tmdb.org/t/p/w500/79y4kReVqUiwSiCwS3Bch1XgUBP.jpg', // Goodfellas
-      'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg', // Lord of the Rings
-      'https://image.tmdb.org/t/p/w500/3WHetfJBxpBDBkWS8YMfjP5GqAZ.jpg', // Fight Club
-      'https://image.tmdb.org/t/p/w500/yP7KhIz1FVyuNLEdvSwjrDPNZGY.jpg', // Spirited Away
-      'https://image.tmdb.org/t/p/w500/ftD1QOwbLRvZbThA8a6PpZqvnSW.jpg', // Parasite
-      'https://image.tmdb.org/t/p/w500/r4B5sQBbo8GtMKKxgjnHiaCVNg2.jpg', // Interstellar
-      'https://image.tmdb.org/t/p/w500/9O1Iy9od7uG14gPy3eFBuBLklrG.jpg', // Avatar
-      'https://image.tmdb.org/t/p/w500/30bn5Hh4alGePqr2P4iLEAh75DH.jpg', // Game of Thrones
-      'https://image.tmdb.org/t/p/w500/rqeYMLryjcawh2JeRpCVUDXYM5b.jpg', // Stranger Things
-      'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',  // Breaking Bad
-      'https://image.tmdb.org/t/p/w500/9faGSFi5jam6pDWGNd0p8JcJgXQ.jpg', // The Office
-      'https://image.tmdb.org/t/p/w500/qztOZCFlkHjcj6n2H4sMPENSpgT.jpg', // Better Call Saul
-      'https://image.tmdb.org/t/p/w500/lBYOKAMcc0R3wWVnPnIcF4DC8Wx.jpg', // Squid Game
-      'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg', // Friends
-      'https://image.tmdb.org/t/p/w500/4DSpPF9JhLWuAvrJUtGWosBXmGr.jpg', // Lupin
-    ];
+    try {
+      // On veut beaucoup d'affiches → on charge plusieurs pages
+      const allPosters = new Set();
+      for (let page = 1; page <= 3; page++) {
+        try {
+          const items = await Wooo.api.topTmdb(null);
+          items.forEach(i => {
+            if (i.poster) allPosters.add(i.poster);
+          });
+          // topTmdb ne pagine pas par défaut, mais on peut s'en sortir avec une recherche élargie
+          if (allPosters.size >= MOSAIC_CELLS) break;
+        } catch (e) { /* ignore */ }
+        // Pas de pagination native ici → on sort après 1 itération
+        break;
+      }
 
-    renderMosaic(mosaicCine, covers.slice(0, MOSAIC_CELLS));
+      // Si on n'a pas assez : on lance des recherches "tendance" générique
+      if (allPosters.size < MOSAIC_CELLS) {
+        const fallbackQueries = ['marvel', 'netflix', 'disney', 'hbo'];
+        for (const q of fallbackQueries) {
+          try {
+            const results = await Wooo.api.searchTmdb(q, null, { page: 1 });
+            results.forEach(r => { if (r.poster) allPosters.add(r.poster); });
+            if (allPosters.size >= MOSAIC_CELLS) break;
+          } catch (e) { /* ignore */ }
+        }
+      }
+
+      const posters = Array.from(allPosters).slice(0, MOSAIC_CELLS);
+      renderMosaic(mosaicCine, posters);
+    } catch (err) {
+      console.warn('[Wooo hub] erreur chargement Ciné :', err);
+    }
   }
 
 

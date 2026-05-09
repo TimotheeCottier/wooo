@@ -1,14 +1,16 @@
 /* =========================================================
-   WOOO — Homepage
+   WOOO Ciné — Homepage
    ---------------------------------------------------------
-   - Affiche les parties en cours (depuis localStorage + état Supabase)
-   - Bouton "Je crée une partie" → create.html
-   - Bouton "Je rejoins une partie" → join.html
-   - Modale "Comment jouer ?" avec 3 cartes de règles
+   - Affiche les parties en cours (filtrées sur produit=cine)
+   - Bouton "Je crée une partie" → create-cine.html
+   - Bouton "Je rejoins une partie" → join.html (commun)
+   - Mosaïque de posters TMDB en bas
    ========================================================= */
 
 (function () {
   'use strict';
+
+  console.log('[Wooo home-cine.js] version 6 chargée ✅');
 
   const $ = (id) => document.getElementById(id);
 
@@ -16,38 +18,30 @@
   const btnJoin       = $('btn-join');
   const btnHow        = $('btn-how');
   const btnBackHub    = $('btn-back-hub');
+  const howModal      = $('how-modal');
+  const activeBlock   = $('active-games');
+  const activeList    = $('active-games-list');
+  const postersEl     = $('home-posters');
 
-  // Bouton retour vers le hub multi-produit
+
+  // ======= BOUTON RETOUR HUB =======
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => {
       window.location.href = 'hub.html';
     });
   }
-  const howModal      = $('how-modal');
-  const activeBlock   = $('active-games');
-  const activeList    = $('active-games-list');
-  const newGameTitle  = $('new-game-title');
 
 
-  // ======= AU CHARGEMENT : on efface la session (on est à la home) =======
-  // ATTENTION : on ne touche PAS à l'historique, juste à la session courante.
-  // Comme ça, cliquer sur une partie dans la liste recharge la session de cette partie.
-
-
-  // ======= CHARGER LES PARTIES EN COURS =======
+  // ======= CHARGER LES PARTIES EN COURS (filtrées ciné) =======
   async function loadActiveGames() {
     try {
       const allGames = await Wooo.history.activeGames();
-      // Filtre : produit=musique (ou non défini = ancien comportement)
-      const games = allGames.filter(g => !g.produit || g.produit === 'musique');
+      const games = allGames.filter(g => (g.produit || 'musique') === 'cine');
       if (games.length === 0) {
         activeBlock.hidden = true;
-        newGameTitle.textContent = 'Nouvelle partie';
         return;
       }
-
       activeBlock.hidden = false;
-      newGameTitle.textContent = 'Ou commence une nouvelle partie';
       renderActiveGames(games);
     } catch (err) {
       console.warn('[Wooo] Erreur chargement parties en cours :', err);
@@ -56,7 +50,6 @@
 
   function renderActiveGames(games) {
     activeList.innerHTML = games.map(game => {
-      // On affiche les avatars + pseudos des joueurs sous forme de tags
       const tags = game.joueurs.slice(0, 5).map((p, i) => {
         const color = pastel(i);
         const avatar = p.avatar || 1;
@@ -91,7 +84,6 @@
     }).join('');
   }
 
-  /** Couleur pastel cyclique */
   function pastel(i) {
     const colors = (Wooo.config && Wooo.config.PLAYER_COLORS) || [
       '#FFCCCC', '#FFCF97', '#FFE895', '#AFEBBF', '#AFDEFF',
@@ -109,14 +101,12 @@
     const action = e.target.closest('[data-action]')?.dataset.action;
     const partieId = card.dataset.partieId;
 
-    // Clic sur la poubelle → confirmation de suppression
     if (action === 'delete') {
       e.stopPropagation();
       askDelete(partieId);
       return;
     }
 
-    // Sinon : on joue
     const game = (await Wooo.history.activeGames()).find(g => g.partie_id === partieId);
     if (!game) {
       Wooo.history.remove(partieId);
@@ -124,7 +114,6 @@
       return;
     }
 
-    // Restaure la session pour cette partie
     Wooo.session.save({
       partie_id:  game.partie_id,
       pin_code:   game.pin_code,
@@ -133,12 +122,11 @@
       pseudo:     game.pseudo,
       avatar:     game.avatar,
       is_creator: game.is_creator,
-      produit:    game.produit || 'musique',
+      produit:    game.produit || 'cine',
     });
 
-    // Redirige vers le bon écran selon le statut
     if (game.status === 'votes') {
-      window.location.href = 'guess.html?theme=0';
+      window.location.href = 'guess-cine.html?theme=0';
     } else {
       window.location.href = game.is_creator ? 'lobby.html' : 'lobby-invite.html';
     }
@@ -163,12 +151,10 @@
   }
 
   document.addEventListener('click', (e) => {
-    // Fermeture
     if (e.target.matches('[data-delete-close]') || e.target.closest('[data-delete-close]')) {
       closeDeleteModal();
       return;
     }
-    // Confirmation
     if (e.target.matches('#btn-delete-confirm')) {
       if (pendingDeleteId) {
         Wooo.history.remove(pendingDeleteId);
@@ -186,7 +172,7 @@
   // ======= BOUTONS PRINCIPAUX =======
   btnCreate.addEventListener('click', () => {
     Wooo.session.clear();
-    window.location.href = 'create.html';
+    window.location.href = 'create-cine.html';
   });
 
   btnJoin.addEventListener('click', () => {
@@ -195,19 +181,17 @@
   });
 
 
-  // ======= MODALE "COMMENT JOUER ?" =======
+  // ======= MODALE COMMENT JOUER =======
   btnHow.addEventListener('click', () => {
     howModal.hidden = false;
     document.body.style.overflow = 'hidden';
   });
-
   howModal.addEventListener('click', (e) => {
     if (e.target.dataset.close !== undefined || e.target.closest('[data-close]')) {
       howModal.hidden = true;
       document.body.style.overflow = '';
     }
   });
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !howModal.hidden) {
       howModal.hidden = true;
@@ -216,7 +200,21 @@
   });
 
 
-  // ======= UTILITAIRES =======
+  // ======= MOSAÏQUE DE POSTERS =======
+  async function loadPosters() {
+    try {
+      const items = await Wooo.api.topTmdb(null);
+      const posters = items.filter(i => i.poster).slice(0, 6);
+      postersEl.innerHTML = posters.map(p => `
+        <img class="home-poster" src="${escapeHtml(p.poster)}" alt="" loading="lazy" />
+      `).join('');
+    } catch (e) {
+      console.warn('[Wooo home-cine] erreur load posters :', e);
+    }
+  }
+
+
+  // ======= UTILITAIRE =======
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str || '';
@@ -226,5 +224,6 @@
 
   // ======= INIT =======
   loadActiveGames();
+  loadPosters();
 
 })();

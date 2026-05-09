@@ -1,0 +1,35 @@
+/* =========================================================
+   WOOO Ciné — Recherche : adaptations
+   ---------------------------------------------------------
+   Pochette rectangulaire (poster), pas de bouton play.
+   ========================================================= */
+
+/* Override pour le ciné : pas de bouton play, et poster rectangulaire */
+[data-product="cine"] .song-bloc {
+  grid-template-columns: 48px 1fr auto;
+}
+
+[data-product="cine"] .song-bloc__cover {
+  width: 48px;
+  height: 72px;
+  border-radius: 6px;
+}
+
+[data-product="cine"] .song-bloc__cover img {
+  border-radius: 6px;
+}
+
+/* Pas de bouton play sur ciné */
+[data-product="cine"] .song-bloc__play {
+  display: none !important;
+}
+
+/* Le cover devient juste une image cliquable — pas d'effet play */
+[data-product="cine"] .song-bloc__cover {
+  cursor: default;
+}
+
+[data-product="cine"] .song-bloc__cover:hover {
+  /* léger zoom sur l'image */
+  transform: none;
+}

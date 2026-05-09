@@ -39,6 +39,17 @@
   const pinCodeEl = $('lobby-pin-code');
   if (pinCodeEl) pinCodeEl.textContent = session.pin_code || '------';
 
+  // Adaptation produit
+  const isCine = session.produit === 'cine';
+  document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
+  const themesIntro = $('themes-intro');
+  if (themesIntro) {
+    themesIntro.textContent = isCine
+      ? `Pour chaque thème, tu vas voir les films/séries choisis par tes potes et tu devras retrouver qui a choisi quoi !`
+      : `Pour chaque thème, tu vas entendre les chansons choisies par tes potes et tu devras retrouver qui a choisi quoi !`;
+  }
+  const guessUrl = isCine ? 'guess-cine.html' : 'guess.html';
+
 
   // ======= ÉTAT =======
   let players = [];
@@ -143,7 +154,7 @@
 
   // ======= BOUTON VOTER =======
   btnVoter.addEventListener('click', () => {
-    window.location.href = 'guess.html?theme=0';
+    window.location.href = guessUrl + '?theme=0';
   });
 
 
@@ -197,7 +208,7 @@
 
   // ======= NAVIGATION =======
   btnBack.addEventListener('click', () => {
-    window.location.href = 'hub.html';
+    window.location.href = isCine ? 'index-cine.html' : 'index.html';
   });
 
 

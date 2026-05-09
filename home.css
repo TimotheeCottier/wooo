@@ -384,3 +384,40 @@
   gap: var(--space-3);
   justify-content: flex-end;
 }
+
+
+/* ---------- Mosaïque de posters (Wooo Ciné) ---------- */
+.home-posters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.home-poster {
+  width: 140px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+  flex-shrink: 0;
+}
+
+@media (min-width: 900px) {
+  .home-poster {
+    width: 160px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 899px) {
+  .home-posters {
+    margin-left: -10vw;
+    margin-right: -10vw;
+    margin-top: var(--space-7);
+    margin-bottom: -40px;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 0 5vw;
+  }
+}

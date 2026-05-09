@@ -4,69 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#F5F5F5" />
-  <title>Wooo Ciné &amp; Séries — Bientôt disponible</title>
+  <title>Wooo Ciné &amp; Séries — Devine ce que regardent tes potes</title>
 
   <link rel="stylesheet" href="styles.css?v=6" />
   <link rel="stylesheet" href="home.css?v=6" />
-  <style>
-    .coming-soon {
-      max-width: 540px;
-      margin: 0 auto;
-      text-align: center;
-      padding: var(--space-7) var(--space-5);
-    }
-    .coming-soon__emoji {
-      font-size: 80px;
-      margin-bottom: var(--space-5);
-    }
-    .coming-soon__title {
-      color: var(--color-text);
-      margin-bottom: var(--space-4);
-    }
-    .coming-soon__lead {
-      font-size: 18px;
-      color: var(--color-text-soft);
-      line-height: 1.5;
-      margin-bottom: var(--space-7);
-    }
-  </style>
 </head>
 <body>
 
   <main class="app">
 
     <header class="app-header">
-      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+      <button type="button" class="icon-btn" id="btn-back-hub" aria-label="Retour au choix">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
       </button>
-      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
-      <span class="icon-btn-spacer"></span>
+      <div class="app-header__brand">
+        <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      </div>
+      <span class="product-tag">Ciné &amp; Séries</span>
     </header>
 
     <section class="app-main">
-      <div class="coming-soon">
-        <div class="coming-soon__emoji">🎬</div>
-        <h1 class="title-h1 coming-soon__title">Wooo Ciné &amp; Séries</h1>
-        <p class="coming-soon__lead">
-          C'est en cours de préparation&nbsp;!<br>
-          Bientôt, tu pourras jouer avec tes potes pour deviner leurs films et séries préférés.
-        </p>
-        <button type="button" class="btn btn--primary" id="btn-back-hub">
-          Retour
-        </button>
+      <div class="layout-split">
+
+        <!-- Hero -->
+        <div class="home-hero">
+          <h1 class="title-display home-hero__title">
+            Devine&nbsp;ce<br />que regardent<br />tes&nbsp;potes&nbsp;!
+          </h1>
+          <p class="home-hero__lead">
+            Le jeu ciné &amp; séries à jouer entre amis. Choisis tes films, devine ceux des autres, marque des points.
+          </p>
+          <button type="button" class="btn btn--tertiary home-hero__how" id="btn-how">
+            Comment jouer ?
+          </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="home-actions">
+
+          <div class="active-games" id="active-games" hidden>
+            <h2 class="title-h3 active-games__title">Tes parties en cours</h2>
+            <ul class="active-games__list" id="active-games-list" aria-live="polite"></ul>
+          </div>
+
+          <div class="new-game">
+            <h2 class="title-h3 new-game__title">Nouvelle partie</h2>
+            <div class="new-game__buttons">
+              <button type="button" class="btn btn--primary btn--full" id="btn-create">
+                Je crée une partie
+              </button>
+              <button type="button" class="btn btn--secondary btn--full" id="btn-join">
+                Je rejoins une partie
+              </button>
+            </div>
+          </div>
+
+        </div>
+
       </div>
+
+      <!-- Mosaïque de posters au lieu des vinyles -->
+      <div class="home-vinyls home-posters" aria-hidden="true" id="home-posters"></div>
+
     </section>
 
   </main>
 
-  <script>
-    document.getElementById('btn-back').addEventListener('click', () => {
-      window.location.href = 'hub.html';
-    });
-    document.getElementById('btn-back-hub').addEventListener('click', () => {
-      window.location.href = 'hub.html';
-    });
-  </script>
+  <!-- Modale "Comment jouer ?" -->
+  <div class="modal" id="how-modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Comment jouer ?</h2>
+      <div class="rules-cards">
+        <div class="rules-card">
+          <div class="rules-card__emoji">🎯</div>
+          <h3 class="title-h3">+1 par bonne réponse</h3>
+          <p>Chaque film correctement attribué = 1 point.</p>
+        </div>
+        <div class="rules-card">
+          <div class="rules-card__emoji">🔥</div>
+          <h3 class="title-h3">+2 si sans-faute</h3>
+          <p>Toutes les bonnes réponses sur un thème ? Bonus de 2 points.</p>
+        </div>
+        <div class="rules-card">
+          <div class="rules-card__emoji">🤝</div>
+          <h3 class="title-h3">Doublons OK</h3>
+          <p>Même film choisi par 2 personnes ? Voter l'un OU l'autre compte.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Modale confirmation suppression -->
+  <div class="modal" id="delete-modal" hidden>
+    <div class="modal__backdrop" data-delete-close></div>
+    <div class="modal__panel modal__panel--small" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-delete-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Supprimer cette partie&nbsp;?</h2>
+      <p class="modal__text">
+        Cette partie ne s'affichera plus sur ta page d'accueil. Les autres joueurs pourront continuer à jouer normalement.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--tertiary" data-delete-close>Annuler</button>
+        <button type="button" class="btn btn--primary" id="btn-delete-confirm">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=6"></script>
+  <script src="home-cine.js?v=6"></script>
 </body>
 </html>

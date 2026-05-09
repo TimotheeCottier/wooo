@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="cine">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo Ciné — Choisis ton film/série</title>
+
+  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="search.css?v=6" />
+  <link rel="stylesheet" href="search-cine.css?v=6" />
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <div class="progress-dots" id="progress-dots"></div>
+      <button type="button" class="icon-btn" id="btn-close" aria-label="Quitter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+
+    <section class="app-main search-main">
+
+      <h1 class="title-h1 search-theme" id="search-theme">CHARGEMENT…</h1>
+
+      <div class="search-bar">
+        <input type="text"
+               id="search-input"
+               class="input search-bar__input"
+               placeholder="film ou série"
+               autocomplete="off" />
+        <button type="button" class="search-bar__button" id="btn-search" aria-label="Rechercher">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-empty" id="search-empty">
+        <p class="search-empty__emoji">🍿</p>
+        <p class="search-empty__text">On sait, c'est difficile<br>d'en choisir un seul&nbsp;!</p>
+      </div>
+
+      <ul class="search-results" id="search-results" hidden></ul>
+
+      <button type="button" class="btn btn--tertiary search-more" id="btn-load-more" hidden>
+        Charger plus de résultats
+      </button>
+
+      <div class="search-loading" id="search-loading" hidden>
+        <p>Recherche…</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=6"></script>
+  <script src="search-cine.js?v=6"></script>
+</body>
+</html>
