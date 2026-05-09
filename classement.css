@@ -156,6 +156,13 @@
   color: var(--color-text-muted);
   font-size: 22px;
 }
+/* Pour les joueurs en attente, on annule TOUTE médaille (or/argent/bronze) */
+.classement-row--waiting .classement-row__rank {
+  background: var(--color-text-muted) !important;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15) !important;
+  font-size: 18px;
+  opacity: 0.7;
+}
 
 
 /* ---------- Bouton info points ---------- */

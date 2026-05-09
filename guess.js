@@ -171,8 +171,9 @@
     trackArtist.textContent = pick.artist || '';
     coverImg.src = pick.cover || '';
 
-    // Retire l'avatar attribué (s'il y en avait un)
-    const oldAssigned = vinyl.querySelector('.assigned-avatar');
+    // Retire l'avatar attribué (s'il y en avait un) - cherche dans stage et vinyle
+    const stageEl = vinyl.parentElement;
+    const oldAssigned = stageEl.querySelector('.assigned-avatar') || vinyl.querySelector('.assigned-avatar');
     if (oldAssigned) oldAssigned.remove();
 
     // Restaure l'avatar si un vote a déjà été fait pour cette chanson
@@ -348,15 +349,18 @@
     const player = allPlayers.find(p => p.id === playerId);
     if (!player) return;
 
-    // Supprime l'ancien
-    const old = vinyl.querySelector('.assigned-avatar');
+    // Supprime l'ancien avatar attribué (placé hors du vinyle qui tourne)
+    const stage = vinyl.parentElement;
+    const old = stage.querySelector('.assigned-avatar');
     if (old) old.remove();
 
     const avatar = player.avatar || 1;
     const div = document.createElement('div');
     div.className = 'assigned-avatar';
     div.innerHTML = `<img src="assets/avatar${avatar}.png" alt="${escapeHtml(player.pseudo)}" />`;
-    vinyl.appendChild(div);
+    // L'avatar est ajouté DANS le stage (parent du vinyle), pas dans le vinyle lui-même.
+    // Comme ça, il reste droit pendant que le vinyle tourne.
+    stage.appendChild(div);
   }
 
 

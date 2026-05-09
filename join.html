@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#F5F5F5" />
   <title>Wooo — Rejoins une partie</title>
 
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="join.css" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="join.css?v=5" />
 </head>
 <body>
 
@@ -26,51 +26,27 @@
       <h1 class="title-h1 join-title">Rejoins une partie</h1>
       <p class="join-lead">Entre le code que ton pote t'a partagé.</p>
 
-      <!-- Étape 1 : code PIN -->
-      <div class="join-step" id="step-pin">
-        <input type="text"
-               id="pin-input"
-               class="input join-pin-input"
-               placeholder="000000"
-               maxlength="6"
-               inputmode="numeric"
-               autocomplete="off" />
-        <p class="join-error" id="pin-error" hidden></p>
-
-        <!-- Aperçu de la partie une fois le PIN trouvé -->
-        <div class="join-preview" id="join-preview" hidden>
-          <p class="join-preview__label">Cette partie contient :</p>
-          <ul class="join-preview__themes" id="join-preview-themes"></ul>
-        </div>
-      </div>
-
-      <!-- Étape 2 : pseudo + avatar -->
-      <div class="join-step" id="step-identity" hidden>
-        <h2 class="title-h2 join-subtitle">C'est quoi ton p'tit nom ?</h2>
-        <input type="text"
-               id="pseudo-input"
-               class="input"
-               placeholder="Ton prénom"
-               maxlength="20" />
-        <p class="join-error" id="pseudo-error" hidden></p>
-
-        <h2 class="title-h3 join-subtitle">Choisis un avatar</h2>
-        <ul class="avatar-grid" id="avatar-picker"></ul>
-      </div>
+      <input type="text"
+             id="pin-input"
+             class="input join-pin-input"
+             placeholder="000000"
+             maxlength="6"
+             inputmode="numeric"
+             autocomplete="off" />
+      <p class="join-error" id="pin-error" hidden></p>
 
     </section>
 
     <footer class="app-footer">
       <div class="app-footer__row">
         <button type="button" class="btn btn--primary" id="btn-validate-pin" disabled>Valider</button>
-        <button type="button" class="btn btn--primary" id="btn-go" hidden disabled>C'est parti&nbsp;!</button>
       </div>
     </footer>
 
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
-  <script src="join.js"></script>
+  <script src="supabase.js?v=5"></script>
+  <script src="join.js?v=5"></script>
 </body>
 </html>

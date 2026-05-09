@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#F5F5F5" />
   <title>Wooo — Devine ce qu'écoutent tes potes</title>
 
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="home.css?v=5" />
 </head>
 <body>
 
@@ -68,9 +68,9 @@
       <!-- Illustration vinyles décoratifs : indépendants du layout split,
            pour pouvoir les positionner différemment sur mobile (bas dépassant) -->
       <div class="home-vinyls" aria-hidden="true">
-        <img class="home-vinyl home-vinyl--1" src="assets/vinyl-orange.svg" alt="" />
-        <img class="home-vinyl home-vinyl--2" src="assets/vinyl-blue.svg" alt="" />
-        <img class="home-vinyl home-vinyl--3" src="assets/vinyl-yellow.svg" alt="" />
+        <img class="home-vinyl home-vinyl--1" src="assets/vinyl1.png" alt="" />
+        <img class="home-vinyl home-vinyl--2" src="assets/vinyl2.png" alt="" />
+        <img class="home-vinyl home-vinyl--3" src="assets/vinyl3.png" alt="" />
       </div>
 
     </section>
@@ -104,8 +104,24 @@
     </div>
   </div>
 
+  <!-- Modale confirmation suppression d'une partie -->
+  <div class="modal" id="delete-modal" hidden>
+    <div class="modal__backdrop" data-delete-close></div>
+    <div class="modal__panel modal__panel--small" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-delete-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Supprimer cette partie&nbsp;?</h2>
+      <p class="modal__text">
+        Cette partie ne s'affichera plus sur ta page d'accueil. Les autres joueurs pourront continuer à jouer normalement.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--tertiary" data-delete-close>Annuler</button>
+        <button type="button" class="btn btn--primary" id="btn-delete-confirm">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
-  <script src="home.js"></script>
+  <script src="supabase.js?v=5"></script>
+  <script src="home.js?v=5"></script>
 </body>
 </html>

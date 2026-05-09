@@ -188,3 +188,23 @@
   margin-right: var(--space-2);
   box-shadow: var(--shadow-button-orange);
 }
+
+
+/* Drag & drop des tags joueurs */
+.recap-row__tag-pill {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.recap-row__tag-pill.is-dragging {
+  cursor: grabbing;
+  opacity: 0.5;
+}
+
+.recap-row.is-drop-target {
+  border-color: var(--color-orange-light);
+  background: rgba(247, 89, 0, 0.06);
+  transform: scale(1.01);
+  transition: transform 0.1s var(--ease-out);
+}

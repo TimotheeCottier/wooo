@@ -70,10 +70,10 @@
   overflow: hidden;
   cursor: pointer;
   background: var(--color-bg);
-  border: 3px solid transparent;
+  border: none;
   transition: transform 0.1s var(--ease-out),
-              border-color 0.15s var(--ease-out),
-              filter 0.15s var(--ease-out);
+              filter 0.25s var(--ease-out),
+              opacity 0.25s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -89,9 +89,17 @@
   transform: translateY(-2px);
 }
 
+/* Quand UN avatar est sélectionné dans la grille, les AUTRES se grisent */
+.avatar-grid:has(.is-selected) .avatar-grid__item:not(.is-selected) {
+  filter: grayscale(0.85);
+  opacity: 0.45;
+}
+
+/* L'avatar sélectionné reste vif, sans bordure */
 .avatar-grid__item.is-selected {
-  border-color: var(--color-orange-light);
-  box-shadow: 0 0 0 4px rgba(247, 89, 0, 0.20);
+  filter: none;
+  opacity: 1;
+  transform: scale(1.04);
 }
 
 .avatar-grid__item.is-disabled {

@@ -36,6 +36,10 @@
 
   const totalThemes = (session.themes || []).length;
 
+  // Affichage du PIN
+  const pinCodeEl = $('lobby-pin-code');
+  if (pinCodeEl) pinCodeEl.textContent = session.pin_code || '------';
+
   // Affichage des boutons selon le rôle
   if (session.is_creator) {
     btnLaunch.hidden = false;

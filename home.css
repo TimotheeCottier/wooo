@@ -343,3 +343,44 @@
     margin-bottom: -50px;
   }
 }
+
+
+/* Bouton poubelle pour supprimer une partie */
+.active-game__delete {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
+}
+.active-game__delete:hover {
+  background: rgba(231, 76, 60, 0.10);
+  color: var(--color-error);
+}
+.active-game__delete svg { width: 18px; height: 18px; }
+
+
+/* Modale "small" pour confirmations */
+.modal__panel--small {
+  max-width: 420px;
+}
+
+.modal__text {
+  color: var(--color-text-soft);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 var(--space-5);
+}
+
+.modal__actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}

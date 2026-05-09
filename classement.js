@@ -77,7 +77,8 @@
         themesDone: themesByJoueur[j.id] || 0,
         finished: (themesByJoueur[j.id] || 0) >= totalThemes,
       })).sort((a, b) => {
-        // Tri : 1) points desc, 2) themesDone desc, 3) pseudo
+        // Tri : 1) finished avant pas finished, 2) points desc, 3) themesDone desc, 4) pseudo
+        if (a.finished !== b.finished) return a.finished ? -1 : 1;
         if (b.points !== a.points) return b.points - a.points;
         if (b.themesDone !== a.themesDone) return b.themesDone - a.themesDone;
         return a.pseudo.localeCompare(b.pseudo);
@@ -131,11 +132,15 @@
       firstRender = false;
     }
 
-    // Calcul des rangs avec ex-aequo
+    // Calcul des rangs avec ex-aequo, UNIQUEMENT pour les joueurs ayant fini
     let prevPoints = null;
     let currentRank = 0;
     let displayedRank = 0;
     ranked.forEach(p => {
+      if (!p.finished) {
+        p._rank = null;
+        return;
+      }
       currentRank++;
       if (p.points !== prevPoints) {
         displayedRank = currentRank;
@@ -145,8 +150,6 @@
     });
 
     const colors = (Wooo.config && Wooo.config.PLAYER_COLORS) || [];
-    const playerOrder = {};
-    ranked.forEach(p => { playerOrder[p.id] = ranked.indexOf(p); });
 
     list.innerHTML = ranked.map((p, idx) => {
       const rank = p._rank;
@@ -162,7 +165,7 @@
 
       return `
         <li class="classement-row ${medalClass} ${isWaiting ? 'classement-row--waiting' : ''}">
-          <span class="classement-row__rank">${rank}</span>
+          <span class="classement-row__rank">${rank !== null ? rank : '—'}</span>
           <span class="classement-row__tag" style="background: ${color}">
             <span class="classement-row__tag-avatar"><img src="assets/avatar${av}.png" alt="" /></span>
             ${escapeHtml(p.pseudo)}${isMe ? '<span class="classement-row__me-badge">TOI</span>' : ''}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" data-product="musique">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F5F5F5" />
+  <title>Wooo — Tu es presque dans la partie !</title>
+
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="create.css?v=5" />
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="app-header">
+      <button type="button" class="icon-btn" id="btn-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+      </button>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
+    </header>
+
+
+    <section class="app-main">
+      <div class="create-content">
+
+        <!-- Bloc 1 : Prénom -->
+        <h1 class="title-h1 create-title">C'est quoi ton p'tit nom&nbsp;?</h1>
+        <input type="text"
+               id="pseudo-input"
+               class="input"
+               placeholder="Ton prénom"
+               maxlength="20"
+               autocomplete="given-name" />
+
+
+        <!-- Bloc 2 : Avatar -->
+        <h2 class="title-h3 create-subtitle">Choisis un avatar</h2>
+        <ul class="avatar-grid" id="avatar-picker"></ul>
+
+
+        <!-- Bloc 3 : RÉCAP des thèmes (lecture seule) -->
+        <h2 class="title-h2 create-subtitle create-subtitle--themes" id="themes-title">
+          Voici les thèmes choisis par <span id="creator-name">…</span>
+        </h2>
+        <p class="create-lead">Tu devras choisir une chanson pour chacun de ces thèmes.</p>
+
+        <ul class="themes-list themes-list--readonly" id="themes-list"></ul>
+
+      </div>
+    </section>
+
+
+    <footer class="app-footer">
+      <div class="app-footer__row">
+        <button type="button" class="btn btn--primary" id="btn-go" disabled>
+          C'est parti&nbsp;!
+        </button>
+      </div>
+    </footer>
+
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=5"></script>
+  <script src="join-identity.js?v=5"></script>
+</body>
+</html>

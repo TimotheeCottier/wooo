@@ -1,14 +1,17 @@
 /* =========================================================
    WOOO — Recap des votes (avant validation)
    ---------------------------------------------------------
-   - Récupère votes en cours depuis sessionStorage
-   - Phase 'adjust' : permet d'échanger 2 attributions par clic
-   - Phase 'results' : affiche ✓/✗ et points
-   - Gère les doublons (2 personnes = même chanson)
+   - Affiche les chansons du thème + tag joueur attribué
+   - Drag & drop des tags pour échanger les attributions
+   - Bouton "Je passe au thème (X)" pour les thèmes intermédiaires
+     ou "Je veux voir les résultats !" pour le dernier
+   - À la validation : sauvegarde votes + score
    ========================================================= */
 
 (function () {
   'use strict';
+
+  console.log('[Wooo recap.js] version 5 chargée ✅');
 
   const $ = (id) => document.getElementById(id);
 
@@ -18,7 +21,6 @@
   const titleEl         = $('recap-title');
   const leadEl          = $('recap-lead');
   const list            = $('recap-list');
-  const btnConfirm      = $('btn-confirm');
   const btnNext         = $('btn-next');
   const audio           = $('audio-player');
 
@@ -34,17 +36,23 @@
   const themeIndex = parseInt(params.get('theme') || '0', 10);
   const themeName = (session.themes && session.themes[themeIndex]) || '';
   const totalThemes = (session.themes || []).length;
+  const isLastTheme = (themeIndex === totalThemes - 1);
 
   titleEl.textContent = themeName.toUpperCase();
   renderProgressDots();
 
+  // Bouton dynamique
+  if (isLastTheme) {
+    btnNext.textContent = 'Je veux voir les résultats !';
+  } else {
+    btnNext.textContent = 'Je passe au thème ' + (themeIndex + 2);
+  }
+
 
   // ======= ÉTAT =======
-  let phase = 'adjust';
   let allPlayers = [];
   let tracks = [];
-  let votes = {};                  // { pick_id: joueur_id }
-  let selectedTrackId = null;
+  let votes = {};
   let playersByDeezerId = {};
   let currentPlayingId = null;
 
@@ -75,7 +83,6 @@
       allPlayers = joueurs;
       tracks = allPicks.filter(p => p.theme_index === themeIndex && p.joueur_id !== session.joueur_id);
 
-      // Map deezer_id → joueurs (pour gérer les doublons)
       const themePicks = allPicks.filter(p => p.theme_index === themeIndex);
       playersByDeezerId = {};
       themePicks.forEach(p => {
@@ -108,23 +115,21 @@
   function renderList() {
     const colors = (Wooo.config && Wooo.config.PLAYER_COLORS) || [];
 
-    list.innerHTML = tracks.map((track, idx) => {
+    list.innerHTML = tracks.map((track) => {
       const guessedId = votes[track.id];
       const guessed = allPlayers.find(p => p.id === guessedId);
-      const isCorrect = phase === 'results' && isVoteCorrect(track, guessedId);
-      const isWrong = phase === 'results' && !isCorrect;
-      const cls = isCorrect ? ' recap-row--correct' : (isWrong ? ' recap-row--wrong' : '');
-      const isSwapSource = (selectedTrackId === track.id);
-      const swapCls = isSwapSource ? ' is-swap-source' : '';
 
-      // Tag du joueur (si attribué)
       let tagHtml = '';
       if (guessed) {
         const playerIdx = allPlayers.findIndex(p => p.id === guessed.id);
         const color = colors[playerIdx % colors.length];
         const av = guessed.avatar || 1;
         tagHtml = `
-          <span class="player-tag" style="background: ${color}">
+          <span class="player-tag recap-row__tag-pill"
+                style="background: ${color}"
+                draggable="true"
+                data-player-id="${guessed.id}"
+                data-source-track="${track.id}">
             <span class="player-tag__avatar">
               <img src="assets/avatar${av}.png" alt="" />
             </span>
@@ -134,7 +139,7 @@
       }
 
       return `
-        <li class="recap-row${cls}${swapCls}" data-track-id="${track.id}">
+        <li class="recap-row" data-track-id="${track.id}">
           <div class="recap-row__cover" data-action="play">
             <img src="${escapeHtml(track.cover || '')}" alt="" onerror="this.style.display='none'" />
             <button type="button" class="recap-row__play" aria-label="Écouter">
@@ -149,46 +154,141 @@
         </li>
       `;
     }).join('');
+
+    setupDragAndDrop();
   }
 
 
-  // ======= INTERACTION : échange par clic =======
+  // ======= DRAG & DROP =======
+  let draggedSourceTrack = null;
+  let dragGhost = null;
+
+  function setupDragAndDrop() {
+    // Tags draggables (HTML5 drag-and-drop pour souris desktop, fallback tactile pour mobile)
+    list.querySelectorAll('.recap-row__tag-pill').forEach(tag => {
+      tag.addEventListener('dragstart', onDragStart);
+      tag.addEventListener('dragend', onDragEnd);
+      // Fallback tactile
+      tag.addEventListener('touchstart', onTouchStart, { passive: false });
+    });
+
+    // Rangées qui acceptent le drop
+    list.querySelectorAll('.recap-row').forEach(row => {
+      row.addEventListener('dragover', onDragOver);
+      row.addEventListener('dragleave', onDragLeave);
+      row.addEventListener('drop', onDrop);
+    });
+  }
+
+  function onDragStart(e) {
+    draggedSourceTrack = e.currentTarget.dataset.sourceTrack;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', draggedSourceTrack);
+    e.currentTarget.classList.add('is-dragging');
+  }
+
+  function onDragEnd(e) {
+    e.currentTarget.classList.remove('is-dragging');
+    list.querySelectorAll('.recap-row').forEach(r => r.classList.remove('is-drop-target'));
+    draggedSourceTrack = null;
+  }
+
+  function onDragOver(e) {
+    if (!draggedSourceTrack) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('is-drop-target');
+  }
+
+  function onDragLeave(e) {
+    e.currentTarget.classList.remove('is-drop-target');
+  }
+
+  function onDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('is-drop-target');
+    const targetTrack = e.currentTarget.dataset.trackId;
+    if (!targetTrack || !draggedSourceTrack || targetTrack === draggedSourceTrack) return;
+    swapAttributions(draggedSourceTrack, targetTrack);
+  }
+
+  function swapAttributions(sourceTrack, targetTrack) {
+    const tmp = votes[targetTrack];
+    votes[targetTrack] = votes[sourceTrack];
+    if (tmp) votes[sourceTrack] = tmp;
+    else delete votes[sourceTrack];
+    if (!votes[targetTrack]) delete votes[targetTrack];
+    persistVotes();
+    renderList();
+  }
+
+
+  // ======= TACTILE (mobile) : on imite le drag avec des touch events =======
+  function onTouchStart(e) {
+    e.preventDefault();
+    const tag = e.currentTarget;
+    draggedSourceTrack = tag.dataset.sourceTrack;
+    tag.classList.add('is-dragging');
+
+    // Crée un fantôme qui suit le doigt
+    dragGhost = tag.cloneNode(true);
+    dragGhost.style.position = 'fixed';
+    dragGhost.style.top = '0';
+    dragGhost.style.left = '0';
+    dragGhost.style.pointerEvents = 'none';
+    dragGhost.style.zIndex = '999';
+    dragGhost.style.opacity = '0.85';
+    document.body.appendChild(dragGhost);
+
+    const onMove = (ev) => {
+      const t = ev.touches[0];
+      dragGhost.style.transform = `translate(${t.clientX - 40}px, ${t.clientY - 20}px)`;
+
+      // Détecte sur quelle row le doigt est
+      list.querySelectorAll('.recap-row').forEach(r => r.classList.remove('is-drop-target'));
+      const elBelow = document.elementFromPoint(t.clientX, t.clientY);
+      if (elBelow) {
+        const row = elBelow.closest('.recap-row');
+        if (row) row.classList.add('is-drop-target');
+      }
+    };
+
+    const onEnd = (ev) => {
+      tag.classList.remove('is-dragging');
+      const t = ev.changedTouches[0];
+      const elBelow = document.elementFromPoint(t.clientX, t.clientY);
+      if (elBelow) {
+        const row = elBelow.closest('.recap-row');
+        if (row && row.dataset.trackId !== draggedSourceTrack) {
+          swapAttributions(draggedSourceTrack, row.dataset.trackId);
+        }
+      }
+      list.querySelectorAll('.recap-row').forEach(r => r.classList.remove('is-drop-target'));
+      if (dragGhost) { dragGhost.remove(); dragGhost = null; }
+      draggedSourceTrack = null;
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onEnd);
+    };
+
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+  }
+
+
+  // ======= SAUVEGARDE LIVE DES VOTES (sessionStorage) =======
+  function persistVotes() {
+    sessionStorage.setItem('wooo:current-votes:' + themeIndex, JSON.stringify(votes));
+  }
+
+
+  // ======= LECTURE AUDIO =======
   list.addEventListener('click', (e) => {
-    if (phase !== 'adjust') return;
-    const row = e.target.closest('.recap-row');
-    if (!row) return;
-
-    // Si on a cliqué sur le bouton play, on lit l'extrait
     const action = e.target.closest('[data-action]')?.dataset.action;
-    if (action === 'play') {
-      const track = tracks.find(t => t.id === row.dataset.trackId);
-      if (track) togglePlay(track);
-      return;
-    }
-
-    const trackId = row.dataset.trackId;
-    if (!selectedTrackId) {
-      selectedTrackId = trackId;
-      renderList();
-    } else if (selectedTrackId === trackId) {
-      // Même clic = annule
-      selectedTrackId = null;
-      renderList();
-    } else {
-      // Échange les 2 votes
-      const a = selectedTrackId;
-      const b = trackId;
-      const tmp = votes[a];
-      votes[a] = votes[b];
-      votes[b] = tmp;
-      // Si l'un était vide, on garde
-      if (!votes[a]) delete votes[a];
-      if (!votes[b]) delete votes[b];
-      selectedTrackId = null;
-      renderList();
-    }
+    if (action !== 'play') return;
+    const row = e.target.closest('.recap-row');
+    const track = tracks.find(t => t.id === row.dataset.trackId);
+    if (track) togglePlay(track);
   });
-
 
   function togglePlay(track) {
     if (currentPlayingId === track.id) {
@@ -209,18 +309,19 @@
 
   function updatePlayingState() {
     list.querySelectorAll('.recap-row').forEach(row => {
-      const trackId = row.dataset.trackId;
-      const isPlaying = (currentPlayingId === trackId);
+      const isPlaying = (currentPlayingId === row.dataset.trackId);
       const playBtn = row.querySelector('.recap-row__play');
       if (playBtn) playBtn.classList.toggle('is-active', isPlaying);
     });
   }
 
 
-  // ======= VALIDATION =======
-  btnConfirm.addEventListener('click', async () => {
-    btnConfirm.disabled = true;
-    btnConfirm.textContent = 'Calcul en cours…';
+  // ======= BOUTON SUIVANT (sauvegarde + redirection) =======
+  btnNext.addEventListener('click', async () => {
+    btnNext.disabled = true;
+    const originalText = btnNext.textContent;
+    btnNext.textContent = 'Enregistrement…';
+    audio.pause();
 
     try {
       let points = 0;
@@ -231,56 +332,27 @@
       const bonus = sansFaute ? 2 : 0;
 
       await saveVotesAndScore(points, bonus);
-
-      // Bascule en phase résultats
-      phase = 'results';
-      audio.pause();
-      currentPlayingId = null;
-      const totalGain = points + bonus;
-      const totalText = sansFaute
-        ? `Sans faute ! Tu remportes ${totalGain} points (dont ${bonus} de bonus) pour ce thème.`
-        : `Tu remportes ${points} point${points > 1 ? 's' : ''} pour ce thème.`;
-      leadEl.textContent = totalText;
-
-      btnConfirm.hidden = true;
-
-      if (themeIndex + 1 < totalThemes) {
-        btnNext.hidden = false;
-        btnNext.textContent = `Je passe au thème n°${themeIndex + 2}`;
-      } else {
-        btnNext.hidden = false;
-        btnNext.textContent = 'Voir le classement';
-      }
-
-      renderList();
-
-      // Nettoie le sessionStorage
       sessionStorage.removeItem('wooo:current-votes:' + themeIndex);
 
+      if (themeIndex + 1 < totalThemes) {
+        // Thème suivant
+        window.location.href = 'guess.html?theme=' + (themeIndex + 1);
+      } else {
+        // FIN pour CE joueur uniquement → on va au classement
+        // On ne change PAS le statut de la partie : les autres joueurs sont peut-être
+        // encore en train de voter. Le classement saura calculer si tout le monde a fini.
+        window.location.href = 'classement.html';
+      }
     } catch (err) {
       console.error(err);
-      btnConfirm.disabled = false;
-      btnConfirm.textContent = 'Je veux voir les résultats !';
+      btnNext.disabled = false;
+      btnNext.textContent = originalText;
       alert('Oups : ' + err.message);
     }
   });
 
 
-  btnNext.addEventListener('click', () => {
-    if (themeIndex + 1 < totalThemes) {
-      window.location.href = 'guess.html?theme=' + (themeIndex + 1);
-    } else {
-      // Marquer la partie comme terminée
-      Wooo.api.setPartieStatus(session.partie_id, 'terminee').catch(err => {
-        console.warn('Statut terminée ignoré :', err);
-      });
-      window.location.href = 'classement.html';
-    }
-  });
-
-
   async function saveVotesAndScore(points, bonus) {
-    // 1) Pour chaque vote, on insert/update dans la table votes
     const promises = Object.entries(votes).map(([choixId, guessedId]) => {
       return fetch(Wooo.config.SUPABASE_URL + '/rest/v1/votes?on_conflict=voter_id,choix_id', {
         method: 'POST',
@@ -300,7 +372,6 @@
     });
     await Promise.all(promises);
 
-    // 2) Score
     await fetch(Wooo.config.SUPABASE_URL + '/rest/v1/scores?on_conflict=joueur_id,theme_index', {
       method: 'POST',
       headers: {

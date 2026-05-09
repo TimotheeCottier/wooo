@@ -267,6 +267,14 @@
 
   // ======= NAVIGATION =======
   btnBack.addEventListener('click', () => {
+    // Si on était en mode édition (depuis validate.html), retour à validate
+    const editReturn = sessionStorage.getItem('wooo:edit-return');
+    if (editReturn === 'validate') {
+      sessionStorage.removeItem('wooo:edit-return');
+      window.location.href = 'validate.html';
+      return;
+    }
+
     if (themeIndex > 0) {
       window.location.href = 'search.html?theme=' + (themeIndex - 1);
     } else {

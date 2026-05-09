@@ -1,5 +1,5 @@
 /* =========================================================
-   WOOO — Rejoindre une partie
+   WOOO — Rejoindre une partie : étape PIN
    ========================================================= */
 
 .join-main {
@@ -10,6 +10,7 @@
   flex-direction: column;
   gap: var(--space-5);
   text-align: center;
+  justify-content: center;
 }
 
 .join-title {
@@ -21,20 +22,6 @@
   color: var(--color-text-soft);
 }
 
-.join-subtitle {
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-2);
-  text-align: left;
-}
-
-.join-step {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-
-/* PIN input — gros chiffres centrés */
 .join-pin-input {
   text-align: center;
   font-family: var(--font-title);
@@ -44,81 +31,9 @@
   height: 80px;
 }
 
-
 .join-error {
   color: var(--color-error);
   font-size: 14px;
   font-weight: var(--fw-medium);
   text-align: center;
-}
-
-
-/* Aperçu de la partie */
-.join-preview {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  border: 1px solid var(--color-border-soft);
-  text-align: left;
-}
-.join-preview__label {
-  font-size: 13px;
-  font-weight: var(--fw-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-3);
-}
-.join-preview__themes {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.join-preview__themes li {
-  font-size: 14px;
-  font-weight: var(--fw-medium);
-  color: var(--color-text);
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-border-soft);
-}
-.join-preview__themes li:last-child { border-bottom: none; }
-
-
-/* Grille d'avatars (réutilise le style de create.css) */
-.avatar-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-}
-
-.avatar-grid__item {
-  position: relative;
-  aspect-ratio: 1;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--color-bg);
-  border: 3px solid transparent;
-  transition: transform 0.1s var(--ease-out), border-color 0.15s var(--ease-out);
-}
-
-.avatar-grid__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-grid__item.is-selected {
-  border-color: var(--color-orange-light);
-  box-shadow: 0 0 0 4px rgba(247, 89, 0, 0.20);
-}
-
-@media (min-width: 900px) {
-  .avatar-grid { grid-template-columns: repeat(4, 1fr); }
 }

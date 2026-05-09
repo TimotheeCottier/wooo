@@ -87,6 +87,10 @@
 
 
   // ======= LECTURE AUDIO =======
+  // Le vinyle ne tourne PAS au chargement. Il tourne uniquement quand l'audio joue.
+  // Pas d'autoplay : c'est l'utilisateur qui décide de lancer la lecture.
+  vinylDisc.style.animationPlayState = 'paused';
+
   btnPlay.addEventListener('click', () => {
     if (!pending.preview) return;
     audio.play();
@@ -101,18 +105,13 @@
   audio.addEventListener('pause', () => {
     btnPlay.hidden = false;
     btnPause.hidden = true;
+    vinylDisc.style.animationPlayState = 'paused';
   });
   audio.addEventListener('ended', () => {
     btnPlay.hidden = false;
     btnPause.hidden = true;
+    vinylDisc.style.animationPlayState = 'paused';
   });
-
-  // Auto-play à l'ouverture (si autorisé par le navigateur)
-  setTimeout(() => {
-    if (pending.preview) {
-      audio.play().catch(() => { /* navigateur a bloqué autoplay */ });
-    }
-  }, 200);
 
 
   // ======= CONFIRMATION =======
@@ -134,12 +133,18 @@
       // Nettoie le pending pick
       sessionStorage.removeItem('wooo:pending-pick');
 
-      // Redirige
+      // Si on est en mode édition (vient de validate.html), retour direct
+      const editReturn = sessionStorage.getItem('wooo:edit-return');
+      if (editReturn === 'validate') {
+        sessionStorage.removeItem('wooo:edit-return');
+        window.location.href = 'validate.html';
+        return;
+      }
+
+      // Sinon, parcours normal : thème suivant ou validate
       if (themeIndex + 1 < totalThemes) {
-        // Thème suivant
         window.location.href = 'search.html?theme=' + (themeIndex + 1);
       } else {
-        // Dernier thème → validate
         window.location.href = 'validate.html';
       }
     } catch (err) {

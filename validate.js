@@ -101,6 +101,8 @@
 
     if (action === 'edit') {
       const themeIdx = e.target.closest('[data-action]').dataset.theme;
+      // Marque qu'on est en mode "édition" : confirm.html devra revenir ici
+      sessionStorage.setItem('wooo:edit-return', 'validate');
       window.location.href = 'search.html?theme=' + themeIdx;
     } else if (action === 'play') {
       const songEl = e.target.closest('.validate-song');
