@@ -14,6 +14,8 @@
 (function () {
   'use strict';
 
+  console.log('[Wooo create.js] version 3 chargée ✅');
+
   const $ = (id) => document.getElementById(id);
 
   // ÉLÉMENTS COMMUNS
@@ -29,7 +31,6 @@
 
   // ÉTAPE 2
   const themesTitle     = $('themes-title');
-  const themesNameWrap  = $('themes-name-wrap');
   const themesList      = $('themes-list');
   const btnAddTheme     = $('btn-add-theme');
   const themeCount      = $('theme-count');
@@ -105,10 +106,9 @@
     const pseudo = pseudoInput.value.trim();
     if (pseudo.length < 2) return;
 
+    console.log('[Wooo] goToStep2 — pseudo:', pseudo);
+
     // Mise à jour du titre :
-    // - Si pseudo : "OK Tim, on a choisi..."
-    // - Sinon : "OK, on a choisi..."
-    // On reconstruit tout le innerHTML pour éviter tout souci de span manquant
     if (pseudo) {
       themesTitle.textContent = `OK ${pseudo}, on a choisi quelques thèmes pour toi, change les si tu veux !`;
     } else {
@@ -122,6 +122,8 @@
       custom: false,
       checked: indicesAleatoires.includes(i),
     }));
+
+    console.log('[Wooo] themes initialisés :', themes);
 
     renderThemes();
 
@@ -148,6 +150,7 @@
   // On affiche TOUS les thèmes (catalogue + customs ajoutés).
   // L'utilisateur peut cocher/décocher librement. Min 3, max 6 cochés.
   function renderThemes() {
+    console.log('[Wooo] renderThemes — nombre de thèmes :', themes.length);
     themesList.innerHTML = themes.map((t, idx) => {
       const checkedClass = t.checked ? 'is-checked' : '';
       return `
