@@ -33,7 +33,7 @@
   // ======= LECTURE SESSION =======
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('index-musique.html');
+    window.location.replace('index.html');
     return;
   }
 
@@ -167,7 +167,7 @@
     if (confirm('Tu veux vraiment arrêter ?')) {
       audio.pause();
       sessionStorage.removeItem('wooo:pending-pick');
-      window.location.href = 'index-musique.html';
+      window.location.href = 'index.html';
     }
   });
 

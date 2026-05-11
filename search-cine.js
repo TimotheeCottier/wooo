@@ -39,6 +39,10 @@
   const themeName = (session.themes && session.themes[themeIndex]) || '';
   const totalThemes = (session.themes || []).length;
 
+  // Type TMDB selon catégorie : 'movie' pour cinema, 'tv' pour serie, 'multi' sinon
+  const produit = session.produit || 'cinema';
+  const tmdbType = (produit === 'serie') ? 'tv' : (produit === 'cinema' ? 'movie' : 'multi');
+
   themeTitleEl.textContent = themeName.toUpperCase();
   renderProgressDots();
 
@@ -115,7 +119,7 @@
     btnLoadMore.hidden = true;
     loadingEl.hidden = false;
 
-    Wooo.api.searchTmdb(query, abortController.signal, { page: 1 })
+    Wooo.api.searchTmdb(query, abortController.signal, { page: 1, type: tmdbType })
       .then(data => {
         loadingEl.hidden = true;
         const items = Array.isArray(data) ? data : (data.results || []);
@@ -145,7 +149,7 @@
     btnLoadMore.disabled = true;
     btnLoadMore.textContent = 'Chargement…';
 
-    Wooo.api.searchTmdb(currentQuery, null, { page: currentPage })
+    Wooo.api.searchTmdb(currentQuery, null, { page: currentPage, type: tmdbType })
       .then(items => {
         if (!items || items.length === 0) {
           btnLoadMore.hidden = true;
@@ -227,13 +231,13 @@
     if (themeIndex > 0) {
       window.location.href = 'search-cine.html?theme=' + (themeIndex - 1);
     } else {
-      window.location.href = session.is_creator ? 'index-cine.html' : 'lobby-invite.html';
+      window.location.href = session.is_creator ? 'index.html' : 'lobby-invite.html';
     }
   });
 
   btnClose.addEventListener('click', () => {
     if (confirm('Tu veux vraiment arrêter ? Tes choix actuels seront sauvegardés.')) {
-      window.location.href = 'index-cine.html';
+      window.location.href = 'index.html';
     }
   });
 

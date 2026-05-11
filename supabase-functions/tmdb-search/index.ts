@@ -2,13 +2,14 @@
 // Edge Function Supabase : tmdb-search
 // ---------------------------------------------------------
 // Proxy CORS-friendly vers l'API TMDB.
-// - Recherche multi (films + séries) via /search/multi
-// - Mode trending via /trending/all/week (pour la mosaïque du hub)
+// - ?type=movie → /search/movie (films uniquement)
+// - ?type=tv    → /search/tv    (séries uniquement)
+// - ?type=multi → /search/multi (mélange films + séries, défaut)
+// - ?trending=1 → /trending/all/week
 // ---------------------------------------------------------
 // Déploiement :
 //   supabase functions deploy tmdb-search --no-verify-jwt
-// (ou via le dashboard Supabase, copier ce fichier dans
-//  Edge Functions → New function → tmdb-search → coller)
+// (ou via le dashboard)
 //
 // Variables d'environnement nécessaires :
 //   TMDB_API_KEY : clé API v3 TMDB (gratuite sur themoviedb.org)
@@ -43,6 +44,7 @@ serve(async (req) => {
     const trending = url.searchParams.get("trending") === "1";
     const q = url.searchParams.get("q") || "";
     const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const type = url.searchParams.get("type") || "multi"; // movie, tv, multi
 
     let endpoint;
     if (trending) {
@@ -53,7 +55,11 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      endpoint = `${TMDB_BASE}/search/multi?api_key=${TMDB_API_KEY}&language=fr-FR&query=${encodeURIComponent(q)}&page=${page}&include_adult=false`;
+      let searchPath = "search/multi";
+      if (type === "movie") searchPath = "search/movie";
+      else if (type === "tv") searchPath = "search/tv";
+
+      endpoint = `${TMDB_BASE}/${searchPath}?api_key=${TMDB_API_KEY}&language=fr-FR&query=${encodeURIComponent(q)}&page=${page}&include_adult=false`;
     }
 
     const tmdbResp = await fetch(endpoint);
@@ -66,12 +72,20 @@ serve(async (req) => {
     const data = await tmdbResp.json();
     const rawResults = data.results || [];
 
-    // On filtre : ne garder que films et séries (pas les "person")
-    // et qui ont un poster.
+    // Normalisation : déterminer si chaque résultat est un film ou une série,
+    // selon le type demandé (les endpoints /movie et /tv ne renvoient pas media_type)
     const filtered = rawResults
-      .filter((r: any) => (r.media_type === "movie" || r.media_type === "tv" || !r.media_type) && r.poster_path)
+      .filter((r: any) => r.poster_path)
       .map((r: any) => {
-        const isMovie = r.media_type === "movie" || (!r.media_type && r.title);
+        // Pour /search/movie, c'est forcément un film
+        // Pour /search/tv, c'est forcément une série
+        // Pour /search/multi, media_type est présent
+        let mediaType;
+        if (type === "movie") mediaType = "movie";
+        else if (type === "tv") mediaType = "tv";
+        else mediaType = r.media_type === "tv" ? "tv" : "movie";
+
+        const isMovie = mediaType === "movie";
         const title = isMovie ? r.title : r.name;
         const release = isMovie ? r.release_date : r.first_air_date;
         const year = release ? release.slice(0, 4) : "";
@@ -83,13 +97,11 @@ serve(async (req) => {
           poster: TMDB_IMG_BASE + "/w500" + r.poster_path,
           poster_small: TMDB_IMG_BASE + "/w185" + r.poster_path,
           overview: r.overview || "",
-          // director / créateur sera enrichi en 2e appel si besoin (cf below)
           director: "",
         };
       });
 
     // Pour la recherche utilisateur, on enrichit les 10 premiers avec le réalisateur
-    // (1 appel /credits par item — coûteux mais on garde 10 max)
     if (!trending && filtered.length > 0) {
       const toEnrich = filtered.slice(0, 10);
       await Promise.all(toEnrich.map(async (item: any) => {
@@ -102,8 +114,6 @@ serve(async (req) => {
             const dir = (cData.crew || []).find((c: any) => c.job === "Director");
             item.director = dir ? dir.name : "";
           } else {
-            // Pour une série, on prend le créateur (created_by) ou le 1er writer
-            // /credits ne contient pas created_by, faut faire /tv/{id}
             const detUrl = `${TMDB_BASE}/tv/${item.id}?api_key=${TMDB_API_KEY}&language=fr-FR`;
             const detResp = await fetch(detUrl);
             if (detResp.ok) {

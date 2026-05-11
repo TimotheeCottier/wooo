@@ -362,9 +362,11 @@ window.Wooo = window.Wooo || {};
    */
   async function searchTmdb(query, signal, opts) {
     const page = (opts && opts.page) || 1;
+    const type = (opts && opts.type) || 'multi';   // 'movie', 'tv' ou 'multi'
     const url = FUNCTIONS_BASE + '/tmdb-search' +
                 '?q=' + encodeURIComponent(query) +
-                '&page=' + page;
+                '&page=' + page +
+                '&type=' + encodeURIComponent(type);
     const resp = await fetch(url, {
       headers: {
         'Authorization': 'Bearer ' + SUPABASE_ANON,
@@ -487,11 +489,19 @@ window.Wooo = window.Wooo || {};
           removeFromHistory(h.partie_id);
           return null;
         }
-        // On filtre les parties terminées (mais on garde les en_cours et votes)
-        if (partie.status === 'terminee') return null;
-        // On récupère aussi les joueurs pour l'affichage
-        const joueurs = await getJoueurs(h.partie_id);
-        return { ...h, status: partie.status, joueurs };
+        // On récupère joueurs + picks counts pour afficher l'état de chacun
+        const [joueurs, picksByJoueur] = await Promise.all([
+          getJoueurs(h.partie_id),
+          getPickCountsByJoueur(h.partie_id),
+        ]);
+        return {
+          ...h,
+          status: partie.status,
+          joueurs,
+          picksByJoueur,
+          themes: partie.themes || h.themes,
+          produit: partie.produit || h.produit || 'musique',
+        };
       } catch (e) {
         return null;
       }

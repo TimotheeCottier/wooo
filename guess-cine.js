@@ -355,7 +355,7 @@
 
   btnClose.addEventListener('click', () => {
     if (confirm('Tu veux vraiment arrêter ? Tes votes en cours seront sauvegardés.')) {
-      window.location.href = "index-cine.html";
+      window.location.href = "index.html";
     }
   });
 

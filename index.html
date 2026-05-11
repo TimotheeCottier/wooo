@@ -4,51 +4,139 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#F5F5F5" />
-  <title>Wooo — Choisis ton univers</title>
+  <title>Wooo — Fais des choix. Trouve ceux des autres.</title>
 
-  <link rel="stylesheet" href="styles.css?v=6" />
-  <link rel="stylesheet" href="hub.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="home.css?v=7" />
 </head>
-<body class="hub-body">
+<body>
 
-  <main class="hub">
+  <main class="app">
 
-    <!-- Logo en surimpression -->
-    <header class="hub-header">
-      <img src="assets/logo.svg" alt="Wooo" class="hub-header__logo" />
+    <!-- Header : logo seul, centré -->
+    <header class="app-header app-header--home">
+      <span class="icon-btn-spacer"></span>
+      <img src="assets/logo.svg" alt="Wooo" class="app-header__logo" />
+      <span class="icon-btn-spacer"></span>
     </header>
 
-    <!-- Split : 2 produits -->
-    <div class="hub-split">
+    <section class="app-main">
+      <div class="layout-split">
 
-      <!-- Wooo Musique -->
-      <a href="index-musique.html" class="hub-card hub-card--musique" data-product="musique">
-        <div class="hub-card__mosaic" id="mosaic-musique" aria-hidden="true"></div>
-        <div class="hub-card__overlay"></div>
-        <div class="hub-card__content">
-          <h2 class="hub-card__title">Wooo<br/>Musique</h2>
-          <p class="hub-card__lead">Devine ce qu'écoutent tes potes&nbsp;!</p>
-          <span class="hub-card__cta">Jouer →</span>
+        <!-- Colonne gauche : hero -->
+        <div class="home-hero">
+          <h1 class="title-display home-hero__title">
+            Fais des choix.<br/>Trouve&nbsp;ceux<br/>des&nbsp;autres.
+          </h1>
+          <p class="home-hero__lead">
+            Wooo est un jeu social basé sur des choix et des déductions.
+          </p>
+          <button type="button" class="btn btn--tertiary home-hero__how" id="btn-how">
+            Comment jouer ?
+          </button>
         </div>
-      </a>
 
-      <!-- Wooo Ciné & Séries -->
-      <a href="index-cine.html" class="hub-card hub-card--cine" data-product="cine">
-        <div class="hub-card__mosaic" id="mosaic-cine" aria-hidden="true"></div>
-        <div class="hub-card__overlay"></div>
-        <div class="hub-card__content">
-          <h2 class="hub-card__title">Wooo<br/>Ciné&nbsp;&amp;&nbsp;Séries</h2>
-          <p class="hub-card__lead">Devine ce que regardent tes potes&nbsp;!</p>
-          <span class="hub-card__cta">Jouer →</span>
+        <!-- Colonne droite : actions + parties en cours -->
+        <div class="home-actions">
+
+          <!-- Nouvelle partie -->
+          <div class="new-game">
+            <h2 class="title-h3 new-game__title">Nouvelle partie</h2>
+            <div class="new-game__buttons">
+              <button type="button" class="btn btn--primary btn--full" id="btn-create">
+                Je crée une partie
+              </button>
+              <button type="button" class="btn btn--secondary btn--full" id="btn-join">
+                Je rejoins une partie
+              </button>
+            </div>
+          </div>
+
+          <!-- Parties en cours par statut -->
+          <div class="active-games" id="active-games" hidden>
+            <h2 class="title-h3 active-games__title">Tes parties en cours</h2>
+
+            <!-- Section : Choix (la partie est en phase de sélection) -->
+            <div class="active-section" id="section-choix" hidden>
+              <h3 class="active-section__title">
+                <span class="active-section__icon">🎯</span>
+                Tu fais tes choix
+              </h3>
+              <ul class="active-games__list" id="list-choix"></ul>
+            </div>
+
+            <!-- Section : Déduction (la partie est en cours de vote) -->
+            <div class="active-section" id="section-deduction" hidden>
+              <h3 class="active-section__title">
+                <span class="active-section__icon">🧠</span>
+                À toi de deviner
+              </h3>
+              <ul class="active-games__list" id="list-deduction"></ul>
+            </div>
+
+            <!-- Section : Classement (partie terminée) -->
+            <div class="active-section" id="section-classement" hidden>
+              <h3 class="active-section__title">
+                <span class="active-section__icon">🏆</span>
+                Classement
+              </h3>
+              <ul class="active-games__list" id="list-classement"></ul>
+            </div>
+          </div>
+
         </div>
-      </a>
 
-    </div>
+      </div>
+
+      <!-- Vinyles décoratifs (uniquement musique pour conserver l'ADN) -->
+      <div class="home-vinyls" aria-hidden="true">
+        <img class="home-vinyl home-vinyl--1" src="assets/vinyl1.png" alt="" />
+        <img class="home-vinyl home-vinyl--2" src="assets/vinyl2.png" alt="" />
+        <img class="home-vinyl home-vinyl--3" src="assets/vinyl3.png" alt="" />
+      </div>
+
+    </section>
 
   </main>
 
+  <!-- Modale "Comment jouer ?" -->
+  <div class="modal" id="how-modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel modal__panel--small" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Comment jouer ?</h2>
+      <div class="rules-text">
+        <p>
+          <strong>1. Faites vos choix.</strong> Chacun choisit une musique, un film ou une série pour chaque thème de la partie.
+        </p>
+        <p>
+          <strong>2. Devinez les choix des autres.</strong> Pour chaque proposition, attribuez la bonne personne. +1 point par bonne réponse, +2 bonus si sans-faute sur un thème.
+        </p>
+        <p>
+          <strong>3. Découvrez le classement.</strong> Celui qui connaît le mieux ses potes l'emporte !
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale confirmation suppression -->
+  <div class="modal" id="delete-modal" hidden>
+    <div class="modal__backdrop" data-delete-close></div>
+    <div class="modal__panel modal__panel--small" role="dialog" aria-modal="true">
+      <button type="button" class="modal__close" data-delete-close aria-label="Fermer">×</button>
+      <h2 class="title-h2 modal__title">Supprimer cette partie&nbsp;?</h2>
+      <p class="modal__text">
+        Cette partie ne s'affichera plus sur ta page d'accueil. Les autres joueurs pourront continuer à jouer normalement.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--tertiary" data-delete-close>Annuler</button>
+        <button type="button" class="btn btn--primary" id="btn-delete-confirm">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js?v=6"></script>
-  <script src="hub.js?v=6"></script>
+  <script src="supabase.js?v=7"></script>
+  <script src="home.js?v=7"></script>
 </body>
 </html>

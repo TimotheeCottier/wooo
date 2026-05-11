@@ -1,59 +1,88 @@
 /* =========================================================
-   WOOO — Création de partie
+   WOOO — Création de partie unifiée
    ---------------------------------------------------------
-   Page UNIQUE :
-   - Pseudo (mise à jour live du titre des thèmes)
+   Page unique :
+   - Pseudo
    - Avatar
-   - Liste des 7 thèmes affichée dès le chargement (3 cochés au hasard)
-   - Possibilité d'ajouter un thème custom (overlay)
-   - Un seul bouton final "C'est parti avec X thèmes !"
+   - Catégorie : musique / cinema / serie
+   - Thèmes (apparait après sélection de catégorie)
+   - Bouton "C'est parti" actif quand : pseudo + avatar + catégorie + 3+ thèmes
    ========================================================= */
 
 (function () {
   'use strict';
 
-  console.log('[Wooo create.js] version 4 chargée ✅');
+  console.log('[Wooo create.js] version 7 chargée ✅');
 
   const $ = (id) => document.getElementById(id);
 
-  // ÉLÉMENTS
   const btnBack         = $('btn-back');
   const pseudoInput     = $('pseudo-input');
   const avatarPicker    = $('avatar-picker');
+  const categoryPicker  = $('category-picker');
+  const categoryTitle   = $('category-title');
+  const themesBlock     = $('themes-block');
   const themesTitle     = $('themes-title');
+  const themesIntro     = $('themes-intro');
   const themesList      = $('themes-list');
   const btnAddTheme     = $('btn-add-theme');
   const btnLaunch       = $('btn-launch');
   const themeCount      = $('theme-count');
 
-  // OVERLAY thème custom
+  // Overlay custom
   const customOverlay   = $('custom-overlay');
+  const customLabel     = $('custom-theme-label');
   const customInput     = $('custom-theme-input');
   const customHint      = $('custom-theme-hint');
   const btnAddCustom    = $('btn-add-custom');
   const btnBackCustom   = $('btn-back-custom');
 
 
-  // ======= CATALOGUE DE THÈMES =======
-  const THEME_CATALOG = [
-    'Ta préférée all-time',
-    'De l\'adolescence',
-    'Pour s\'ambiancer',
-    'Qui te fait saigner des oreilles',
-    'Que tu n\'assumes pas',
-    'Qui te fait pleurer',
-    'Pour partir en vacances',
-  ];
+  // ======= CATALOGUES DE THÈMES PAR CATÉGORIE =======
+  const THEME_CATALOGS = {
+    musique: [
+      'Ta préférée all-time',
+      'De l\'adolescence',
+      'Pour s\'ambiancer',
+      'Qui te fait saigner des oreilles',
+      'Que tu n\'assumes pas',
+      'Qui te fait pleurer',
+      'Pour partir en vacances',
+    ],
+    cinema: [
+      'Le meilleur all-time',
+      'Tout le monde l\'adore sauf toi',
+      'Tu ne l\'assumes pas',
+      'Avec la meilleure BO',
+      'Tu l\'as abandonné en cours',
+      'Avec le meilleur twist',
+      'Ça t\'a fait pleurer',
+    ],
+    serie: [
+      'Ta préférée all-time',
+      'Que tu binges en cachette',
+      'Que tu n\'assumes pas',
+      'Avec le meilleur générique',
+      'Que tu as abandonnée en cours',
+      'Avec le meilleur twist',
+      'Qui t\'a fait pleurer',
+    ],
+  };
+
+  // Labels d'intro selon catégorie
+  const CATEGORY_LABELS = {
+    musique: { item: 'une chanson', custom: 'Une musique…' },
+    cinema:  { item: 'un film',     custom: 'Un film…' },
+    serie:   { item: 'une série',   custom: 'Une série…' },
+  };
 
 
   // ======= ÉTAT =======
   let selectedAvatar = 1;
-  // Thèmes : 3 du catalogue cochés au hasard, les autres décochés
-  // Possibilité d'ajouter des thèmes custom (en tête de liste)
+  let selectedCategory = null;
   let themes = [];
 
 
-  // ======= UTILITAIRE : tirage aléatoire =======
   function pickRandomIndices(max, n) {
     const all = Array.from({ length: max }, (_, i) => i);
     for (let i = all.length - 1; i > 0; i--) {
@@ -64,19 +93,7 @@
   }
 
 
-  // ======= INIT THÈMES =======
-  function initThemes() {
-    const indicesAleatoires = pickRandomIndices(THEME_CATALOG.length, 3);
-    themes = THEME_CATALOG.map((name, i) => ({
-      name,
-      custom: false,
-      checked: indicesAleatoires.includes(i),
-    }));
-    console.log('[Wooo] thèmes initialisés :', themes);
-  }
-
-
-  // ======= RENDU AVATARS =======
+  // ======= AVATARS =======
   function renderAvatars() {
     const colors = (Wooo.config && Wooo.config.PLAYER_COLORS) || [];
     avatarPicker.innerHTML = Array.from({ length: 8 }, (_, i) => {
@@ -102,9 +119,53 @@
   });
 
 
-  // ======= RENDU THÈMES =======
+  // ======= CATÉGORIE =======
+  categoryPicker.addEventListener('click', (e) => {
+    const card = e.target.closest('.category-card');
+    if (!card) return;
+    const cat = card.dataset.category;
+    if (selectedCategory === cat) return; // déjà sélectionné
+
+    selectedCategory = cat;
+
+    // Marquer la carte sélectionnée + griser les autres
+    categoryPicker.querySelectorAll('.category-card').forEach(el => {
+      el.classList.toggle('is-selected', el.dataset.category === cat);
+    });
+
+    // Charger les thèmes de cette catégorie
+    initThemesForCategory(cat);
+
+    // Afficher le bloc thèmes
+    themesBlock.hidden = false;
+
+    // Adapter labels custom
+    const labels = CATEGORY_LABELS[cat];
+    if (themesIntro && labels) {
+      themesIntro.textContent = `Tu devras choisir ${labels.item} pour chacun de ces thèmes.`;
+    }
+    if (customLabel && labels) {
+      customLabel.textContent = labels.custom;
+    }
+
+    updateLaunchButton();
+  });
+
+
+  function initThemesForCategory(cat) {
+    const catalog = THEME_CATALOGS[cat] || [];
+    const indices = pickRandomIndices(catalog.length, 3);
+    themes = catalog.map((name, i) => ({
+      name,
+      custom: false,
+      checked: indices.includes(i),
+    }));
+    renderThemes();
+  }
+
+
+  // ======= THÈMES =======
   function renderThemes() {
-    console.log('[Wooo] renderThemes — nombre :', themes.length);
     themesList.innerHTML = themes.map((t, idx) => `
       <li>
         <button type="button" class="themed-check ${t.checked ? 'is-checked' : ''}" data-idx="${idx}">
@@ -123,7 +184,6 @@
     if (!btn) return;
     const idx = parseInt(btn.dataset.idx, 10);
     const willCheck = !themes[idx].checked;
-    // Limite à 6 cochés
     if (willCheck) {
       const checkedCount = themes.filter(t => t.checked).length;
       if (checkedCount >= 6) {
@@ -140,28 +200,22 @@
   });
 
 
-  // ======= MISE À JOUR DU BOUTON LANCER =======
   function updateLaunchButton() {
     const checked = themes.filter(t => t.checked).length;
     const pseudoOk = pseudoInput.value.trim().length >= 2;
+    const categoryOk = !!selectedCategory;
     themeCount.textContent = checked;
-    btnLaunch.disabled = !(pseudoOk && checked >= 3 && checked <= 6);
+    btnLaunch.disabled = !(pseudoOk && categoryOk && checked >= 3 && checked <= 6);
   }
 
 
-  // ======= MISE À JOUR LIVE DU TITRE DES THÈMES SELON LE PRÉNOM =======
+  // ======= PSEUDO LIVE =======
   pseudoInput.addEventListener('input', () => {
-    const pseudo = pseudoInput.value.trim();
-    if (pseudo.length >= 2) {
-      themesTitle.textContent = `OK ${pseudo}, on a choisi quelques thèmes pour toi, change les si tu veux !`;
-    } else {
-      themesTitle.textContent = `OK, on a choisi quelques thèmes pour toi, change les si tu veux !`;
-    }
     updateLaunchButton();
   });
 
 
-  // ======= OVERLAY THÈME CUSTOM =======
+  // ======= OVERLAY CUSTOM =======
   btnAddTheme.addEventListener('click', () => {
     customInput.value = '';
     customHint.textContent = '0 / 40';
@@ -188,10 +242,8 @@
   function addCustomTheme() {
     const val = customInput.value.trim();
     if (val.length < 2 || val.length > 40) return;
-    // Vérifier qu'on n'est pas à la limite max cochés
     const checkedCount = themes.filter(t => t.checked).length;
-    const willCheck = checkedCount < 6;
-    themes.unshift({ name: val, custom: true, checked: willCheck });
+    themes.unshift({ name: val, custom: true, checked: checkedCount < 6 });
     renderThemes();
     closeCustomOverlay();
   }
@@ -207,18 +259,18 @@
   });
 
 
-  // ======= LANCEMENT DE LA PARTIE =======
+  // ======= LANCEMENT =======
   btnLaunch.addEventListener('click', async () => {
     const pseudo = pseudoInput.value.trim();
     const chosen = themes.filter(t => t.checked).map(t => t.name);
 
-    if (pseudo.length < 2 || chosen.length < 3 || chosen.length > 6) return;
+    if (pseudo.length < 2 || chosen.length < 3 || chosen.length > 6 || !selectedCategory) return;
 
     btnLaunch.disabled = true;
     btnLaunch.textContent = 'Création…';
 
     try {
-      const partie = await Wooo.api.createPartie(chosen, 'musique');
+      const partie = await Wooo.api.createPartie(chosen, selectedCategory);
       const joueur = await Wooo.api.addJoueur(partie.id, pseudo, true, selectedAvatar);
       Wooo.session.save({
         partie_id:  partie.id,
@@ -228,8 +280,12 @@
         joueur_id:  joueur.id,
         pseudo:     pseudo,
         avatar:     selectedAvatar,
+        produit:    selectedCategory,
       });
-      window.location.href = 'search.html?theme=0';
+
+      // Redirige vers la bonne page de recherche selon catégorie
+      const searchUrl = (selectedCategory === 'musique') ? 'search.html' : 'search-cine.html';
+      window.location.href = searchUrl + '?theme=0';
     } catch (err) {
       console.error(err);
       btnLaunch.disabled = false;
@@ -239,13 +295,11 @@
   });
 
 
-  // ======= RETOUR =======
   btnBack.addEventListener('click', () => {
-    window.location.href = 'index-musique.html';
+    window.location.href = 'index.html';
   });
 
 
-  // ======= UTILITAIRE =======
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str || '';
@@ -254,8 +308,6 @@
 
 
   // ======= INIT =======
-  initThemes();
   renderAvatars();
-  renderThemes();
 
 })();

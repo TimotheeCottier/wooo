@@ -47,13 +47,20 @@
   if (pinCodeEl) pinCodeEl.textContent = session.pin_code || '------';
 
   // Adaptation produit (musique vs ciné)
-  const isCine = session.produit === 'cine';
+  const isCine = session.produit && session.produit !== 'musique';
   document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
   const themesIntro = $('themes-intro');
   if (themesIntro) {
-    themesIntro.textContent = isCine
-      ? `Pour chaque thème, tu vas voir les films/séries choisis par tes potes et tu devras retrouver qui a choisi quoi !`
-      : `Pour chaque thème, tu vas entendre les chansons choisies par tes potes et tu devras retrouver qui a choisi quoi !`;
+    const produit = session.produit || 'musique';
+    if (produit === 'musique') {
+      themesIntro.textContent = `Pour chaque thème, tu vas entendre les chansons choisies par tes potes et tu devras retrouver qui a choisi quoi !`;
+    } else if (produit === 'cinema') {
+      themesIntro.textContent = `Pour chaque thème, tu vas voir les films choisis par tes potes et tu devras retrouver qui a choisi quoi !`;
+    } else if (produit === 'serie') {
+      themesIntro.textContent = `Pour chaque thème, tu vas voir les séries choisies par tes potes et tu devras retrouver qui a choisi quoi !`;
+    } else {
+      themesIntro.textContent = `Pour chaque thème, tu vas voir les films/séries choisis par tes potes et tu devras retrouver qui a choisi quoi !`;
+    }
   }
   // URL de la page de jeu selon produit
   const guessUrl = isCine ? 'guess-cine.html' : 'guess.html';
@@ -249,7 +256,7 @@
 
   // ======= NAVIGATION =======
   btnBack.addEventListener('click', () => {
-    window.location.href = isCine ? 'index-cine.html' : 'index-musique.html';
+    window.location.href = isCine ? 'index.html' : 'index.html';
   });
 
 

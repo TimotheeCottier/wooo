@@ -125,7 +125,7 @@
   btnClose.addEventListener('click', () => {
     if (confirm('Tu veux vraiment arrêter ?')) {
       sessionStorage.removeItem('wooo:pending-pick-cine');
-      window.location.href = 'index-cine.html';
+      window.location.href = 'index.html';
     }
   });
 

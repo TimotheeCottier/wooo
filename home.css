@@ -429,3 +429,156 @@
     padding: 0 5vw;
   }
 }
+
+
+/* =========================================================
+   HOMEPAGE v7 — Sections par statut + badges produit
+   ========================================================= */
+
+/* Centrage du logo dans le header de la home (pas de boutons à gauche/droite) */
+.app-header--home {
+  justify-content: center;
+}
+.icon-btn-spacer {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+
+/* Sections de la liste des parties */
+.active-section {
+  margin-bottom: var(--space-5);
+}
+
+.active-section__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-base);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+.active-section__icon {
+  font-size: 16px;
+}
+
+
+/* Carte de partie élargie */
+.active-game {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.active-game__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.active-game__product {
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+}
+
+.active-game__status {
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.active-game__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.active-game__cta {
+  flex: 1;
+}
+
+
+/* Joueurs en attente : tag grisé */
+.player-tag--waiting {
+  filter: grayscale(0.7);
+  opacity: 0.6;
+}
+
+
+/* Badge produit par couleur d'accent (bordure gauche) */
+.active-game--musique  { border-left: 4px solid #F75900; }
+.active-game--cinema   { border-left: 4px solid #5D6DFC; }
+.active-game--serie    { border-left: 4px solid #B85F1F; }
+
+
+/* Grille de catégories (page create) */
+.category-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-3);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: transform 0.1s var(--ease-out),
+              border-color 0.15s var(--ease-out),
+              opacity 0.2s var(--ease-out),
+              filter 0.2s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-orange-light);
+}
+
+.category-card.is-selected {
+  border-color: var(--color-orange-light);
+  background: rgba(247, 89, 0, 0.06);
+  box-shadow: 0 0 0 3px rgba(247, 89, 0, 0.12);
+  transform: scale(1.02);
+}
+
+.category-grid:has(.is-selected) .category-card:not(.is-selected) {
+  filter: grayscale(0.8);
+  opacity: 0.5;
+}
+
+.category-card__emoji {
+  font-size: 32px;
+}
+
+.category-card__label {
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+}
+
+@media (max-width: 599px) {
+  .category-card { padding: var(--space-4) var(--space-2); }
+  .category-card__emoji { font-size: 28px; }
+}

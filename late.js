@@ -27,7 +27,7 @@
 
   if (!pin || !/^\d{6}$/.test(pin)) {
     // Pas de PIN valide → retour à l'accueil
-    window.location.replace('index-musique.html');
+    window.location.replace('index.html');
     return;
   }
 
@@ -136,7 +136,7 @@
   const btnBack = $('btn-back');
   if (btnBack) {
     btnBack.addEventListener('click', () => {
-      window.location.href = 'index-musique.html';
+      window.location.href = 'index.html';
     });
   }
 

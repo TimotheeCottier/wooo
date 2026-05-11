@@ -24,7 +24,7 @@
 
   const session = Wooo.session.get();
   if (!session || !session.partie_id || !session.joueur_id) {
-    window.location.replace('index-musique.html');
+    window.location.replace('index.html');
     return;
   }
 
@@ -36,7 +36,7 @@
   renderProgressDots();
 
   // Adaptation produit (musique vs ciné)
-  const isCine = session.produit === 'cine';
+  const isCine = session.produit && session.produit !== 'musique';
   document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
   if (isCine) {
     // Adapter les textes de la modale "Règles" : chanson → film
@@ -325,10 +325,10 @@
   });
 
   btnBack.addEventListener('click', () => {
-    window.location.href = 'index-musique.html';
+    window.location.href = 'index.html';
   });
   btnClose.addEventListener('click', () => {
-    window.location.href = 'index-musique.html';
+    window.location.href = 'index.html';
   });
 
 

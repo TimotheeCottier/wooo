@@ -55,13 +55,15 @@
       foundPartie = partie;
 
       // Adapter le wording selon produit de la partie
-      const isCine = (partie.produit === 'cine');
-      document.documentElement.setAttribute('data-product', isCine ? 'cine' : 'musique');
+      const produit = partie.produit || 'musique';
+      const isMusique = (produit === 'musique');
+      document.documentElement.setAttribute('data-product', isMusique ? 'musique' : 'cine');
       const themesIntro = document.getElementById('themes-intro');
       if (themesIntro) {
-        themesIntro.textContent = isCine
-          ? 'Tu devras choisir un film ou une série pour chacun de ces thèmes.'
-          : 'Tu devras choisir une chanson pour chacun de ces thèmes.';
+        if (produit === 'musique')      themesIntro.textContent = 'Tu devras choisir une chanson pour chacun de ces thèmes.';
+        else if (produit === 'cinema')  themesIntro.textContent = 'Tu devras choisir un film pour chacun de ces thèmes.';
+        else if (produit === 'serie')   themesIntro.textContent = 'Tu devras choisir une série pour chacun de ces thèmes.';
+        else                            themesIntro.textContent = 'Tu devras choisir un film ou une série pour chacun de ces thèmes.';
       }
 
       // Récupère le créateur
@@ -177,7 +179,7 @@
       });
 
       // Redirige vers le bon parcours selon produit
-      const searchUrl = produit === 'cine' ? 'search-cine.html' : 'search.html';
+      const searchUrl = produit === 'musique' ? 'search.html' : 'search-cine.html';
       window.location.href = searchUrl + '?theme=0';
     } catch (err) {
       console.error(err);
